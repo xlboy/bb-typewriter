@@ -40,4 +40,4 @@ export interface IContrstCharObj {
     text: string; // 单个文字内容
     haveInput: boolean; // 是否已输入
     inputCorrect: boolean; // 是否输入正确
-  }
+}
