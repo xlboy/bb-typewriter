@@ -28,10 +28,7 @@ export default defineComponent({
       console.log("是是是，完成了完成了");
     }
 
-    provide(
-      TypingSymbol,
-      useTyping(finishCallback, "downKey", typingInputId)
-    );
+    provide(TypingSymbol, useTyping(finishCallback, "downKey", typingInputId));
     return {
       typingInputId
     };
