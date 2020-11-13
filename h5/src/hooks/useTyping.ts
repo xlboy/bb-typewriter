@@ -1,5 +1,5 @@
 import { reactive, computed, watch, onMounted } from "vue";
-import { ITypingSource, ITypingState, IUseTyping } from '@/interface/ITyping'
+import { IFinishCallback, ITypingResults, ITypingSource, ITypingState, IUseTyping } from '@/interface/ITyping'
 
 // 起一个唯一的代号，用来引入provide/inject
 export const TypingSymbol = Symbol('typing')
@@ -12,10 +12,11 @@ export const TypingSymbol = Symbol('typing')
  * inputVal是监听输入框的值进行处理，这里精准程度不如downKey模式，但此模式兼容PC端与移动端。
  * @param inputId 若type为downKey类型，则需要传一个相对应的输入框id进来，在本hooks里会将其进行键盘事件注册
  */
+
 export default function (
-  finishCallback: Function,
+  finishCallback: IFinishCallback,
   type: 'downKey' | 'inputVal',
-  inputId: string
+  inputId?: string
 ): IUseTyping {
 
   // 返回辅助型的数据
@@ -39,7 +40,7 @@ export default function (
     aid: initAidState(),
     ref: {
       source: {
-        content: "因为我今生才会那么努力，把最好的给你。因为".repeat(10), // 练习对照的内容
+        content: "因为我今生才会那么努力，把最好的给你。因为".repeat(2), // 练习对照的内容
         index: 1, // 练习内容的(序号/段号)
       },
       haveInput: '', // 已输入内容
@@ -109,7 +110,7 @@ export default function (
   // 注册键盘模式的监听
   function downKeyListenReg() {
     // 如模式为downKey键盘监听模式，则给dom注册键盘事件
-    if (type === 'downKey') {
+    if (type === 'downKey' && inputId) {
       const inputDom = document.getElementById(inputId)
       if (inputDom) {
         inputDom.onkeydown = event => {
@@ -139,8 +140,23 @@ export default function (
   // 练习完成事件
   function typingFinish() {
     mutations.UpdateEndTime()
-    console.log('牛皮的结果', state)
-    finishCallback()
+    const errorNum = ((num = 0, target = state.ref): number => {
+      /* 计算错误的字数 */
+      target.haveInput.split('').forEach((v, i) => v !== target.source.content[i] && num++)
+      return num
+    })()
+
+    const typingResults: ITypingResults = {
+      speed: getters.getSpeed.value,
+      keystroke: getters.getKeystroke.value,
+      yardsLong: getters.getYardsLong.value,
+      totalTime: state.aid.time.total,
+      backSpace: state.aid.basis.backSpace,
+      backChange: state.aid.basis.backChange,
+      totalKey: state.aid.basis.totalKey,
+      errorNum
+    }
+    finishCallback(typingResults)
   }
 
   onMounted(() => {
@@ -159,7 +175,7 @@ export default function (
       if (time.end === 0) {
         // start != 0（打字进行中）
         if (time.start !== 0) {
-          
+
           if (newVal.length === 0) mutations.ResetTyping() // 输入框清空咯，重置打字数据
 
           if (type === 'inputVal') mutations.UpdateTotalTime() // 实时更新总耗时间，计算实时的打字速度
