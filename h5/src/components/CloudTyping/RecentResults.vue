@@ -1,27 +1,36 @@
-<template>
-  <ul class="recent">
-    <li>
-      <span>第1段</span>
-      <span>100.00</span>
-      <span>0</span>
-      <span>0</span>
-      <span>381字</span>
-      <span>错0</span>
-      <span>2.101s</span>
-      <span class="date">10/1 20:11:41</span>
+<template >
+  <ul class="recent" :class="{ 'empty-data': resultsList.length === 0 }">
+    <li v-for="(item, index) in resultsList" :key="index">
+      <span>第{{ item.index }}段</span>
+      <span>{{ item.speed }}</span>
+      <!-- <span>0</span>
+      <span>0</span> -->
+      <span>{{ item.totalCharSize }}字</span>
+      <span>错{{ item.errorNum }}</span>
+      <span>{{ item.totalTime }}s</span>
+      <span class="date">{{ item.insertTime }}</span>
     </li>
   </ul>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+import recentResults from "./utils/recentResults";
 export default defineComponent({
   name: "RecentResults",
   setup() {
-    return {};
-  }
+    recentResults.updateResults();  
+    return {
+      resultsList: recentResults.resultsList,
+    };
+  },
 });
 </script>
 <style lang="scss" scoped>
+.empty-data {
+  background: url("../../assets/images/bg-empty.png") no-repeat center center;
+  background-size: auto 80%;
+  background-color: #f5f5f6;
+}
 .recent {
   width: 100%;
   height: 100%;
@@ -46,7 +55,7 @@ export default defineComponent({
         color: var(--theme-color);
         background-color: var(--box-shadow);
       }
-      &.date{
+      &.date {
         min-width: 130px;
       }
     }

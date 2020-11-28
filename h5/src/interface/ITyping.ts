@@ -43,7 +43,7 @@ export interface IContrstCharObj {
 }
 
 // 打字练习成绩的数据
-export interface ITypingResults {
+export interface ITypingResult {
     speed: number; // 速度
     keystroke: number; // 击键
     yardsLong: number; // 码长
@@ -52,11 +52,12 @@ export interface ITypingResults {
     backChange: number; // 回改
     totalKey: number; // 总键数
     errorNum: number; // 错误字数
+    totalCharSize: number; // 总字数
 }
 
 // 练习完成的回调定义
 export interface IFinishCallback {
-    (results: ITypingResults): void
+    (results: ITypingResult): void
 }
 
 

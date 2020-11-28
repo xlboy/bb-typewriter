@@ -1,15 +1,13 @@
 <template>
   <div class="domain">
     这特么是功能区
-    <Button label="Submit" />
+    <van-button plain hairline type="primary">细边框按钮</van-button>
   </div>
 </template>
 <script lang="ts">
-import Button from 'primevue/button';
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "Domain",
-  components: { Button },
   setup() {
     return {};
   }

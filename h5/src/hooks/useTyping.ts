@@ -1,5 +1,5 @@
 import { reactive, computed, watch, onMounted } from "vue";
-import { IFinishCallback, ITypingResults, ITypingSource, ITypingState, IUseTyping } from '@/interface/ITyping'
+import { IFinishCallback, ITypingResult, ITypingSource, ITypingState, IUseTyping } from '@/interface/ITyping'
 
 // 起一个唯一的代号，用来引入provide/inject
 export const TypingSymbol = Symbol('typing')
@@ -40,7 +40,7 @@ export default function (
     aid: initAidState(),
     ref: {
       source: {
-        content: "因为我今生才会那么努力，把最好的给你。因为".repeat(2), // 练习对照的内容
+        content: "因为我今生才会那么努力，把最好的给你。因为".repeat(1), // 练习对照的内容
         index: 1, // 练习内容的(序号/段号)
       },
       haveInput: '', // 已输入内容
@@ -67,6 +67,10 @@ export default function (
       const { totalKey } = state.aid.basis
       const result: string = (totalKey / state.ref.haveInput.length).toFixed(2)
       return ['Infinity', 'NaN'].includes(result) ? 0 : +result
+    }),
+    getSourceContentLength: computed((): number => {
+      /* 文段字数长度 */
+      return state.ref.source.content.length
     })
   }
 
@@ -79,7 +83,9 @@ export default function (
     ResetTyping() {
       /* 重置数据 */
       state.ref.haveInput = ''
+      console.log(state.ref.haveInput)
       state.aid = initAidState()
+      console.log("我这不是重置了吗，草")
     },
     AddBackSpace() {
       /* 退格+1 */
@@ -146,7 +152,7 @@ export default function (
       return num
     })()
 
-    const typingResults: ITypingResults = {
+    const typingResults: ITypingResult = {
       speed: getters.getSpeed.value,
       keystroke: getters.getKeystroke.value,
       yardsLong: getters.getYardsLong.value,
@@ -154,7 +160,8 @@ export default function (
       backSpace: state.aid.basis.backSpace,
       backChange: state.aid.basis.backChange,
       totalKey: state.aid.basis.totalKey,
-      errorNum
+      errorNum,
+      totalCharSize: state.ref.source.content.length
     }
     finishCallback(typingResults)
   }
@@ -166,17 +173,18 @@ export default function (
   watch(
     () => state.ref.haveInput,
     (newVal, oldVal) => {
-      const sourceContentLength = state.ref.source.content.length
-      state.ref.haveInput = state.ref.haveInput.substr(0, sourceContentLength) // 过滤输入框的值，不允超过练习内容长度
+      const sourceContextLength = state.ref.source.content.length
+      state.ref.haveInput = state.ref.haveInput.substr(0, sourceContextLength) // 过滤输入框的值，不允超过练习内容长度
 
       const { time } = state.aid
+
+      // 输入框清空咯，重置打字数据
+      if (newVal.length === 0) mutations.ResetTyping() 
 
       // end == 0 （打字未结束）
       if (time.end === 0) {
         // start != 0（打字进行中）
         if (time.start !== 0) {
-
-          if (newVal.length === 0) mutations.ResetTyping() // 输入框清空咯，重置打字数据
 
           if (type === 'inputVal') mutations.UpdateTotalTime() // 实时更新总耗时间，计算实时的打字速度
 
@@ -189,7 +197,7 @@ export default function (
         }
 
         // 练习完成
-        if (newVal.length === sourceContentLength) typingFinish()
+        if (newVal.length === sourceContextLength) typingFinish()
       }
     })
 

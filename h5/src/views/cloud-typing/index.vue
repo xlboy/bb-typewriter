@@ -27,20 +27,22 @@
 import ContrstMiddle from "@/components/CloudTyping/ContrstMiddle.vue";
 import InputBox from "@/components/CloudTyping/InputBox.vue";
 import SpeedTop from "@/components/CloudTyping/SpeedTop.vue";
-import RecentResults from '@/components/CloudTyping/RecentResults.vue';
-import Domain from '@/components/CloudTyping/Domain.vue';
+import RecentResults from "@/components/CloudTyping/RecentResults.vue";
+import Domain from "@/components/CloudTyping/Domain.vue";
 
 import { defineComponent, provide } from "vue";
 import useTyping, { TypingSymbol } from "@/hooks/useTyping";
-import { ITypingResults } from "@/interface/ITyping";
+import { ITypingResult } from "@/interface/ITyping";
 import copyText from "@/utils/copyText";
+import recentResults, { IRencentResult } from "@/components/CloudTyping/utils/recentResults";
 export default defineComponent({
   name: "CloudTyping",
   components: { SpeedTop, ContrstMiddle, InputBox, RecentResults, Domain },
   setup() {
-    // 每练习完成一次的回调
     const typingInputId = "typing-input";
-    const typing = useTyping(function(results: ITypingResults) {
+
+    // 每练习完成一次的回调
+    const typing = useTyping(function (result: ITypingResult) {
       const keyName: any = {
         // #是占位符
         speed: "速度#",
@@ -49,21 +51,41 @@ export default defineComponent({
         totalTime: "耗时#s",
         backSpace: "退格#",
         backChange: "回改#",
-        totalKey: "总键数#"
+        totalKey: "总键数#",
+        totalCharSize: "总字数#",
       };
       const cIndex = (typing.refState as any).source?.index; // 当前练习段号
       let resultsStr = `第${cIndex}段 `;
-      Object.entries(results).forEach(
+      Object.entries(result).forEach(
         ([k, v]) =>
           keyName[k] && (resultsStr += `${keyName[k].replace("#", v)} `)
       );
+
+      const resultObj: IRencentResult = {
+        index: cIndex,
+        speed: result.speed,
+        keystroke: result.speed,
+        yardsLong: result.yardsLong,
+        totalTime: result.totalTime,
+        backSpace: result.backSpace,
+        backChange: result.backChange,
+        errorNum: result.errorNum,
+        totalKey: result.totalKey,
+        totalCharSize: result.totalCharSize,
+        insertTime: new Date()
+          .toLocaleString()
+          .match(/(?<=.{5})[\d/ :]+/g)?.join("") ?? '',
+      };
+      recentResults.saveResult(resultObj)
+      recentResults.updateResults()
       copyText(resultsStr);
     }, "inputVal");
+
     provide(TypingSymbol, typing);
     return {
-      typingInputId
+      typingInputId,
     };
-  }
+  },
 });
 </script>
 
@@ -90,7 +112,7 @@ export default defineComponent({
     margin-top: 7px;
     height: 90px;
   }
-  .typing-domain{
+  .typing-domain {
     width: 100%;
     height: auto;
     margin-top: 7px;
