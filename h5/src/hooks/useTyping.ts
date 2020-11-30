@@ -40,7 +40,7 @@ export default function (
     aid: initAidState(),
     ref: {
       source: {
-        content: "因为我今生才会那么努力，把最好的给你。因为".repeat(1), // 练习对照的内容
+        content: "因为我今生才会那么努力，把最好的给你。因为你".repeat(20), // 练习对照的内容
         index: 1, // 练习内容的(序号/段号)
       },
       haveInput: '', // 已输入内容
@@ -83,9 +83,7 @@ export default function (
     ResetTyping() {
       /* 重置数据 */
       state.ref.haveInput = ''
-      console.log(state.ref.haveInput)
       state.aid = initAidState()
-      console.log("我这不是重置了吗，草")
     },
     AddBackSpace() {
       /* 退格+1 */
@@ -116,14 +114,12 @@ export default function (
   // 注册键盘模式的监听
   function downKeyListenReg() {
     // 如模式为downKey键盘监听模式，则给dom注册键盘事件
-    if (type === 'downKey' && inputId) {
-      const inputDom = document.getElementById(inputId)
+    if (type === 'downKey') {
+      const inputDom = inputId && document.getElementById(inputId)
       if (inputDom) {
         inputDom.onkeydown = event => {
           // 开打，计时，揍他丫的
-          if (state.aid.time.start === 0) {
-            mutations.UpdateStartTime()
-          }
+          if (state.aid.time.start === 0) mutations.UpdateStartTime()
 
           if (state.aid.time.end === 0) {
             const { code } = event
@@ -136,10 +132,7 @@ export default function (
             mutations.UpdateTotalTime() // 更新当前总耗时间
           }
         }
-      } else {
-        console.error('提供的input-id不正确')
       }
-
     }
   }
 
@@ -179,7 +172,7 @@ export default function (
       const { time } = state.aid
 
       // 输入框清空咯，重置打字数据
-      if (newVal.length === 0) mutations.ResetTyping() 
+      if (newVal.length === 0) mutations.ResetTyping()
 
       // end == 0 （打字未结束）
       if (time.end === 0) {

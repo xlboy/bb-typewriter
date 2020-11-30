@@ -1,5 +1,5 @@
 <template>
-  <div class="live2d" id="live2dBox" style="width: 60px; height: 80px;">
+  <div class="live2d" id="live2dBox" style="width: 60px; height: 80px">
     <canvas
       id="live2d"
       width="70"
@@ -16,6 +16,7 @@ function defaultEvent(e: Event) {
 }
 export default defineComponent({
   name: "Live2d",
+  emits: ["openSidebar"],
   setup(props, { emit }) {
     onMounted(() => {
       interface GlobalThis {
@@ -32,16 +33,13 @@ export default defineComponent({
         // 绑定touchstart事件
         block.addEventListener(
           "touchstart",
-          function(e) {
+          function (e) {
+            // 双击打开侧边栏
             if (lastTime) {
-              if (+new Date() - lastTime < 300) {
-                emit("open-sidebar");
-              } else {
-                lastTime = +new Date();
-              }
-            } else {
-              lastTime = +new Date();
-            }
+              if (+new Date() - lastTime < 300) emit("openSidebar");
+              else lastTime = +new Date();
+            } else lastTime = +new Date();
+
             const touches = e.touches[0];
             oW = touches.clientX - block.offsetLeft;
             oH = touches.clientY - block.offsetTop;
@@ -53,19 +51,19 @@ export default defineComponent({
 
         block.addEventListener(
           "touchmove",
-          function(e) {
+          function (e) {
             const touches = e.touches[0];
             let oLeft = touches.clientX - oW;
             let oTop = touches.clientY - oH;
             const { clientWidth, clientHeight } = document.documentElement;
-            if (oLeft < 0) {
-              oLeft = 0;
-            } else if (oLeft > clientWidth - block.offsetWidth) {
+
+            if (oLeft < 0) oLeft = 0;
+            else if (oLeft > clientWidth - block.offsetWidth) {
               oLeft = clientWidth - block.offsetWidth;
             }
-            if (oTop < 0) {
-              oTop = 0;
-            } else if (oTop > clientHeight - block.offsetHeight) {
+
+            if (oTop < 0) oTop = 0;
+            else if (oTop > clientHeight - block.offsetHeight) {
               oTop = clientHeight - block.offsetHeight;
             }
             block.style.left = oLeft + "px";
@@ -76,7 +74,7 @@ export default defineComponent({
 
         block.addEventListener(
           "touchend",
-          function() {
+          function () {
             document.removeEventListener("touchmove", defaultEvent, false);
           },
           false
@@ -84,7 +82,7 @@ export default defineComponent({
       }
     });
     return {};
-  }
+  },
 });
 </script>
 

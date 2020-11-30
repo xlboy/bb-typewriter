@@ -10,7 +10,7 @@
         </keep-alive>
       </router-view>
     </div>
-    <Live2d @open-sidebar="openSidebar" />
+    <Live2d @openSidebar="openSidebar" />
   </div>
 </template>
 <script lang="ts">
@@ -22,14 +22,14 @@ export default defineComponent({
   name: "Layout",
   components: {
     AppSidebar,
-    Live2d
+    Live2d,
   },
   setup() {
     // 处理侧边栏(Sidebar)的功能块
     const appSidebar = (() => {
       const sidebar = reactive({
         visible: false, // 是否打开了侧边栏
-        closeAnime: false // 是否展示关闭动画
+        closeAnime: false, // 是否展示关闭动画
       });
 
       function openSidebar() {
@@ -50,13 +50,13 @@ export default defineComponent({
       return {
         openSidebar,
         switchContainer,
-        sidebarVisibleClass
+        sidebarVisibleClass,
       };
     })();
     return {
-      ...appSidebar
+      ...appSidebar,
     };
-  }
+  },
 });
 </script>
 <style lang="scss" scoped>

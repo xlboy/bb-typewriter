@@ -27,32 +27,8 @@ const routes: Array<RouteRecordRaw> = [
         path: "app-about",
         name: "AppAbout",
         component: () => import("../views/app-about/index.vue")
-      },
-      {
-        path: "about",
-        name: "ABOUT",
-        component: () =>
-          import(/* webpackChunkName: "about" */ "../views/About.vue")
       }
     ]
-  },
-  {
-    path: "/vuex",
-    name: "VUEX",
-    component: () =>
-      import(/* webpackChunkName: "vuex" */ "../views/vuex/index.vue")
-  },
-  {
-    path: "/message",
-    name: "MESSAGE",
-    component: () =>
-      import(/* webpackChunkName: "message" */ "../views/message/index.vue")
-  },
-  {
-    path: "/form",
-    name: "FORM",
-    component: () =>
-      import(/* webpackChunkName: "form" */ "../views/message/form.vue")
   }
 ];
 

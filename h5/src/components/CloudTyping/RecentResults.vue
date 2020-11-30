@@ -14,7 +14,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import recentResults from "./utils/recentResults";
+import recentResults from "./hooks/recentResults";
 export default defineComponent({
   name: "RecentResults",
   setup() {
@@ -57,6 +57,7 @@ export default defineComponent({
       }
       &.date {
         min-width: 130px;
+        justify-content: flex-start;
       }
     }
   }

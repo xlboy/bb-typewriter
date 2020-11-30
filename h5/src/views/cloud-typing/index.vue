@@ -34,52 +34,63 @@ import { defineComponent, provide } from "vue";
 import useTyping, { TypingSymbol } from "@/hooks/useTyping";
 import { ITypingResult } from "@/interface/ITyping";
 import copyText from "@/utils/copyText";
-import recentResults, { IRencentResult } from "@/components/CloudTyping/utils/recentResults";
+import recentResults, {
+  IRencentResult,
+} from "@/components/CloudTyping/hooks/recentResults";
 export default defineComponent({
   name: "CloudTyping",
   components: { SpeedTop, ContrstMiddle, InputBox, RecentResults, Domain },
   setup() {
     const typingInputId = "typing-input";
 
-    // 每练习完成一次的回调
-    const typing = useTyping(function (result: ITypingResult) {
-      const keyName: any = {
-        // #是占位符
-        speed: "速度#",
-        keystroke: "击键#",
-        yardsLong: "码长#",
-        totalTime: "耗时#s",
-        backSpace: "退格#",
-        backChange: "回改#",
-        totalKey: "总键数#",
-        totalCharSize: "总字数#",
-      };
-      const cIndex = (typing.refState as any).source?.index; // 当前练习段号
-      let resultsStr = `第${cIndex}段 `;
-      Object.entries(result).forEach(
-        ([k, v]) =>
-          keyName[k] && (resultsStr += `${keyName[k].replace("#", v)} `)
-      );
+    const typing = useTyping(
+      // 每练习完成一次的回调
+      function (result: ITypingResult) {
+        // 将成绩复制到剪贴板中
+        const keyName: any = {
+          // #是占位符
+          speed: "速度#",
+          keystroke: "击键#",
+          yardsLong: "码长#",
+          totalTime: "耗时#s",
+          backSpace: "退格#",
+          backChange: "回改#",
+          totalKey: "总键数#",
+          totalCharSize: "总字数#",
+        };
+        const cIndex = (typing.refState as any).source?.index; // 当前练习段号
+        let resultsStr = `第${cIndex}段 `;
+        Object.entries(result).forEach(
+          ([k, v]) =>
+            keyName[k] && (resultsStr += `${keyName[k].replace("#", v)} `)
+        );
+        copyText(resultsStr);
 
-      const resultObj: IRencentResult = {
-        index: cIndex,
-        speed: result.speed,
-        keystroke: result.speed,
-        yardsLong: result.yardsLong,
-        totalTime: result.totalTime,
-        backSpace: result.backSpace,
-        backChange: result.backChange,
-        errorNum: result.errorNum,
-        totalKey: result.totalKey,
-        totalCharSize: result.totalCharSize,
-        insertTime: new Date()
-          .toLocaleString()
-          .match(/(?<=.{5})[\d/ :]+/g)?.join("") ?? '',
-      };
-      recentResults.saveResult(resultObj)
-      recentResults.updateResults()
-      copyText(resultsStr);
-    }, "inputVal");
+        // 更新最近十把成绩
+        const resultObj: IRencentResult = {
+          index: cIndex,
+          speed: result.speed,
+          keystroke: result.speed,
+          yardsLong: result.yardsLong,
+          totalTime: result.totalTime,
+          backSpace: result.backSpace,
+          backChange: result.backChange,
+          errorNum: result.errorNum,
+          totalKey: result.totalKey,
+          totalCharSize: result.totalCharSize,
+          insertTime:
+            new Date()
+              .toLocaleString()
+              .match(/(?<=.{5})[\d/ :]+/g)
+              ?.join("") ?? "",
+        };
+        recentResults.saveResult(resultObj);
+        recentResults.updateResults();
+        
+      },
+      "downKey",
+      typingInputId
+    );
 
     provide(TypingSymbol, typing);
     return {

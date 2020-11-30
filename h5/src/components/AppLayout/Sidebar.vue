@@ -75,6 +75,7 @@ export default defineComponent({
         themeColors
       };
     })();
+    
     return {
       ...nav,
       ...theme
