@@ -40,7 +40,7 @@ export default function (
     aid: initAidState(),
     ref: {
       source: {
-        content: "因为我今生才会那么努力，把最好的给你。因为你".repeat(20), // 练习对照的内容
+        content: "因为我今生才会那么努力，把最好的给你。因为你".repeat(30), // 练习对照的内容
         index: 1, // 练习内容的(序号/段号)
       },
       haveInput: '', // 已输入内容
