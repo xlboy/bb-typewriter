@@ -5,7 +5,7 @@
       :key="index"
       :class="[inputCorrectClass(item), haveInputClass(item.haveInput)]"
     >
-      {{ item.text }}
+      {{ formatSpace(item.text) }}
     </span>
   </div>
 </template>
@@ -73,6 +73,7 @@ export default defineComponent({
       });
 
       return {
+        formatSpace,
         ...verifCorrect(),
         currentPageChars,
       };
@@ -117,7 +118,7 @@ export default defineComponent({
             (newVal) => {
               const { startIndex, endIndex, turnSize } = pageScroll;
               const pageMaxHeight = elContrst.scrollHeight;
-              // 输入的内容超过了二十个字后再进行滚动
+              // 输入的内容超过了20个字后再进行滚动
               // -30是为了滚动滚的更精准，一些偏差
               if (newVal.length - 20 > startIndex.value) {
                 elContrst.scrollTop =
@@ -135,8 +136,12 @@ export default defineComponent({
           );
         }
       }
+      // 过滤空格内容
+      function formatSpace(text: string) {
+        return text === ' ' ? '　' : text
+      }
     })();
-    
+
     return {
       ...renderContrst,
     };
