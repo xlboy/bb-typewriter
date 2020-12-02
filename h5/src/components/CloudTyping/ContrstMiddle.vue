@@ -18,7 +18,7 @@ import {
   inject,
   onMounted,
   reactive,
-  toRefs,
+  ref,
   watch,
 } from "vue";
 export default defineComponent({
@@ -28,43 +28,50 @@ export default defineComponent({
 
     // 处理渲染对照区
     const renderContrst = (() => {
-      const { content } = refState.source;
       // 练习内容的源数据，记载练习时的状态
       const contrstChars: IContrstCharObj[] = reactive(
-        content.split("").map((v: any) => ({
+        refState.source.content.split("").map((v: any) => ({
           text: v,
           haveInput: false,
           inputCorrect: false,
         }))
       );
+      // 翻页、滚动的数据块
       const pageScroll = (() => {
-        const state = reactive({
-          page: 1, // 当前页数
-          size: 50, // 每页字数
-          turnSize: 5, // 提前多少个字进行预翻页
-        });
+        const size = 100; // 每页字数
+        const turnSize = 5; // 提前多少个字进行预翻页
+        const page = ref(1); // 当前是第几页
+
         // 每页开始的索引位置
-        const startSize = computed(
+        const startIndex = computed(
           () =>
-            state.page * state.size -
-            state.size -
-            (state.page * state.turnSize - state.turnSize)
+            page.value * size -
+            size -
+            // 如若当前页数不为第1页，则少取提前翻页的字数进行预处理
+            (page.value !== 1 ? (page.value - 1) * (turnSize * 2) : 0)
         );
+
+        // 每页结尾的索引位置
+        const endIndex = computed(() => {
+          return startIndex.value + size;
+        });
         return {
-          ...toRefs(state),
-          startSize,
+          page,
+          size,
+          turnSize,
+          startIndex,
+          endIndex,
         };
       })();
-
       // 当前页的字符数据，给予模板进行渲染
       const currentPageChars = computed(() => {
-        const { startSize, size } = pageScroll;
-        const end = startSize.value + size.value;
-        return contrstChars.slice(startSize.value, end);
+        const { startIndex, endIndex } = pageScroll;
+        return contrstChars.slice(startIndex.value, endIndex.value);
       });
       onMounted(() => {
         contrstPageScroll();
       });
+
       return {
         ...verifCorrect(),
         currentPageChars,
@@ -101,7 +108,6 @@ export default defineComponent({
           haveInputClass,
         };
       }
-
       // 对照区的翻页、滚动（输入框内容发生改变时触发）
       function contrstPageScroll() {
         const elContrst = document.getElementById("elContrst");
@@ -109,32 +115,28 @@ export default defineComponent({
           watch(
             () => refState.haveInput,
             (newVal) => {
-              const { startSize: pageStartSize } = pageScroll;
+              const { startIndex, endIndex, turnSize } = pageScroll;
               const pageMaxHeight = elContrst.scrollHeight;
               // 输入的内容超过了二十个字后再进行滚动
               // -30是为了滚动滚的更精准，一些偏差
-              if (newVal.length - 20 > pageStartSize.value) {
+              if (newVal.length - 20 > startIndex.value) {
                 elContrst.scrollTop =
-                  ((newVal.length - pageStartSize.value) /
+                  ((newVal.length - startIndex.value) /
                     currentPageChars.value.length) *
                     pageMaxHeight -
                   30;
               }
 
-              // 当前页结尾的索引位置大小
-              const endSize =
-                pageStartSize.value +
-                pageScroll.size.value -
-                pageScroll.turnSize.value;
               // 当输入的长度小于或等于 当页结尾字数的时候进行跳页。。
-              if (newVal.length >= endSize) {
+              if (newVal.length >= endIndex.value - turnSize) {
                 pageScroll.page.value++;
-              } 
+              }
             }
           );
         }
       }
     })();
+    
     return {
       ...renderContrst,
     };
