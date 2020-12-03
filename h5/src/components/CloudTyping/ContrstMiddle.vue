@@ -38,7 +38,7 @@ export default defineComponent({
       );
       // 翻页、滚动的数据块
       const pageScroll = (() => {
-        const size = 100; // 每页字数
+        const size = 200; // 每页字数
         const turnSize = 5; // 提前多少个字进行预翻页
         const page = ref(1); // 当前是第几页
 

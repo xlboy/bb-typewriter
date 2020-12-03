@@ -40,7 +40,7 @@ export default function (
     aid: initAidState(),
     ref: {
       source: {
-        content: "如梦初  醒，你在何方", // 练习对照的内容
+        content: "只期待后来的你能快乐", // 练习对照的内容
         index: 1, // 练习内容的(序号/段号)
       },
       haveInput: '', // 已输入内容
