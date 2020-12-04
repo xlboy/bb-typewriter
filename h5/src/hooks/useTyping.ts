@@ -40,7 +40,7 @@ export default function (
     aid: initAidState(),
     ref: {
       source: {
-        content: "只期待后来的你能快乐", // 练习对照的内容
+        content: "只期待后来的你能快乐".repeat(100), // 练习对照的内容
         index: 1, // 练习内容的(序号/段号)
       },
       haveInput: '', // 已输入内容
@@ -78,7 +78,8 @@ export default function (
   const mutations = {
     SetSource(source: ITypingSource) {
       /* 设置练习内容源 */
-      state.ref.source = source
+      Object.assign(state.ref.source, source)
+      this.ResetTyping()
     },
     ResetTyping() {
       /* 重置数据 */

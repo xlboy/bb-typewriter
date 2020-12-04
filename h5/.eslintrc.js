@@ -19,6 +19,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": ["off"],
     "@typescript-eslint/interface-name-prefix": ["off"],
     'vue/custom-event-name-casing': 'off',
-    '@typescript-eslint/no-use-before-define': ['off']
+    '@typescript-eslint/no-use-before-define': ['off'],
+    "no-empty": 0,
   }
 };

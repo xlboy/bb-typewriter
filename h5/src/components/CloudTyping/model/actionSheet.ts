@@ -3,28 +3,17 @@ export interface IActionSheet {
     name: string,
     children?: IActionSheet[]
 }
+const typingGroups = ["鹤一", "鹤二", "键心阁", "五林风", "晴天", "指爱", "帝隆", "梦幻"]
 export const loadArticle: IActionSheet[] = [
     {
         type: 'loadArticle',
         name: '群载文',
-        children: [
-            {
-                type: 'loadGroupArticle',
-                name: '鹤一'
-            }, {
-                type: 'loadGroupArticle',
-                name: '鹤二'
-            }, {
-                type: 'loadGroupArticle',
-                name: '键心阁'
-            }, {
-                type: 'loadGroupArticle',
-                name: '五林风'
-            }, {
-                type: 'loadGroupArticle',
-                name: '晴天'
-            },
-        ]
+        children: typingGroups.map(s => ({ type: 'loadGroupLatestArticle', name: s }))
+    },
+    {
+        type: 'loadArticle',
+        name: '群赛文',
+        children: typingGroups.map(s => ({ type: 'loadGroupMatchArticle', name: s }))
     },
     {
         type: 'loadArticle',
@@ -56,11 +45,11 @@ export const postArticle: IActionSheet[] = [
         ]
     },
     {
-        type:'postArticle',
+        type: 'postArticle',
         name: '随机一文'
     },
     {
-        type:'postArticle',
+        type: 'postArticle',
         name: '自定义文章'
     }
 ]

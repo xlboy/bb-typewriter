@@ -28,17 +28,30 @@ export default defineComponent({
 
     // 处理渲染对照区
     const renderContrst = (() => {
+
       // 练习内容的源数据，记载练习时的状态
-      const contrstChars: IContrstCharObj[] = reactive(
-        refState.source.content.split("").map((v: any) => ({
+      const contrstChars: IContrstCharObj[] = reactive([
+        ...toContrstCharObjs(refState.source.content),
+      ]);
+      // 转成对照区规定格式的，可供初始化转化与源数据内容变化时转化↓
+      function toContrstCharObjs(content: string): IContrstCharObj[] {
+        return content.split("").map((v: any) => ({
           text: v,
           haveInput: false,
           inputCorrect: false,
-        }))
+        }));
+      }
+      watch(
+        () => refState.source.content,
+        (newVal) => {
+          while (contrstChars.shift()) {}
+          Object.assign(contrstChars, toContrstCharObjs(newVal));
+        }
       );
+
       // 翻页、滚动的数据块
       const pageScroll = (() => {
-        const size = 200; // 每页字数
+        const size = 300; // 每页字数
         const turnSize = 5; // 提前多少个字进行预翻页
         const page = ref(1); // 当前是第几页
 
@@ -125,12 +138,13 @@ export default defineComponent({
                   ((newVal.length - startIndex.value) /
                     currentPageChars.value.length) *
                     pageMaxHeight -
-                  30;
+                  40;
               }
 
               // 当输入的长度小于或等于 当页结尾字数的时候进行跳页。。
               if (newVal.length >= endIndex.value - turnSize) {
                 pageScroll.page.value++;
+                elContrst.scrollTop = 0
               }
             }
           );
@@ -138,7 +152,7 @@ export default defineComponent({
       }
       // 过滤空格内容
       function formatSpace(text: string) {
-        return text === ' ' ? '　' : text
+        return text === " " ? "　" : text;
       }
     })();
 
