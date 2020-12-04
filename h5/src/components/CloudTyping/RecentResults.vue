@@ -1,7 +1,7 @@
 <template >
   <ul class="recent" :class="{ 'empty-data': resultsList.length === 0 }">
     <li v-for="(item, index) in resultsList" :key="index">
-      <span>第{{ item.index }}段</span>
+      <span class="index">第{{ item.index }}段</span>
       <span>{{ item.speed }}</span>
       <!-- <span>0</span>
       <span>0</span> -->
@@ -54,6 +54,9 @@ export default defineComponent({
       &:nth-child(2n) {
         color: var(--theme-color);
         background-color: var(--box-shadow);
+      }
+      &.index{
+        min-width: 100px;
       }
       &.date {
         min-width: 130px;

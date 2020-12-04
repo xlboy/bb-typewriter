@@ -1,19 +1,20 @@
+import typingGroups from './typingGroup'
 export interface IActionSheet {
     type: string,
     name: string,
     children?: IActionSheet[]
 }
-const typingGroups = ["鹤一", "鹤二", "键心阁", "五林风", "晴天", "指爱", "帝隆", "梦幻"]
+
 export const loadArticle: IActionSheet[] = [
     {
         type: 'loadArticle',
         name: '群载文',
-        children: typingGroups.map(s => ({ type: 'loadGroupLatestArticle', name: s }))
+        children: typingGroups.map(o => ({ type: 'loadGroupLatestArticle', name: o.name }))
     },
     {
         type: 'loadArticle',
         name: '群赛文',
-        children: typingGroups.map(s => ({ type: 'loadGroupMatchArticle', name: s }))
+        children: typingGroups.map(o => ({ type: 'loadGroupMatchArticle', name: o.name }))
     },
     {
         type: 'loadArticle',

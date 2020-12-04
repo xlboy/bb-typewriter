@@ -20,9 +20,7 @@ axios.interceptors.response.use(
     },
     // 服务器状态码不是200的情况
     error => {
-        if (error.response.status) {
-            return Promise.reject(error.response)
-        }
+        return Promise.reject(error.response)
     }
 )
 
@@ -41,7 +39,7 @@ export default function request(
     isDefault = true,
     headers: any = {},
 ) {
-    const defaultBaseUrl = 'http://localhost:3000'
+    const defaultBaseUrl = 'http://xlboy.cn:8988'
     url = isDefault ? `${defaultBaseUrl}${url}` : url
 
     // headers['Content-Type'] ??= 'application/json'; 在这里会被编译报错，版本没跟上原因吧

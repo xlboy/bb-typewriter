@@ -13,3 +13,12 @@ export function getGroupMatchArticle(guid: number): any {
         'Accept': 'application/vnd.xc.v1+json'
     })
 }
+/**
+ * 
+ * @param groupId 群号群号，如上一样，群号，只是两个接口各接收的参不同，感谢老谭与达达提供的接口
+ */
+export function getGroupLatestArticle(groupId: number): any {
+    return request('get', '/getGroupLatestArticle', {
+        groupId
+    })
+}

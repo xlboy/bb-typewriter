@@ -14,9 +14,13 @@
 import useRequest from "@/hooks/useRequest";
 import { defineComponent, inject, reactive } from "vue";
 import { IActionSheet, loadArticle, postArticle } from "./model/actionSheet";
-import { getGroupMatchArticle } from "@/api/getGroupMatchArticle";
+import {
+  getGroupMatchArticle,
+  getGroupLatestArticle,
+} from "@/api/getGroupArticle";
 import Notify from "@/utils/notify";
 import { TypingSymbol } from "@/hooks/useTyping";
+import typingGroup from "./model/typingGroup";
 export default defineComponent({
   name: "Domain",
   setup() {
@@ -48,21 +52,30 @@ export default defineComponent({
       }
       // 处理选择动作面板后的分类回调匹配
       function handleSelectType(type: string, name: string) {
-        switch (type) {
-          case "loadArticle":
-            onLoadArticle(name);
-            break;
-          case "loadGroupMatchArticle":
-            onLoadGroupMatchArticle(name);
-            break;
-          case "postArticle":
-            onPostArticle(name);
-            break;
+        try {
+          switch (type) {
+            case "loadArticle":
+              onLoadArticle(name);
+              break;
+            case "loadGroupMatchArticle":
+              onLoadGroupMatchArticle(name);
+              break;
+            case "loadGroupLatestArticle":
+              onLoadGroupLatestArticle(name);
+              break;
+            case "postArticle":
+              onPostArticle(name);
+              break;
 
-          case "postWords":
-            onPostWords(name);
-            break;
+            case "postWords":
+              onPostWords(name);
+              break;
+          }
+        } catch (error) {
+          Notify.danger("出错啦，快联系开发人员呀" + error);
+          throw new Error(error);
         }
+
         // 处理载文
         function onLoadArticle(name: string) {
           switch (name) {
@@ -72,33 +85,39 @@ export default defineComponent({
           }
         }
         // 处理群载文，param name is group nme
+        function onLoadGroupLatestArticle(name: string) {
+          // 群号
+          const guid: number =
+            typingGroup.find((o) => o.name === name)?.guid ?? 522394334;
+          // 请求老谭的接口，取到实时的文章内容并赋上
+          useRequest(getGroupLatestArticle(guid), function (result: any) {
+            console.log("result", result);
+            if (result.code === 200) {
+              const { content, id } = result.result;
+              typingMutations.SetSource({
+                content,
+                index: id,
+              });
+              Notify("载入成功，干它丫的吧");
+            } else Notify("获取实时文章失败，请稍后重试");
+          });
+        }
+        // 处理群赛文，param name is group nme
         function onLoadGroupMatchArticle(name: string) {
-          const groupData: any = {
-            鹤一: 522394334,
-            鹤二: 723795668,
-            键心阁: 41639633,
-            五林风: 26053477,
-            晴天: 556981260,
-            指爱: 49269560,
-            帝隆: 68947810,
-            梦幻: 28534214,
-          };
-          const guid: number = groupData[name];
+          // 群号
+          const guid: number =
+            typingGroup.find((o) => o.name === name)?.guid ?? 522394334;
+          // 请求小拆的接口，取到文章内容并赋上
           useRequest(getGroupMatchArticle(guid), function (result: any) {
-            try {
-              if (result.code === 0) {
-                const [data] = result.data.data;
-                if (data) {
-                  typingMutations.SetSource({
-                    content: data.content,
-                    index: data.number,
-                  });
-                  Notify('载入成功，干它丫的吧')
-                } else Notify("此群今日无赛文，请换群尝试");
-              }
-            } catch (error) {
-              Notify.danger(error);
-              throw new Error(error);
+            if (result.code === 0) {
+              const [data] = result?.data?.data;
+              if (data) {
+                typingMutations.SetSource({
+                  content: data.content,
+                  index: data.number,
+                });
+                Notify("载入成功，干它丫的吧");
+              } else Notify("此群今日无赛文，请换群尝试");
             }
           });
         }

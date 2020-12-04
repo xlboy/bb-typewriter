@@ -10,7 +10,7 @@
 | Composition-API手册 | <a href="https://vue3js.cn/vue-composition-api/" target="_blank">链接</a> |
 | Vue3.0 源码学习 | <a href="https://vue3js.cn/start/" target="_blank">链接</a> |
 | Vue-Router 官方文档 | <a href="https://next.router.vuejs.org/" target="_blank">链接</a> |
-| Vuex4.0（目前在 beta 阶段） | <a href="https://github.com/vuejs/vuex/tree/4.0/" target="_blank">Github</a> |
+| Vuex4.0（目前在 rc.2 阶段） | <a href="https://github.com/vuejs/vuex/tree/4.0/" target="_blank">Github</a> |
 
 
 <!-- [demo浏览](https://vue3-ts-template-h5.vercel.app) -->
@@ -23,4 +23,6 @@
 
 ## 感谢
 [vue3-ts-template-h5](https://github.com/weizhanzhan/vue3-ts-template-h5)
+
+
 [vue-h5-template](https://github.com/sunniejs/vue-h5-template)
