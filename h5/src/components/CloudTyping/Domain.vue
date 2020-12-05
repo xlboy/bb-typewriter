@@ -1,7 +1,7 @@
 <template>
   <div class="domain">
-    <button class="domain-button" @click="showLoadArticle">载文</button>
-    <button class="domain-button" @click="showPostArticle">发文</button>
+    <button class="domain-button waves-btn" @click="showLoadArticle">载文</button>
+    <button class="domain-button waves-btn" @click="showPostArticle">发文</button>
   </div>
   <van-action-sheet
     v-model:show="actionSheet.data.show"
@@ -20,7 +20,7 @@ import {
 } from "@/api/getGroupArticle";
 import Notify from "@/utils/notify";
 import { TypingSymbol } from "@/hooks/useTyping";
-import typingGroup from "./model/typingGroup";
+import typingGroup from "@/model/typingGroup";
 export default defineComponent({
   name: "Domain",
   setup() {
@@ -66,9 +66,8 @@ export default defineComponent({
             case "postArticle":
               onPostArticle(name);
               break;
-
-            case "postWords":
-              onPostWords(name);
+            case "postASingleWord":
+              onPostASingleWord(name);
               break;
           }
         } catch (error) {
@@ -133,7 +132,7 @@ export default defineComponent({
           }
         }
         // 处理发文：单字
-        function onPostWords(name: string) {
+        function onPostASingleWord(name: string) {
           console.log("打单字啦，看看这家伙要打啥单字--->>", name);
         }
       }
@@ -180,32 +179,6 @@ export default defineComponent({
     filter: opacity(50%);
     overflow: hidden;
     margin-right: 7px;
-    &:after {
-      width: 100%;
-      padding-top: 100%;
-      background: transparent;
-      border-radius: 50%;
-      content: "";
-      transform: translate(-50%, -50%);
-      position: absolute;
-      left: 50%;
-      top: 50%;
-    }
-    @keyframes btnAnm {
-      from {
-        transform: translate(-50%, -50%) scale(0);
-        background: rgba(0, 0, 0, 0.45);
-      }
-      to {
-        transform: translate(-50%, -50%) scale(1);
-        background: transparent;
-      }
-    }
-    &:hover {
-      &:after {
-        animation: btnAnm 0.7s;
-      }
-    }
   }
 }
 </style>

@@ -3,7 +3,7 @@
  */
 
 export default function (text: string) {
-    const input = document.createElement('input');
+    const input = document.createElement('textarea');
     input.style.cssText = 'position: absolute;opacity: 0;'
     input.value = text
     document.body.appendChild(input)

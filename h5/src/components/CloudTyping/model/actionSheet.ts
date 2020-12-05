@@ -1,4 +1,4 @@
-import typingGroups from './typingGroup'
+import typingGroups from '@/model/typingGroup'
 export interface IActionSheet {
     type: string,
     name: string,
@@ -28,26 +28,26 @@ export const postArticle: IActionSheet[] = [
         name: '单字',
         children: [
             {
-                type: 'postWords',
-                name: '前五百单字'
+                type: 'postASingleWord',
+                name: '前五百'
             },
             {
-                type: 'postWords',
-                name: '中五百单字'
+                type: 'postASingleWord',
+                name: '中五百'
             },
             {
-                type: 'postWords',
-                name: '后五百单字'
+                type: 'postASingleWord',
+                name: '后五百'
             },
             {
-                type: 'postWords',
-                name: '前一千五单字'
+                type: 'postASingleWord',
+                name: '前一千五'
             }
         ]
     },
     {
         type: 'postArticle',
-        name: '随机一文'
+        name: '常用词组'
     },
     {
         type: 'postArticle',

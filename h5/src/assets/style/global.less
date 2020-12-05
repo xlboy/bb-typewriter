@@ -40,3 +40,34 @@ body{
 .identicon div[data="0"] {
   background: #eee !important;
 }
+.waves-btn{
+  position: relative;
+  outline: none;
+  overflow: hidden;
+  &:after {
+    width: 100%;
+    padding-top: 100%;
+    background: transparent;
+    border-radius: 50%;
+    content: "";
+    transform: translate(-50%, -50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
+  @keyframes btnAnm {
+    from {
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(0, 0, 0, 0.45);
+    }
+    to {
+      transform: translate(-50%, -50%) scale(1);
+      background: transparent;
+    }
+  }
+  &:hover {
+    &:after {
+      animation: btnAnm 0.7s;
+    }
+  }
+}
