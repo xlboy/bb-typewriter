@@ -1,8 +1,17 @@
 <template>
   <div class="domain">
-    <button class="domain-button waves-btn" @click="showLoadArticle">载文</button>
-    <button class="domain-button waves-btn" @click="showPostArticle">发文</button>
+    <button class="domain-button waves-btn" @click="showLoadArticle">
+      载文
+    </button>
+    <button class="domain-button waves-btn" @click="showPostArticle">
+      发文
+    </button>
   </div>
+  <van-number-keyboard
+    :show="true"
+    title="数字键盘"
+    close-button-text="完成"
+  />
   <van-action-sheet
     v-model:show="actionSheet.data.show"
     :actions="actionSheet.data.actions"
@@ -21,10 +30,16 @@ import {
 import Notify from "@/utils/notify";
 import { TypingSymbol } from "@/hooks/useTyping";
 import typingGroup from "@/model/typingGroup";
+// import ConfirmInput from "@/components/Common/ConfirmInput";
 export default defineComponent({
   name: "Domain",
   setup() {
+    // ConfirmInput.number().then((val) => {
+    //   console.log("val", val);
+    // });
+
     const { mutations: typingMutations }: any = inject(TypingSymbol);
+
     // 下拉面板的功能区
     const actionSheet = (() => {
       const data = reactive({

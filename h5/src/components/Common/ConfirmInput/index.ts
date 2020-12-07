@@ -1,21 +1,30 @@
-import { render, createVNode } from "vue";
-import ConfirmInputConstructor, { show } from "./ConfirmInput.vue";
+import { render, createVNode, VNodeProps } from "vue";
+import NumberInputConstructor from "./NumberInput.vue";
+import TextInputConstructor from "./TextInput.vue";
 
-export default (() => {
+function createVM(type: 'number' | 'text', params: object) {
     const confirmInputVM = createVNode(
-        ConfirmInputConstructor,
-        {},
+        type === 'number' ? NumberInputConstructor : TextInputConstructor,
+        params as VNodeProps,
         null
     )
     const confirmInputEl = document.createElement("div")
     render(confirmInputVM, confirmInputEl);
     document.body.appendChild(confirmInputEl);
-    return {
-        show() {
-            show.value = true
-        },
-        close() {
-            show.value = false
-        }
+}
+
+interface IConfirmNumber {
+    label?: string
+}
+
+export default {
+    number: (params: IConfirmNumber = {}) => {
+        const finishCall = new Promise(r => {
+            createVM('number', {
+                ...params,
+                finishCall: r,
+            })
+        })
+        return finishCall
     }
-})();
+}

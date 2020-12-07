@@ -9,7 +9,9 @@ import {
   NavBar,
   Field,
   ActionSheet,
-  Uploader
+  Uploader,
+  Popup,
+  NumberKeyboard
 } from "vant";
 
 const plugins = [
@@ -22,11 +24,13 @@ const plugins = [
   NavBar,
   Field,
   ActionSheet,
-  Uploader
+  Uploader,
+  Popup,
+  NumberKeyboard
 ];
 
 export const vantPlugins = {
-  install: function(vm: VM) {
+  install: function (vm: VM) {
     plugins.forEach(item => {
       vm.component(item.name, item);
     });
