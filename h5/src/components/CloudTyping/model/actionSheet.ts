@@ -47,7 +47,13 @@ export const postArticle: IActionSheet[] = [
     },
     {
         type: 'postArticle',
-        name: '常用词组'
+        name: '常用词组',
+        children: [
+            {
+                type: 'postChinesePhrase',
+                name: '二字词组'
+            }
+        ]
     },
     {
         type: 'postArticle',
