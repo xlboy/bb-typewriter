@@ -11,7 +11,7 @@
     @select="actionSheet.onSelect"
     cancel-text="取消"
   />
-  <ConfirmNumberInput ref="confirmNumberInput" />
+  <!-- <ConfirmNumberInput ref="confirmNumberInput" /> -->
 </template>
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";
@@ -21,16 +21,18 @@ import { getGroupMatchArticle, getGroupLatestArticle } from "@/api/getGroupArtic
 import Notify from "@/utils/notify";
 import { TypingSymbol } from "@/hooks/useTyping";
 import typingGroup from "@/model/typingGroup";
-import ConfirmNumberInput from "../Common/ConfirmInput/NumberInput.vue";
+// import ConfirmNumberInput from "../Common/ConfirmInput/NumberInput.vue";
 import aSingleWord from "@/model/aSingleWord";
 import chinesePhrase from "@/model/chinesePhrase";
 import { shuffleArray } from "@/utils/utils";
+import ConfirmInput from "../Common/ConfirmInput";
 export default defineComponent({
-  components: { ConfirmNumberInput },
+  // components: { ConfirmNumberInput },
   name: "Domain",
   setup() {
     const { mutations: typingMutations }: any = inject(TypingSymbol);
     // 下拉面板的功能区
+    ConfirmInput.number()
     const app = getCurrentInstance();
     const actionSheet = (() => {
       const data = reactive({

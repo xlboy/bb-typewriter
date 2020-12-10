@@ -9,7 +9,7 @@ import "./assets/style/global.less";
 import "./utils/theme";
 
 
-const app = createApp(App);
+export const app = createApp(App);
 // app.config.globalProperties.$bmob = Bmob;
 app
   .use(store)

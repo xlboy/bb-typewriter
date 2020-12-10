@@ -28,7 +28,7 @@ import { defineComponent, ref } from "vue";
 export default defineComponent({
   name: "ConfirmNumberInput",
   setup() {
-    const show = ref(false);
+    const show = ref(true);
     const inputVal = ref("");
     const inputLabel = ref("标签");
     let hideCall: Function;
