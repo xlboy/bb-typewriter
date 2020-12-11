@@ -8,12 +8,17 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-export const show = ref(false);
+import { defineComponent } from "vue";
 export default defineComponent({
   name: "Loading",
-  setup() {
-    return { show };
+  props: {
+    show: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup(props) {
+    return { ...props };
   },
 });
 </script>

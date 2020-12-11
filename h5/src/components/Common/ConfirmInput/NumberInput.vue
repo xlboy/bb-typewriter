@@ -10,13 +10,12 @@
         :style="{ height: '30%' }"
         :overlay="false"
       >
-        <van-field v-model="inputVal" type="digit" :label="inputLabel" />
+        <van-field v-model="val" type="digit" :label="label" />
       </van-popup>
       <van-number-keyboard
-        v-model="inputVal"
+        v-model="val"
         :show="show"
         title="数字键盘"
-        :extra-key="['00']"
         close-button-text="完成"
         @close="closeInput"
       />
@@ -27,23 +26,29 @@
 import { defineComponent, ref } from "vue";
 export default defineComponent({
   name: "ConfirmNumberInput",
-  setup() {
+  props: {
+    finishCall: {
+      type: Function,
+      required: true,
+    },
+    label: {
+      type: String,
+      default: "标签",
+    },
+  },
+  setup(props) {
     const show = ref(true);
-    const inputVal = ref("");
-    const inputLabel = ref("标签");
-    let hideCall: Function;
+    const val = ref("");
 
-    async function showInput(label = "标签") {
-      show.value = true;
-      inputVal.value = "";
-      inputLabel.value = label;
-      return new Promise((r) => (hideCall = r));
-    }
     function closeInput() {
       show.value = false;
-      hideCall?.(inputVal.value);
+      props.finishCall(val.value);
     }
-    return { show, inputVal, inputLabel, closeInput, showInput };
+    return {
+      show,
+      val,
+      closeInput,
+    };
   },
 });
 </script>

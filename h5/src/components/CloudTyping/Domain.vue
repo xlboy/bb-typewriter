@@ -1,9 +1,14 @@
 <template>
-  <div class="domain" ref="domain">
-    <button class="domain-button waves-btn" @click="showLoadArticle" ref="button-test">
+  <div class="domain">
+    <button
+      class="domain-button waves-btn"
+      @click="showLoadArticle"
+    >
       载文
     </button>
-    <button class="domain-button waves-btn" @click="showPostArticle">发文</button>
+    <button class="domain-button waves-btn" @click="showPostArticle">
+      发文
+    </button>
   </div>
   <van-action-sheet
     v-model:show="actionSheet.data.show"
@@ -11,29 +16,32 @@
     @select="actionSheet.onSelect"
     cancel-text="取消"
   />
-  <!-- <ConfirmNumberInput ref="confirmNumberInput" /> -->
 </template>
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";
-import { defineComponent, getCurrentInstance, inject, reactive, ref } from "vue";
+import {
+  defineComponent,
+  inject,
+  reactive
+} from "vue";
 import { IActionSheet, loadArticle, postArticle } from "./model/actionSheet";
-import { getGroupMatchArticle, getGroupLatestArticle } from "@/api/getGroupArticle";
+import {
+  getGroupMatchArticle,
+  getGroupLatestArticle,
+} from "@/api/getGroupArticle";
 import Notify from "@/utils/notify";
 import { TypingSymbol } from "@/hooks/useTyping";
 import typingGroup from "@/model/typingGroup";
-// import ConfirmNumberInput from "../Common/ConfirmInput/NumberInput.vue";
 import aSingleWord from "@/model/aSingleWord";
 import chinesePhrase from "@/model/chinesePhrase";
 import { shuffleArray } from "@/utils/utils";
 import ConfirmInput from "../Common/ConfirmInput";
 export default defineComponent({
-  // components: { ConfirmNumberInput },
   name: "Domain",
   setup() {
     const { mutations: typingMutations }: any = inject(TypingSymbol);
+    
     // 下拉面板的功能区
-    ConfirmInput.number()
-    const app = getCurrentInstance();
     const actionSheet = (() => {
       const data = reactive({
         show: false,
@@ -60,8 +68,6 @@ export default defineComponent({
       }
       // 处理选择动作面板后的分类回调匹配
       function handleSelectType(type: string, name: string) {
-        const confirmNumberInput: any = app?.refs.confirmNumberInput;
-
         try {
           switch (type) {
             case "loadArticle":
@@ -103,7 +109,6 @@ export default defineComponent({
             typingGroup.find((o) => o.name === name)?.guid ?? 522394334;
           // 请求老谭的接口，取到实时的文章内容并赋上
           useRequest(getGroupLatestArticle(guid), function (result: any) {
-            console.log("result", result);
             if (result.code === 200) {
               const { content, id } = result.result;
               typingMutations.SetSource({
@@ -146,7 +151,7 @@ export default defineComponent({
         }
         // 处理发文：常用词组
         function onPostChinesePhrase(name: string) {
-          confirmNumberInput?.showInput("练习字数").then((size: string | number) => {
+          ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
             size = +size;
             const phraseContents: any[] = chinesePhrase[name];
             // 如若输入的练习字数超过源文件的字数，则将源文件字数进行扩展大于练习字数
@@ -168,23 +173,25 @@ export default defineComponent({
         }
         // 处理发文：单字
         function onPostASingleWord(name: string) {
-          confirmNumberInput?.showInput("练习字数").then((size: string | number) => {
-            size = +size;
-            let wordContents: string[] = aSingleWord[name].split("");
-            // 如若输入的练习字数超过源文件的字数，则将源文件字数进行扩展大于练习字数
-            if (size > wordContents.length) {
-              const difference = ~~(size - wordContents.length) / wordContents.length;
-              wordContents = wordContents.concat(
-                String(wordContents).repeat(difference).split("")
-              );
+          ConfirmInput.number({ label: "练习字数" }).then(
+            (size: any) => {
+              size = +size;
+              let wordContents: string[] = aSingleWord[name].split("");
+              // 如若输入的练习字数超过源文件的字数，则将源文件字数进行扩展大于练习字数
+              if (size > wordContents.length) {
+                const difference =
+                  ~~(size - wordContents.length) / wordContents.length;
+                wordContents = wordContents.concat(
+                  String(wordContents).repeat(difference).split("")
+                );
+              }
+              typingMutations.SetSource({
+                content: shuffleArray(wordContents).slice(0, size).join(""),
+                index: 1,
+              });
+              Notify("载入成功，干它丫的吧");
             }
-            typingMutations.SetSource({
-              content: shuffleArray(wordContents).slice(0, size).join(""),
-              index: 1,
-            });
-            Notify("载入成功，干它丫的吧");
-            console.log("size=", size);
-          });
+          );
         }
       }
     })();
@@ -199,8 +206,6 @@ export default defineComponent({
       actionSheet.setActions(postArticle);
       actionSheet.data.show = true;
     }
-    const domain = ref(null);
-    console.log("domain", domain);
     return {
       actionSheet,
       showLoadArticle,

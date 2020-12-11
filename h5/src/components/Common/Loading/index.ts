@@ -1,6 +1,7 @@
-import { render, createVNode } from "vue";
-import LoadingConstructor, { show } from "./Loading.vue";
-const loadingVM = createVNode(LoadingConstructor)
+import { render, createVNode, ref } from "vue";
+import LoadingConstructor from "./Loading.vue";
+const show = ref(false)
+const loadingVM = createVNode(LoadingConstructor, { show })
 const loadingEl = document.createElement("div")
 render(loadingVM, loadingEl);
 document.body.appendChild(loadingEl);
