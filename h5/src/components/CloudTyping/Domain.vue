@@ -16,13 +16,15 @@
     @select="actionSheet.onSelect"
     cancel-text="取消"
   />
+  <SelectCustomize :show="selectCustomizeVisible" />
 </template>
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";
 import {
   defineComponent,
   inject,
-  reactive
+  reactive,
+  ref
 } from "vue";
 import { IActionSheet, loadArticle, postArticle } from "./model/actionSheet";
 import {
@@ -36,11 +38,13 @@ import aSingleWord from "@/model/aSingleWord";
 import chinesePhrase from "@/model/chinesePhrase";
 import { shuffleArray } from "@/utils/utils";
 import ConfirmInput from "../Common/ConfirmInput";
+import SelectCustomize from './components/SelectCustomize.vue'
 export default defineComponent({
   name: "Domain",
+  components: { SelectCustomize },
   setup() {
     const { mutations: typingMutations }: any = inject(TypingSymbol);
-    
+    const selectCustomizeVisible = ref(true)
     // 下拉面板的功能区
     const actionSheet = (() => {
       const data = reactive({
@@ -143,6 +147,7 @@ export default defineComponent({
           switch (name) {
             case "自定义文章":
               console.log("好好好，准备给他发自定义文章");
+              selectCustomizeVisible.value = true
               break;
             case "随机一文":
               console.log("好好好，准备随机一文，OK");
@@ -210,6 +215,7 @@ export default defineComponent({
       actionSheet,
       showLoadArticle,
       showPostArticle,
+      selectCustomizeVisible
     };
   },
 });

@@ -19,13 +19,13 @@ export interface IRencentResult {
 }
 const store = new LocalStore('bb-recentResults')
 export default {
-    updateResults() {
+    initData() {
         store.initStore()
-        this.resultsList.value = store.toArray().slice(0, 10) as never
+        this.list.value = store.toArray().slice(0, 10) as never
     },
-    saveResult(result: IRencentResult) {
-        this.resultsList.value.unshift(result as never)
-        store.writeJson(this.resultsList.value)
+    add(result: IRencentResult) {
+        this.list.value.unshift(result as never)
+        store.writeJson(this.list.value)
     },
-    resultsList: ref([])
+    list: ref([])
 }

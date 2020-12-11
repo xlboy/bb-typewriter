@@ -27,6 +27,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "app-about",
         name: "AppAbout",
         component: () => import("../views/app-about/index.vue")
+      },
+      {
+        path: "add-customize-article",
+        name: "AddCustomizeArticle",
+        component: () => import("../views/cloud-typing/addCustomizeArticle.vue")
       }
     ]
   }

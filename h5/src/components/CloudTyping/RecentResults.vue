@@ -18,9 +18,9 @@ import recentResults from "./hooks/recentResults";
 export default defineComponent({
   name: "RecentResults",
   setup() {
-    recentResults.updateResults();  
+    recentResults.initData();  
     return {
-      resultsList: recentResults.resultsList,
+      resultsList: recentResults.list,
     };
   },
 });

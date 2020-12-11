@@ -84,8 +84,8 @@ export default defineComponent({
               .match(/(?<=.{5})[\d/ :]+/g)
               ?.join("") ?? "",
         };
-        recentResults.saveResult(resultObj);
-        recentResults.updateResults();
+        recentResults.add(resultObj);
+        recentResults.initData();
         
       },
       "downKey",
