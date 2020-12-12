@@ -81,7 +81,7 @@ export default defineComponent({
     height: 100%;
     border: 1px;
     box-sizing: border-box;
-    padding: 5px;
+    // padding: 5px;
     background: #fbfbfb;
     border-radius: 0px;
     transition: all 0.4s;

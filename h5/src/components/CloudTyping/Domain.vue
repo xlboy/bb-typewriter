@@ -1,9 +1,6 @@
 <template>
   <div class="domain">
-    <button
-      class="domain-button waves-btn"
-      @click="showLoadArticle"
-    >
+    <button class="domain-button waves-btn" @click="showLoadArticle">
       载文
     </button>
     <button class="domain-button waves-btn" @click="showPostArticle">
@@ -20,12 +17,7 @@
 </template>
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";
-import {
-  defineComponent,
-  inject,
-  reactive,
-  ref
-} from "vue";
+import { defineComponent, inject, reactive, ref } from "vue";
 import { IActionSheet, loadArticle, postArticle } from "./model/actionSheet";
 import {
   getGroupMatchArticle,
@@ -38,13 +30,14 @@ import aSingleWord from "@/model/aSingleWord";
 import chinesePhrase from "@/model/chinesePhrase";
 import { shuffleArray } from "@/utils/utils";
 import ConfirmInput from "../Common/ConfirmInput";
-import SelectCustomize from './components/SelectCustomize.vue'
+import SelectCustomize from "./components/SelectCustomize.vue";
+
 export default defineComponent({
   name: "Domain",
   components: { SelectCustomize },
   setup() {
     const { mutations: typingMutations }: any = inject(TypingSymbol);
-    const selectCustomizeVisible = ref(true)
+    const selectCustomizeVisible = ref(false);
     // 下拉面板的功能区
     const actionSheet = (() => {
       const data = reactive({
@@ -147,7 +140,7 @@ export default defineComponent({
           switch (name) {
             case "自定义文章":
               console.log("好好好，准备给他发自定义文章");
-              selectCustomizeVisible.value = true
+              selectCustomizeVisible.value = true;
               break;
             case "随机一文":
               console.log("好好好，准备随机一文，OK");
@@ -178,25 +171,23 @@ export default defineComponent({
         }
         // 处理发文：单字
         function onPostASingleWord(name: string) {
-          ConfirmInput.number({ label: "练习字数" }).then(
-            (size: any) => {
-              size = +size;
-              let wordContents: string[] = aSingleWord[name].split("");
-              // 如若输入的练习字数超过源文件的字数，则将源文件字数进行扩展大于练习字数
-              if (size > wordContents.length) {
-                const difference =
-                  ~~(size - wordContents.length) / wordContents.length;
-                wordContents = wordContents.concat(
-                  String(wordContents).repeat(difference).split("")
-                );
-              }
-              typingMutations.SetSource({
-                content: shuffleArray(wordContents).slice(0, size).join(""),
-                index: 1,
-              });
-              Notify("载入成功，干它丫的吧");
+          ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
+            size = +size;
+            let wordContents: string[] = aSingleWord[name].split("");
+            // 如若输入的练习字数超过源文件的字数，则将源文件字数进行扩展大于练习字数
+            if (size > wordContents.length) {
+              const difference =
+                ~~(size - wordContents.length) / wordContents.length;
+              wordContents = wordContents.concat(
+                String(wordContents).repeat(difference).split("")
+              );
             }
-          );
+            typingMutations.SetSource({
+              content: shuffleArray(wordContents).slice(0, size).join(""),
+              index: 1,
+            });
+            Notify("载入成功，干它丫的吧");
+          });
         }
       }
     })();
@@ -215,7 +206,7 @@ export default defineComponent({
       actionSheet,
       showLoadArticle,
       showPostArticle,
-      selectCustomizeVisible
+      selectCustomizeVisible,
     };
   },
 });

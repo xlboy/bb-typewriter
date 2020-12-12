@@ -19,10 +19,7 @@ export default defineComponent({
   emits: ["openSidebar"],
   setup(props, { emit }) {
     onMounted(() => {
-      interface GlobalThis {
-        loadlive2d: Function;
-      }
-      ((window as unknown) as GlobalThis).loadlive2d(
+      (window as any)?.loadlive2d?.(
         "live2d",
         "model/hijiki/hijiki.model.json"
       );
