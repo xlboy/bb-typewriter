@@ -1,23 +1,20 @@
 <template>
-  <div class="about">
-    你好，关于APP
-    <router-view></router-view>
-  </div>
+  <div>我真只为test而生</div>
 </template>
-
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "AppAbout",
+  name: "AddCustomizeArticle",
   setup() {
     return {};
-  }
+  },
 });
 </script>
-
-<style lang="less" scoped>
-.about {
-  width: 100%;
+<style lang="scss" scoped>
+.main {
   height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>

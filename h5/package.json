@@ -20,7 +20,7 @@
     "vant": "^3.0.0-rc.1",
     "vue": "^3.0.3",
     "vue-class-component": "^8.0.0-0",
-    "vue-router": "^4.0.0-0",
+    "vue-router": "4.0.1",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

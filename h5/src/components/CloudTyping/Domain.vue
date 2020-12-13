@@ -13,7 +13,7 @@
     @select="actionSheet.onSelect"
     cancel-text="取消"
   />
-  <SelectCustomize :show="selectCustomizeVisible" />
+  <SelectCustomize v-model:show="selectCustomizeVisible" />
 </template>
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";

@@ -1,6 +1,6 @@
 <template>
   <router-view v-slot="{ Component }">
-    <keep-alive :include="includeRoutes">
+    <keep-alive>
       <component :is="Component" />
     </keep-alive>
   </router-view>
@@ -11,10 +11,10 @@ import { defineComponent, reactive, toRefs } from "vue";
 export default defineComponent({
   setup() {
     const state = reactive({
-      includeRoutes: ["/about", "about"]
+      includeRoutes: [],
     });
     return { ...toRefs(state) };
-  }
+  },
 });
 </script>
 

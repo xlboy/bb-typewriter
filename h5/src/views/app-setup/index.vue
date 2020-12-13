@@ -1,6 +1,7 @@
 <template>
   <div class="setup">
     你好，APP设置
+    <button @click="$router.push({ name: 'AppAboutTest' })">to</button>
   </div>
 </template>
 

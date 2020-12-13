@@ -1,6 +1,12 @@
 <template>
   <div class="mini-apps">
     你好，这里是小程序大厅
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <router-view></router-view>
   </div>
 </template>
 

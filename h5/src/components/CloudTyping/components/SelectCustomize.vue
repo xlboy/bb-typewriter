@@ -1,12 +1,18 @@
 <template>
   <van-popup
+    class="select-customize"
     v-model:show="show"
     closeable
     close-icon="close"
     position="bottom"
     :style="{ height: '80%' }"
   >
-    <van-button @click="toAddPage"> 添加 </van-button>
+    <van-icon
+      class="select-customize__add-btn"
+      name="add-o"
+      size="21px"
+      @click="toAddPage"
+    />
     <van-swipe-cell v-for="(item, index) in customizeArticleList" :key="index">
       <template #left>
         <van-button square type="primary" text="练习" />
@@ -28,17 +34,11 @@ import { useRouter } from "vue-router";
 import customizeArticle from "../hooks/customizeArticle";
 export default defineComponent({
   name: "SelectCustomize",
-  props: {
-    // show: {
-    //   type: Boolean,
-    //   default: false,
-    // },
-  },
-  emits: ["update:show"],
+  emits: ["show:update"],
   setup() {
     const router = useRouter();
     function toAddPage() {
-      router.push({ name: "AddCustomizeArticle" });
+      router.push({ name: "test11" });
     }
     return {
       customizeArticleList: customizeArticle.list,
@@ -48,4 +48,14 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.select-customize {
+  box-sizing: border-box;
+  padding-top: 10px;
+  &__add-btn {
+    position: absolute;
+    left: 17px;
+    top: 15px;
+    color: #c8c9cc;
+  }
+}
 </style>
