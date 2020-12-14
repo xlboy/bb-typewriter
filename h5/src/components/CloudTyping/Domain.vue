@@ -6,6 +6,9 @@
     <button class="domain-button waves-btn" @click="showPostArticle">
       发文
     </button>
+    <button class="domain-button waves-btn" @click="showTypingModel">
+      模式
+    </button>
   </div>
   <van-action-sheet
     v-model:show="actionSheet.data.show"
@@ -18,7 +21,12 @@
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";
 import { defineComponent, inject, reactive, ref } from "vue";
-import { IActionSheet, loadArticle, postArticle } from "./model/actionSheet";
+import {
+  IActionSheet,
+  loadArticle,
+  postArticle,
+  typingModel,
+} from "./model/actionSheet";
 import {
   getGroupMatchArticle,
   getGroupLatestArticle,
@@ -26,11 +34,9 @@ import {
 import Notify from "@/utils/notify";
 import { TypingSymbol } from "@/hooks/useTyping";
 import typingGroup from "@/model/typingGroup";
-import aSingleWord from "@/model/aSingleWord";
-import chinesePhrase from "@/model/chinesePhrase";
-import { shuffleArray } from "@/utils/utils";
 import ConfirmInput from "../Common/ConfirmInput";
 import SelectCustomize from "./components/SelectCustomize.vue";
+import typingContent from "@/utils/typingContent";
 
 export default defineComponent({
   name: "Domain",
@@ -85,17 +91,29 @@ export default defineComponent({
             case "postArticle":
               onPostArticle(name);
               break;
+            case "typingModel":
+              onTypingModel(name);
+              break;
           }
         } catch (error) {
           Notify.danger("出错啦，快联系开发人员呀" + error);
           throw new Error(error);
         }
 
+        // 模式切换
+        function onTypingModel(name: string) {
+          data.actions.forEach((e: IActionSheet) => (e.disabled = false));
+          const action: any = data.actions.find(
+            (e: IActionSheet) => e.name === name
+          );
+          action.disabled = true;
+          typingMutations.SetTypingModel(name)
+        }
         // 处理载文
         function onLoadArticle(name: string) {
           switch (name) {
             case "剪贴板":
-              Notify.primary('功能正在开发中哦...')
+              Notify.primary("功能正在开发中哦...");
               break;
           }
         }
@@ -139,31 +157,19 @@ export default defineComponent({
         function onPostArticle(name: string) {
           switch (name) {
             case "自定义文章":
-              console.log("好好好，准备给他发自定义文章");
+              Notify("自定义文章有BUG,正在努力修复中...");
               selectCustomizeVisible.value = true;
               break;
             case "随机一文":
-              console.log("好好好，准备随机一文，OK");
+              Notify("随机一文功能正在努力开发中...");
               break;
           }
         }
         // 处理发文：常用词组
         function onPostChinesePhrase(name: string) {
           ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
-            size = +size;
-            const phraseContents: any[] = chinesePhrase[name];
-            // 如若输入的练习字数超过源文件的字数，则将源文件字数进行扩展大于练习字数
-            const phraseContentStr = phraseContents.join("");
-            if (size > phraseContentStr.length) {
-              const difference =
-                ~~(size - phraseContentStr.length) / phraseContentStr.length;
-              // 因为词组数组的原因，特殊处理，将相差数进行循环，再加入源文件至目标变量中
-              for (let i = 0; i < difference; i++) {
-                phraseContents.push(...phraseContents);
-              }
-            }
             typingMutations.SetSource({
-              content: shuffleArray(phraseContents).join("").substr(0, size),
+              content: typingContent.phrase(name, +size),
               index: 1,
             });
             Notify("载入成功，干它丫的吧");
@@ -172,18 +178,8 @@ export default defineComponent({
         // 处理发文：单字
         function onPostASingleWord(name: string) {
           ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
-            size = +size;
-            let wordContents: string[] = aSingleWord[name].split("");
-            // 如若输入的练习字数超过源文件的字数，则将源文件字数进行扩展大于练习字数
-            if (size > wordContents.length) {
-              const difference =
-                ~~(size - wordContents.length) / wordContents.length;
-              wordContents = wordContents.concat(
-                String(wordContents).repeat(difference).split("")
-              );
-            }
             typingMutations.SetSource({
-              content: shuffleArray(wordContents).slice(0, size).join(""),
+              content: typingContent.word(name, +size),
               index: 1,
             });
             Notify("载入成功，干它丫的吧");
@@ -202,10 +198,16 @@ export default defineComponent({
       actionSheet.setActions(postArticle);
       actionSheet.data.show = true;
     }
+    // 跟打模式选择
+    function showTypingModel() {
+      actionSheet.setActions(typingModel);
+      actionSheet.data.show = true;
+    }
     return {
       actionSheet,
       showLoadArticle,
       showPostArticle,
+      showTypingModel,
       selectCustomizeVisible,
     };
   },

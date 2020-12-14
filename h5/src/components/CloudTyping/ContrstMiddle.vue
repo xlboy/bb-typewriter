@@ -1,5 +1,5 @@
 <template>
-  <div class="contrst" id="elContrst">
+  <div class="contrst" :class="[seePlayTypingModelClass]" id="elContrst">
     <span
       v-for="(item, index) in currentPageChars"
       :key="index"
@@ -28,7 +28,6 @@ export default defineComponent({
 
     // 处理渲染对照区
     const renderContrst = (() => {
-
       // 练习内容的源数据，记载练习时的状态
       const contrstChars: IContrstCharObj[] = reactive([
         ...toContrstCharObjs(refState.source.content),
@@ -84,11 +83,15 @@ export default defineComponent({
       onMounted(() => {
         contrstPageScroll();
       });
-
+      // 所处模式,是否为看打模式,若是,则不显示对与错
+      const seePlayTypingModelClass = computed(() => {
+        return refState.typingModel === "看打模式" ? "contrst-see-play" : "";
+      });
       return {
         formatSpace,
         ...verifCorrect(),
         currentPageChars,
+        seePlayTypingModelClass,
       };
 
       // 处理录入内容的正确性验证
@@ -144,7 +147,7 @@ export default defineComponent({
               // 当输入的长度小于或等于 当页结尾字数的时候进行跳页。。
               if (newVal.length >= endIndex.value - turnSize) {
                 pageScroll.page.value++;
-                elContrst.scrollTop = 0
+                elContrst.scrollTop = 0;
               }
             }
           );
@@ -187,6 +190,14 @@ export default defineComponent({
   }
   .contrst-span__input-error {
     color: #ff0000;
+  }
+  &-see-play {
+    .contrst-span__have-input {
+      background: transparent;
+    }
+    .contrst-span__input-error {
+      color: inherit;
+    }
   }
 }
 </style>

@@ -2,10 +2,11 @@
   <div class="speed">
     <div class="speed-tag">第{{ refState.source.index }}段</div>
     <div class="speed-tag">{{ getSpeed }}</div>
-    <!-- <div class="speed-tag">{{ getKeystroke }}</div>
-    <div class="speed-tag">{{ getYardsLong }}</div> -->
     <div class="speed-btn waves-btn" @click="restartTyping">
       <van-icon name="replay" />
+    </div>
+    <div class="speed-btn waves-btn" @click="shareArticle">
+      <van-icon name="share-o" />
     </div>
     <div class="speed-btn waves-btn" @click="shareArticle">
       <van-icon name="share-o" />

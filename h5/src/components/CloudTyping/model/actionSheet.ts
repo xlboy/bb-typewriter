@@ -2,6 +2,7 @@ import typingGroups from '@/model/typingGroup'
 export interface IActionSheet {
     type: string,
     name: string,
+    disabled?: boolean,
     children?: IActionSheet[]
 }
 
@@ -58,5 +59,18 @@ export const postArticle: IActionSheet[] = [
     {
         type: 'postArticle',
         name: '自定义文章'
+    }
+]
+
+export const typingModel: IActionSheet[] = [
+    {
+        type: 'typingModel',
+        name: '跟打模式',
+        disabled: true
+    },
+    {
+        type: 'typingModel',
+        name: '看打模式',
+        disabled: false
     }
 ]

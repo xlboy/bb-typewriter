@@ -44,6 +44,8 @@ export default function (
         index: 1, // 练习内容的(序号/段号)
       },
       haveInput: '', // 已输入内容
+      typingModel: "跟打模式", // 练习模式, "跟打模式" | "看打模式"
+      typingType: "单字", // 练习类型, "单字" | "词组" | "自定义文章" | "剪贴板"
     }
   })
 
@@ -109,7 +111,13 @@ export default function (
     UpdateEndTime() {
       /* 更新结束时间 */
       state.aid.time.end = +new Date()
-    }
+    },
+    SetTypingModel(model: "跟打模式" | "看打模式") {
+      state.ref.typingModel = model
+    },
+    SetTypingType(type: "单字" | "词组" | "自定义文章" | "剪贴板") {
+      state.ref.typingType = type
+    },
   }
 
   // 注册键盘模式的监听
