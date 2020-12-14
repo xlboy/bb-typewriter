@@ -95,7 +95,7 @@ export default defineComponent({
         function onLoadArticle(name: string) {
           switch (name) {
             case "剪贴板":
-              console.log("进行剪贴板内容读取");
+              Notify.primary('功能正在开发中哦...')
               break;
           }
         }

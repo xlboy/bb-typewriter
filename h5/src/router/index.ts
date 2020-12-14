@@ -1,13 +1,11 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-// import test from '../views/cloud-typing/test.vue'
-// import test1 from '../views/layout/baseLayout.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Layout",
-    // redirect: "/cloud-typing",
+    redirect: "/cloud-typing",
     component: () =>
-      import(/* webpackChunkName: "layout" */ "../views/mini-apps/index.vue"),
+      import(/* webpackChunkName: "layout" */ "../views/layout/index.vue"),
     children: [
       {
         path: "cloud-typing",

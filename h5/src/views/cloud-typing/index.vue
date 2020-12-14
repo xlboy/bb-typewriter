@@ -1,107 +1,99 @@
 <template>
   <div class="typing">
-    <button @click="nb">为什么为什么为什么</button>
     <!-- 实时速度 -->
-    <!-- <div class="typing-speed">
+    <div class="typing-speed">
       <SpeedTop />
-    </div> -->
+    </div>
     <!-- 对照区 -->
-    <!-- <div class="typing-contrst">
+    <div class="typing-contrst">
       <ContrstMiddle />
-    </div> -->
+    </div>
     <!-- 输入框 -->
-    <!-- <div class="typing-input">
+    <div class="typing-input">
       <InputBox :id="typingInputId" />
-    </div> -->
+    </div>
     <!-- 最近十条练习记录 -->
-    <!-- <div class="typing-recent">
+    <div class="typing-recent">
       <RecentResults />
-    </div> -->
+    </div>
     <!-- 功能区 -->
-    <!-- <div class="typing-domain">
+    <div class="typing-domain">
       <Domain />
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-// import ContrstMiddle from "@/components/CloudTyping/ContrstMiddle.vue";
-// import InputBox from "@/components/CloudTyping/InputBox.vue";
-// import SpeedTop from "@/components/CloudTyping/SpeedTop.vue";
-// import RecentResults from "@/components/CloudTyping/RecentResults.vue";
-// import Domain from "@/compo  ents/CloudTyping/Domain.vue";
+import ContrstMiddle from "@/components/CloudTyping/ContrstMiddle.vue";
+import InputBox from "@/components/CloudTyping/InputBox.vue";
+import SpeedTop from "@/components/CloudTyping/SpeedTop.vue";
+import RecentResults from "@/components/CloudTyping/RecentResults.vue";
+import Domain from "@/components/CloudTyping/Domain.vue";
 
-// import { defineComponent, provide } from "vue";
-import { defineComponent } from "vue";
-import { useRouter } from "vue-router";
-// import useTyping, { TypingSymbol } from "@/hooks/useTyping";
-// import { ITypingResult } from "@/interface/ITyping";
-// import copyText from "@/utils/copyText";
-// import recentResults, {
-//   IRencentResult,
-// } from "@/components/CloudTyping/hooks/recentResults";
+import { defineComponent, provide } from "vue";
+import useTyping, { TypingSymbol } from "@/hooks/useTyping";
+import { ITypingResult } from "@/interface/ITyping";
+import copyText from "@/utils/copyText";
+import recentResults, {
+  IRencentResult,
+} from "@/components/CloudTyping/hooks/recentResults";
 export default defineComponent({
   name: "CloudTyping",
-  // components: { SpeedTop, ContrstMiddle, InputBox, RecentResults, Domain },
+  components: { SpeedTop, ContrstMiddle, InputBox, RecentResults, Domain },
   setup() {
-    const router = useRouter();
-    function nb() {
-      router.push({ name: 'AppAboutTest' });
-    }
-    // const typingInputId = "typing-input";
+    const typingInputId = "typing-input";
 
-    // const typing = useTyping(
-    //   // 每练习完成一次的回调
-    //   function (result: ITypingResult) {
-    //     // 将成绩复制到剪贴板中
-    //     const keyName: any = {
-    //       // #是占位符
-    //       speed: "速度#",
-    //       keystroke: "击键#",
-    //       yardsLong: "码长#",
-    //       totalTime: "耗时#s",
-    //       backSpace: "退格#",
-    //       backChange: "回改#",
-    //       totalKey: "总键数#",
-    //       totalCharSize: "总字数#",
-    //     };
-    //     const cIndex = (typing.refState as any).source?.index; // 当前练习段号
-    //     let resultsStr = `第${cIndex}段 `;
-    //     Object.entries(result).forEach(
-    //       ([k, v]) =>
-    //         keyName[k] && (resultsStr += `${keyName[k].replace("#", v)} `)
-    //     );
-    //     copyText(resultsStr);
+    const typing = useTyping(
+      // 每练习完成一次的回调
+      function (result: ITypingResult) {
+        // 将成绩复制到剪贴板中
+        const keyName: any = {
+          // #是占位符
+          speed: "速度#",
+          keystroke: "击键#",
+          yardsLong: "码长#",
+          totalTime: "耗时#s",
+          backSpace: "退格#",
+          backChange: "回改#",
+          totalKey: "总键数#",
+          totalCharSize: "总字数#",
+        };
+        const cIndex = (typing.refState as any).source?.index; // 当前练习段号
+        let resultsStr = `第${cIndex}段 `;
+        Object.entries(result).forEach(
+          ([k, v]) =>
+            keyName[k] && (resultsStr += `${keyName[k].replace("#", v)} `)
+        );
+        copyText(resultsStr);
 
-    //     // 更新最近十把成绩
-    //     const resultObj: IRencentResult = {
-    //       index: cIndex,
-    //       speed: result.speed,
-    //       keystroke: result.speed,
-    //       yardsLong: result.yardsLong,
-    //       totalTime: result.totalTime,
-    //       backSpace: result.backSpace,
-    //       backChange: result.backChange,
-    //       errorNum: result.errorNum,
-    //       totalKey: result.totalKey,
-    //       totalCharSize: result.totalCharSize,
-    //       insertTime:
-    //         new Date()
-    //           .toLocaleString()
-    //           .match(/(?<=.{5})[\d/ :]+/g)
-    //           ?.join("") ?? "",
-    //     };
-    //     recentResults.add(resultObj);
-    //     recentResults.initData();
-    //   },
-    //   "downKey",
-    //   typingInputId
-    // );
+        // 更新最近十把成绩
+        const resultObj: IRencentResult = {
+          index: cIndex,
+          speed: result.speed,
+          keystroke: result.speed,
+          yardsLong: result.yardsLong,
+          totalTime: result.totalTime,
+          backSpace: result.backSpace,
+          backChange: result.backChange,
+          errorNum: result.errorNum,
+          totalKey: result.totalKey,
+          totalCharSize: result.totalCharSize,
+          insertTime:
+            new Date()
+              .toLocaleString()
+              .match(/(?<=.{5})[\d/ :]+/g)
+              ?.join("") ?? "",
+        };
+        recentResults.add(resultObj);
+        recentResults.initData();
+      },
+      "downKey",
+      typingInputId
+    );
 
-    // provide(TypingSymbol, typing);
+    provide(TypingSymbol, typing);
     return {
-      // typingInputId,
-      nb,
+      typingInputId,
     };
   },
 });
