@@ -11,7 +11,8 @@ import {
   ActionSheet,
   Uploader,
   Popup,
-  NumberKeyboard
+  NumberKeyboard,
+  Popover
 } from "vant";
 
 const plugins = [
@@ -26,7 +27,8 @@ const plugins = [
   ActionSheet,
   Uploader,
   Popup,
-  NumberKeyboard
+  NumberKeyboard,
+  Popover
 ];
 
 export const vantPlugins = {

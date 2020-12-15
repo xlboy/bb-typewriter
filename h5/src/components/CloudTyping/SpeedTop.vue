@@ -5,31 +5,81 @@
     <div class="speed-btn waves-btn" @click="restartTyping">
       <van-icon name="replay" />
     </div>
-    <div class="speed-btn waves-btn" @click="shareArticle">
-      <van-icon name="share-o" />
-    </div>
-    <div class="speed-btn waves-btn" @click="shareArticle">
-      <van-icon name="share-o" />
-    </div>
+    <van-popover
+      v-model:show="menuActions.data.show"
+      :actions="menuActions.data.actions"
+      @select="menuActions.onSelect"
+      placement="bottom-end"
+      class="wdnmdb"
+      :style="{ height: '100%' }"
+    >
+      <template #reference>
+        <div class="speed-btn waves-btn">
+          <van-icon name="apps-o" />
+        </div>
+      </template>
+    </van-popover>
   </div>
 </template>
 <script lang="ts">
 import { TypingSymbol } from "@/hooks/useTyping";
 import copyText from "@/utils/copyText";
+import typingContent from "@/utils/typingContent";
 import { Toast } from "vant";
-import { defineComponent, inject } from "vue";
+import Notify from "@/utils/notify";
+import { defineComponent, inject, reactive } from "vue";
 export default defineComponent({
   name: "SpeedTop",
   setup() {
     const { getters, refState, mutations }: any = inject(TypingSymbol);
     const { getSpeed, getKeystroke, getYardsLong } = getters;
-    // 分享当前文章
-    function shareArticle() {
-      const { content, index } = refState.source;
-      const shareStr = `${content}\n-----第${index}段-----`;
-      Toast("小B已帮您复制至剪贴板，快去分享吧");
-      copyText(shareStr);
-    }
+
+    const menuActions = (() => {
+      const data = reactive({
+        show: false,
+        actions: [
+          { text: "分享内容", icon: "share-o" },
+          { text: "下一段", icon: "arrow-down" },
+        ],
+      });
+      function onSelect(action: { text: string }) {
+        console.log("进来了ow ");
+        switch (action.text) {
+          case "分享内容": {
+            const { content, index } = refState.source;
+            const shareStr = `${content}\n-----第${index}段-----`;
+            Toast("小B已帮您复制至剪贴板，快去分享吧");
+            copyText(shareStr);
+            break;
+          }
+          case "下一段": {
+            // 根据当前练习内容的类型来判定是否有下一段的操作
+            console.log('refState.typingType', refState.typingType)
+            const { type, data } = refState.typingType;
+            if (["单字", "词组"].includes(type)) {
+              if (data.size && data.name) {
+                const processMethod =
+                  typingContent[type === "单字" ? "word" : "phrase"];
+                mutations.SetSource({
+                  content: processMethod(data.name, data.size),
+                  index: refState.source.index + 1,
+                });
+                mutations.ResetTyping()
+                Notify("下一段成功，开始你的表演");
+              }
+            } else {
+              Notify.warning("下一段内容类型不匹配哦");
+            }
+            break;
+          }
+        }
+      }
+      return {
+        data,
+        onSelect,
+      };
+    })();
+
     // 重新开始
     function restartTyping() {
       Toast("刷新成功");
@@ -40,12 +90,13 @@ export default defineComponent({
       getKeystroke,
       getYardsLong,
       refState,
-      shareArticle,
+      menuActions,
       restartTyping,
     };
   },
 });
 </script>
+
 <style lang="scss" scoped>
 .speed {
   width: 100%;
@@ -84,6 +135,13 @@ export default defineComponent({
     &:nth-last-child(1) {
       margin-right: 0px;
     }
+  }
+}
+</style>
+<style lang="scss" >
+.speed {
+  .van-popover__wrapper {
+    height: 100%;
   }
 }
 </style>

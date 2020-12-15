@@ -107,7 +107,7 @@ export default defineComponent({
             (e: IActionSheet) => e.name === name
           );
           action.disabled = true;
-          typingMutations.SetTypingModel(name)
+          typingMutations.SetTypingModel(name);
         }
         // 处理载文
         function onLoadArticle(name: string) {
@@ -126,6 +126,7 @@ export default defineComponent({
           useRequest(getGroupLatestArticle(guid), function (result: any) {
             if (result.code === 200) {
               const { content, id } = result.result;
+              typingMutations.SetTypingType("群载文");
               typingMutations.SetSource({
                 content,
                 index: id,
@@ -144,6 +145,7 @@ export default defineComponent({
             if (result.code === 0) {
               const [data] = result?.data?.data;
               if (data) {
+                typingMutations.SetTypingType("群赛文");
                 typingMutations.SetSource({
                   content: data.content,
                   index: data.number,
@@ -168,6 +170,10 @@ export default defineComponent({
         // 处理发文：常用词组
         function onPostChinesePhrase(name: string) {
           ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
+            typingMutations.SetTypingType("词组", {
+              size,
+              name,
+            });
             typingMutations.SetSource({
               content: typingContent.phrase(name, +size),
               index: 1,
@@ -178,6 +184,10 @@ export default defineComponent({
         // 处理发文：单字
         function onPostASingleWord(name: string) {
           ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
+            typingMutations.SetTypingType("单字", {
+              size,
+              name,
+            });
             typingMutations.SetSource({
               content: typingContent.word(name, +size),
               index: 1,

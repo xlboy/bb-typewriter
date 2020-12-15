@@ -45,7 +45,10 @@ export default function (
       },
       haveInput: '', // 已输入内容
       typingModel: "跟打模式", // 练习模式, "跟打模式" | "看打模式"
-      typingType: "单字", // 练习类型, "单字" | "词组" | "自定义文章" | "剪贴板"
+      typingType: {
+        type: "", // 练习类型, "单字" | "词组" | "自定义文章" | "剪贴板"
+        data: {}, // 所带的自定义值,可能是字数,可能是其他
+      }
     }
   })
 
@@ -115,97 +118,98 @@ export default function (
     SetTypingModel(model: "跟打模式" | "看打模式") {
       state.ref.typingModel = model
     },
-    SetTypingType(type: "单字" | "词组" | "自定义文章" | "剪贴板") {
-      state.ref.typingType = type
+    SetTypingType(type: "单字" | "词组" | "自定义文章" | "剪贴板", data: object = {}) {
+      state.ref.typingType.type = type
+      state.ref.typingType.data = data
     },
-  }
+}
 
-  // 注册键盘模式的监听
-  function downKeyListenReg() {
-    // 如模式为downKey键盘监听模式，则给dom注册键盘事件
-    if (type === 'downKey') {
-      const inputDom = inputId && document.getElementById(inputId)
-      if (inputDom) {
-        inputDom.onkeydown = event => {
-          // 开打，计时，揍他丫的
-          if (state.aid.time.start === 0) mutations.UpdateStartTime()
+// 注册键盘模式的监听
+function downKeyListenReg() {
+  // 如模式为downKey键盘监听模式，则给dom注册键盘事件
+  if (type === 'downKey') {
+    const inputDom = inputId && document.getElementById(inputId)
+    if (inputDom) {
+      inputDom.onkeydown = event => {
+        // 开打，计时，揍他丫的
+        if (state.aid.time.start === 0) mutations.UpdateStartTime()
 
-          if (state.aid.time.end === 0) {
-            const { code } = event
-            switch (code) {
-              case 'Backspace':
-                mutations.AddBackSpace()
-                break;
-            }
-            mutations.AddTotalKey() // 总按下的键+1
-            mutations.UpdateTotalTime() // 更新当前总耗时间
+        if (state.aid.time.end === 0) {
+          const { code } = event
+          switch (code) {
+            case 'Backspace':
+              mutations.AddBackSpace()
+              break;
           }
+          mutations.AddTotalKey() // 总按下的键+1
+          mutations.UpdateTotalTime() // 更新当前总耗时间
         }
       }
     }
   }
+}
 
-  // 练习完成事件
-  function typingFinish() {
-    mutations.UpdateEndTime()
-    const errorNum = ((num = 0, target = state.ref): number => {
-      /* 计算错误的字数 */
-      target.haveInput.split('').forEach((v, i) => v !== target.source.content[i] && num++)
-      return num
-    })()
+// 练习完成事件
+function typingFinish() {
+  mutations.UpdateEndTime()
+  const errorNum = ((num = 0, target = state.ref): number => {
+    /* 计算错误的字数 */
+    target.haveInput.split('').forEach((v, i) => v !== target.source.content[i] && num++)
+    return num
+  })()
 
-    const typingResults: ITypingResult = {
-      speed: getters.getSpeed.value,
-      keystroke: getters.getKeystroke.value,
-      yardsLong: getters.getYardsLong.value,
-      totalTime: state.aid.time.total,
-      backSpace: state.aid.basis.backSpace,
-      backChange: state.aid.basis.backChange,
-      totalKey: state.aid.basis.totalKey,
-      errorNum,
-      totalCharSize: state.ref.source.content.length
-    }
-    finishCallback(typingResults)
+  const typingResults: ITypingResult = {
+    speed: getters.getSpeed.value,
+    keystroke: getters.getKeystroke.value,
+    yardsLong: getters.getYardsLong.value,
+    totalTime: state.aid.time.total,
+    backSpace: state.aid.basis.backSpace,
+    backChange: state.aid.basis.backChange,
+    totalKey: state.aid.basis.totalKey,
+    errorNum,
+    totalCharSize: state.ref.source.content.length
   }
+  finishCallback(typingResults)
+}
 
-  onMounted(() => {
-    downKeyListenReg()
+onMounted(() => {
+  downKeyListenReg()
+})
+
+watch(
+  () => state.ref.haveInput,
+  (newVal, oldVal) => {
+    const sourceContextLength = state.ref.source.content.length
+    state.ref.haveInput = state.ref.haveInput.substr(0, sourceContextLength) // 过滤输入框的值，不允超过练习内容长度
+
+    const { time } = state.aid
+
+    // 输入框清空咯，重置打字数据
+    if (newVal.length === 0) mutations.ResetTyping()
+
+    // end == 0 （打字未结束）
+    if (time.end === 0) {
+      // start != 0（打字进行中）
+      if (time.start !== 0) {
+
+        if (type === 'inputVal') mutations.UpdateTotalTime() // 实时更新总耗时间，计算实时的打字速度
+
+      } else if (type === 'inputVal') mutations.UpdateStartTime() // 更新开始时间
+
+      // 判断是否回改
+      if (newVal.length < oldVal.length) {
+        const changeNum = Math.abs(newVal.length - oldVal.length)
+        mutations.SetBackChange(changeNum)
+      }
+
+      // 练习完成
+      if (newVal.length === sourceContextLength) typingFinish()
+    }
   })
 
-  watch(
-    () => state.ref.haveInput,
-    (newVal, oldVal) => {
-      const sourceContextLength = state.ref.source.content.length
-      state.ref.haveInput = state.ref.haveInput.substr(0, sourceContextLength) // 过滤输入框的值，不允超过练习内容长度
-
-      const { time } = state.aid
-
-      // 输入框清空咯，重置打字数据
-      if (newVal.length === 0) mutations.ResetTyping()
-
-      // end == 0 （打字未结束）
-      if (time.end === 0) {
-        // start != 0（打字进行中）
-        if (time.start !== 0) {
-
-          if (type === 'inputVal') mutations.UpdateTotalTime() // 实时更新总耗时间，计算实时的打字速度
-
-        } else if (type === 'inputVal') mutations.UpdateStartTime() // 更新开始时间
-
-        // 判断是否回改
-        if (newVal.length < oldVal.length) {
-          const changeNum = Math.abs(newVal.length - oldVal.length)
-          mutations.SetBackChange(changeNum)
-        }
-
-        // 练习完成
-        if (newVal.length === sourceContextLength) typingFinish()
-      }
-    })
-
-  return {
-    refState: state.ref,
-    getters,
-    mutations
-  }
+return {
+  refState: state.ref,
+  getters,
+  mutations
+}
 }
