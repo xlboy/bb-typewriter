@@ -1,6 +1,6 @@
 # vue3-ts-h5-bbTypewriter
 ## 一款基于Vue3.0 + TypeScript 的Webapp移动端打字练习软件，为五笔、音形文字录入爱好者而生的打字机。
-
+<a href="http://xlboy.cn:8484/" target="_blank">预览地址</a>
 📖 `Vue3.0` 相关文档：
 
 | 相关库名称 | 在线地址 🔗 |
@@ -23,4 +23,6 @@
 
 ## 感谢
 [vue3-ts-template-h5](https://github.com/weizhanzhan/vue3-ts-template-h5)
+
+
 [vue-h5-template](https://github.com/sunniejs/vue-h5-template)
