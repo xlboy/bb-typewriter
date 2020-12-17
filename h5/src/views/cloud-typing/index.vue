@@ -4,6 +4,13 @@
     <div class="typing-speed">
       <SpeedTop />
     </div>
+    <!-- 实时进度条 -->
+    <div class="typing-progress">
+      <div
+        class="typing-progress-fill"
+        :style="{ width: finishProgress + '%' }"
+      ></div>
+    </div>
     <!-- 对照区 -->
     <div class="typing-contrst">
       <ContrstMiddle />
@@ -30,7 +37,7 @@ import SpeedTop from "@/components/CloudTyping/SpeedTop.vue";
 import RecentResults from "@/components/CloudTyping/RecentResults.vue";
 import Domain from "@/components/CloudTyping/Domain.vue";
 
-import { defineComponent, provide } from "vue";
+import { computed, defineComponent, provide } from "vue";
 import useTyping, { TypingSymbol } from "@/hooks/useTyping";
 import { ITypingResult } from "@/interface/ITyping";
 import copyText from "@/utils/copyText";
@@ -91,40 +98,56 @@ export default defineComponent({
       typingInputId
     );
 
+    const finishProgress = computed(() => {
+      return typing.getters.getHasInputProgress.value;
+    });
     provide(TypingSymbol, typing);
     return {
       typingInputId,
+      finishProgress,
     };
   },
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .typing {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
   padding: 5px;
-  .typing-speed {
+  &-speed {
     width: 100%;
     height: 30px;
   }
-  .typing-contrst {
+  &-progress {
+    width: 100%;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 100px;
+    background: #f0f0f0;
+    margin-top: 5px;
+    &-fill {
+      height: 100%;
+      background: var(--theme-color);
+      transition: all 0.7s;
+    }
+  }
+  &-contrst {
     width: 100%;
     height: 150px;
-    margin-top: 5px;
   }
-  .typing-input {
+  &-input {
     width: 100%;
     height: 50px;
     margin-top: 7px;
   }
-  .typing-recent {
+  &-recent {
     width: 100%;
     margin-top: 7px;
     height: 90px;
   }
-  .typing-domain {
+  &-domain {
     width: 100%;
     height: auto;
     margin-top: 7px;

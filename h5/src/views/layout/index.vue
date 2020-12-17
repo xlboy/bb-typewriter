@@ -66,7 +66,7 @@ export default defineComponent({
   height: 100vh;
   float: left;
   position: relative;
-  overflow: auto;
+  overflow: hidden;;
   background: var(--sidebar-bg);
   .app-sidebar {
     box-sizing: border-box;

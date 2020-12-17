@@ -5,6 +5,9 @@
     <div class="speed-btn waves-btn" @click="restartTyping">
       <van-icon name="replay" />
     </div>
+    <div class="speed-btn waves-btn" @click="switchFullScreen">
+      <van-icon name="expand-o" />
+    </div>
     <van-popover
       v-model:show="menuActions.data.show"
       :actions="menuActions.data.actions"
@@ -34,6 +37,19 @@ export default defineComponent({
     const { getters, refState, mutations }: any = inject(TypingSymbol);
     const { getSpeed, getKeystroke, getYardsLong } = getters;
 
+    // 切换全屏
+    const switchFullScreen = (() => {
+      let isFullScreen = false;
+      function onSwitch() {
+        isFullScreen
+          ? document.exitFullscreen()
+          : document.body.requestFullscreen();
+        isFullScreen = !isFullScreen;
+      }
+      return onSwitch
+    })();
+
+    // 小菜单
     const menuActions = (() => {
       const data = reactive({
         show: false,
@@ -42,6 +58,7 @@ export default defineComponent({
           { text: "下一段", icon: "arrow-down" },
         ],
       });
+
       function onSelect(action: { text: string }) {
         console.log("进来了ow ");
         switch (action.text) {
@@ -54,7 +71,6 @@ export default defineComponent({
           }
           case "下一段": {
             // 根据当前练习内容的类型来判定是否有下一段的操作
-            console.log('refState.typingType', refState.typingType)
             const { type, data } = refState.typingType;
             if (["单字", "词组"].includes(type)) {
               if (data.size && data.name) {
@@ -64,7 +80,7 @@ export default defineComponent({
                   content: processMethod(data.name, data.size),
                   index: refState.source.index + 1,
                 });
-                mutations.ResetTyping()
+                mutations.ResetTyping();
                 Notify("下一段成功，开始你的表演");
               }
             } else {
@@ -92,6 +108,7 @@ export default defineComponent({
       refState,
       menuActions,
       restartTyping,
+      switchFullScreen
     };
   },
 });
