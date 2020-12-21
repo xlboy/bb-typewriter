@@ -1,7 +1,6 @@
 <template>
   <div class="base-layout">
-    123
-    <!-- <div class="base-layout__header">
+    <div class="base-layout__header">
       <van-icon name="arrow-left" @click="onClickLeft" />
       <van-icon
         :name="navBar.rightIconName"
@@ -9,31 +8,30 @@
         @click="onClickRight"
       />
       <span class="base-layout__header-title">{{ navBar.title }}</span>
-    </div> -->
+    </div>
     <router-view class="base-layout__view"></router-view>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-// import useBaseLayout from "@/hooks/useBaseLayout";
-// import { useRouter } from "vue-router";
+import useBaseLayout from "@/hooks/useBaseLayout";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "BaseLayout",
   setup() {
-    // const baseLayout = useBaseLayout();
-    // const router = useRouter();
-    // function onClickLeft() {
-    //   router.back();
-    // }
-    // function onClickRight() {
-    //   // baseLayout.navBar.rightClick?.();
-    // }
-    // return {
-    //   // navBar: baseLayout.navBar,
-    //   navBar: {},
-    //   onClickLeft,
-    //   onClickRight,
-    // };
+    const baseLayout = useBaseLayout();
+    const router = useRouter();
+    function onClickLeft() {
+      router.back();
+    }
+    function onClickRight() {
+      baseLayout.navBar.rightClick?.();
+    }
+    return {
+      navBar: baseLayout.navBar,
+      onClickLeft,
+      onClickRight,
+    };
   },
 });
 </script>

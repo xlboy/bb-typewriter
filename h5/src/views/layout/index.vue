@@ -10,13 +10,14 @@
         </keep-alive>
       </router-view>
     </div>
-    <Live2d @openSidebar="openSidebar" />
+    <!-- <Live2d @openSidebar="openSidebar" v-if="live2dShow" /> -->
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive } from "vue";
+import { computed, defineComponent, reactive, ref, watch } from "vue";
 import AppSidebar from "@/components/AppLayout/Sidebar.vue";
 import Live2d from "@/components/AppLayout/Live2d.vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Layout",
@@ -53,8 +54,26 @@ export default defineComponent({
         sidebarVisibleClass,
       };
     })();
+
+    // live2d模型模块（处理第三级路由时产生的live2d内存溢出）
+    const live2d = (() => {
+      const show = ref(true);
+      const router = useRouter();
+      // 路由发生改变后，判断是否为第三级子路由页面，若是则隐藏掉live2d模型，因为会触发不明所以的内存溢出。。。
+      watch(
+        () => router.currentRoute.value.fullPath,
+        (newVal) => {
+          console.log("newVal", newVal);
+          show.value = !/base-layout/.test(newVal);
+        }
+      );
+      return {
+        live2dShow: show,
+      };
+    })();
     return {
       ...appSidebar,
+      ...live2d,
     };
   },
 });
@@ -66,7 +85,7 @@ export default defineComponent({
   height: 100vh;
   float: left;
   position: relative;
-  overflow: hidden;;
+  overflow: hidden;
   background: var(--sidebar-bg);
   .app-sidebar {
     box-sizing: border-box;

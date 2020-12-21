@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosPromise } from 'axios'
 import qs from 'qs'
 // 请求拦截器
 axios.interceptors.request.use(
@@ -35,10 +35,10 @@ axios.defaults.timeout = 10000
 export default function request(
     method: 'post' | 'get' | 'put' | 'patch',
     url: string,
-    data: object | string,
+    data: object | string = '',
     isDefault = true,
     headers: any = {},
-) {
+): AxiosPromise<any> {
     const defaultBaseUrl = 'http://xlboy.cn:8988'
     url = isDefault ? `${defaultBaseUrl}${url}` : url
 

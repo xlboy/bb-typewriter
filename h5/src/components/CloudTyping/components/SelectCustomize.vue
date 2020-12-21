@@ -38,7 +38,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     function toAddPage() {
-      router.push({ name: "test11" });
+      router.push({ name: "AddCustomizeArticle" });
     }
     return {
       customizeArticleList: customizeArticle.list,

@@ -30,7 +30,7 @@ import {
 import {
   getGroupMatchArticle,
   getGroupLatestArticle,
-} from "@/api/getGroupArticle";
+} from "@/api/qqGroupArticle";
 import Notify from "@/utils/notify";
 import { TypingSymbol } from "@/hooks/useTyping";
 import typingGroup from "@/model/typingGroup";

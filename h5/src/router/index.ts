@@ -33,21 +33,21 @@ const routes: Array<RouteRecordRaw> = [
             component: () => import("../views/app-about/index.vue"),
           }
         ]
+      },
+      {
+        path: "/base-layout",
+        name: "BaseLayout",
+        component: () => import("../views/layout/base-layout.vue"),
+        children: [
+          {
+            path: "add-customize-article",
+            name: "AddCustomizeArticle",
+            component: () => import("../views/cloud-typing/add-customize-article.vue")
+          },
+        ]
       }
     ]
-  },
-  // {
-  //   path: "/base-layout",
-  //   name: "BaseLayout",
-  //   component: () => import("../views/layout/base-layout.vue"),
-  //   children: [
-  //     {
-  //       path: "test",
-  //       name: "test",
-  //       component: () => import("../views/app-about/index.vue")
-  //     },
-  //   ]
-  // }
+  }
 ];
 
 const router = createRouter({
