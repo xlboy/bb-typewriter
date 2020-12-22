@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <div class="sidebar-user">
+    <div class="sidebar-user" @click="toLogin">
       <img
         class="sidebar-user__avatar"
         src="http://q1.qlogo.cn/g?b=qq&nk=52852983&s=640"
@@ -76,9 +76,15 @@ export default defineComponent({
       };
     })();
     
+    // 去登录页面
+    function toLogin() {
+      router.push({ name: "AppLogin" })
+    }
+
     return {
       ...nav,
-      ...theme
+      ...theme,
+      toLogin
     };
   }
 });

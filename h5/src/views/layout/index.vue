@@ -11,19 +11,22 @@
       </router-view>
     </div>
     <!-- <Live2d @openSidebar="openSidebar" v-if="live2dShow" /> -->
+    <div class="app-suspension" @click="openSidebar">
+      <van-icon name="ellipsis" size="30" />
+    </div>
   </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref, watch } from "vue";
 import AppSidebar from "@/components/AppLayout/Sidebar.vue";
-import Live2d from "@/components/AppLayout/Live2d.vue";
+// import Live2d from "@/components/AppLayout/Live2d.vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Layout",
   components: {
     AppSidebar,
-    Live2d,
+    // Live2d,
   },
   setup() {
     // 处理侧边栏(Sidebar)的功能块
@@ -55,7 +58,8 @@ export default defineComponent({
       };
     })();
 
-    // live2d模型模块（处理第三级路由时产生的live2d内存溢出）
+    // live2d模型模块（处理第三级路由时产生的live2d内存溢出）(2020-12-21)
+    // 发现将live2d隐藏掉也无济于事，那只能换种方式了，此处留着，以后有长进了再看看 (2020-12-22)
     const live2d = (() => {
       const show = ref(true);
       const router = useRouter();
@@ -63,7 +67,6 @@ export default defineComponent({
       watch(
         () => router.currentRoute.value.fullPath,
         (newVal) => {
-          console.log("newVal", newVal);
           show.value = !/base-layout/.test(newVal);
         }
       );
@@ -87,6 +90,24 @@ export default defineComponent({
   position: relative;
   overflow: hidden;
   background: var(--sidebar-bg);
+  .app-suspension {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background: #2196f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: all 0.5s;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    &:hover{
+      transform: rotate(180deg);
+    }
+  }
   .app-sidebar {
     box-sizing: border-box;
     padding: 50px 0px;
@@ -107,11 +128,6 @@ export default defineComponent({
     position: fixed;
     top: 0%;
     transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
-  }
-  .app-suspension {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
   }
   &__open-sidebar {
     .app-container {

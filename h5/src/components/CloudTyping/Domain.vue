@@ -159,7 +159,6 @@ export default defineComponent({
         function onPostArticle(name: string) {
           switch (name) {
             case "自定义文章":
-              Notify("自定义文章有BUG,正在努力修复中...");
               selectCustomizeVisible.value = true;
               break;
             case "随机一文":

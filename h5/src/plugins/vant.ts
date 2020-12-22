@@ -12,7 +12,8 @@ import {
   Uploader,
   Popup,
   NumberKeyboard,
-  Popover
+  Popover,
+  SwipeCell
 } from "vant";
 
 const plugins = [
@@ -28,7 +29,8 @@ const plugins = [
   Uploader,
   Popup,
   NumberKeyboard,
-  Popover
+  Popover,
+  SwipeCell
 ];
 
 export const vantPlugins = {

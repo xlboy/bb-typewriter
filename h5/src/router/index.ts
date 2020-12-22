@@ -20,19 +20,12 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "app-setup",
         name: "AppSetup",
-        component: () => import("../views/app-setup/index.vue")
+        component: () => import("../views/app-setup.vue")
       },
       {
         path: "app-about",
         name: "AppAbout",
-        component: () => import("../views/app-about/index.vue"),
-        children: [
-          {
-            path: "test",
-            name: "AppAboutTest",
-            component: () => import("../views/app-about/index.vue"),
-          }
-        ]
+        component: () => import("../views/app-about.vue")
       },
       {
         path: "/base-layout",
@@ -44,6 +37,11 @@ const routes: Array<RouteRecordRaw> = [
             name: "AddCustomizeArticle",
             component: () => import("../views/cloud-typing/add-customize-article.vue")
           },
+          {
+            path: "app-login",
+            name: "AppLogin",
+            component: () => import("../views/app-login.vue")
+          }
         ]
       }
     ]

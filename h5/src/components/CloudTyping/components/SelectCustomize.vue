@@ -13,14 +13,18 @@
       size="21px"
       @click="toAddPage"
     />
-    <van-swipe-cell v-for="(item, index) in customizeArticleList" :key="index">
+    <van-swipe-cell
+      class="select-customize__swipe-item"
+      v-for="(item, index) in customizeArticleList"
+      :key="index"
+    >
       <template #left>
         <van-button square type="primary" text="练习" />
       </template>
       <van-cell
         :border="false"
         :title="item.title"
-        :value="`字数:${item.content.length}-当前进度:${item.currentIndex}`"
+        :value="`长度${item.content.length}  已打${item.currentIndex}`"
       />
       <template #right>
         <van-button square type="danger" text="删除" />
@@ -40,6 +44,8 @@ export default defineComponent({
     function toAddPage() {
       router.push({ name: "AddCustomizeArticle" });
     }
+    customizeArticle.initData();
+    console.log("重新触发啦", customizeArticle);
     return {
       customizeArticleList: customizeArticle.list,
       toAddPage,
@@ -47,15 +53,19 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .select-customize {
   box-sizing: border-box;
-  padding-top: 10px;
+  padding-top: 40px;
   &__add-btn {
     position: absolute;
     left: 17px;
     top: 15px;
     color: #c8c9cc;
+  }
+  &__swipe-item {
+    margin-bottom: 3px;
+    border-bottom: 1px solid rgba(51, 51, 51,.08);
   }
 }
 </style>

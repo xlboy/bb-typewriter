@@ -17,6 +17,8 @@
 import customizeArticle from "@/components/CloudTyping/hooks/customizeArticle";
 import useBaseLayout from "@/hooks/useBaseLayout";
 import { defineComponent, reactive } from "vue";
+import Notify from "@/utils/notify";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "AddCustomizeArticle",
   setup() {
@@ -27,12 +29,17 @@ export default defineComponent({
       currentIndex: 0,
     });
     const baseLayout = useBaseLayout();
+    const router = useRouter();
     baseLayout.setNavBar({
       title: "自定义文章添加",
       rightVisible: true,
       rightIconName: "aim",
       rightClick() {
         customizeArticle.add({ ...form });
+        Notify("自定义文章添加成功");
+        setTimeout(() => {
+          router.back();
+        }, 300);
       },
     });
     return {
