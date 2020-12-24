@@ -43,7 +43,8 @@ import { ITypingResult } from "@/interface/ITyping";
 import copyText from "@/utils/copyText";
 import recentResults, {
   IRencentResult,
-} from "@/components/CloudTyping/hooks/recentResults";
+} from "@/storeComposition/cloudTyping/recentResults";
+import { Toast } from "vant";
 export default defineComponent({
   name: "CloudTyping",
   components: { SpeedTop, ContrstMiddle, InputBox, RecentResults, Domain },
@@ -71,6 +72,8 @@ export default defineComponent({
           ([k, v]) =>
             keyName[k] && (resultsStr += `${keyName[k].replace("#", v)} `)
         );
+        resultsStr += "@bb打字机1.0";
+        Toast(resultsStr);
         copyText(resultsStr);
 
         // 更新最近十把成绩
@@ -92,7 +95,6 @@ export default defineComponent({
               ?.join("") ?? "",
         };
         recentResults.add(resultObj);
-        recentResults.initData();
       },
       "downKey",
       typingInputId

@@ -60,7 +60,6 @@ export default defineComponent({
       });
 
       function onSelect(action: { text: string }) {
-        console.log("进来了ow ");
         switch (action.text) {
           case "分享内容": {
             const { content, index } = refState.source;

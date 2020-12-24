@@ -1,16 +1,20 @@
-body{
+body {
   user-select: none;
 }
-.wx-flex{
+
+.wx-flex {
   display: flex;
 }
-.wx-flex-auto{
+
+.wx-flex-auto {
   flex: 1;
 }
-.wx-flex-sb{
+
+.wx-flex-sb {
   justify-content: space-between;
 }
-.wx-flex-column{
+
+.wx-flex-column {
   flex-direction: column;
 }
 
@@ -19,11 +23,13 @@ body{
   background: #eee;
   display: inline-block;
 }
+
 .identicon:after {
   content: '';
   clear: both;
   display: block;
 }
+
 .identicon div {
   float: left;
   height: 5px;
@@ -31,19 +37,24 @@ body{
   width: 5px;
   float: left;
 }
+
 .identicon div:nth-child(5n + 1) {
   clear: both;
 }
+
 .identicon div[data="1"] {
   background: red;
 }
+
 .identicon div[data="0"] {
   background: #eee !important;
 }
-.waves-btn{
+
+.waves-btn {
   position: relative;
   outline: none;
   overflow: hidden;
+
   &:after {
     width: 100%;
     padding-top: 100%;
@@ -55,19 +66,64 @@ body{
     left: 50%;
     top: 50%;
   }
+
   @keyframes btnAnm {
     from {
       transform: translate(-50%, -50%) scale(0);
       background: rgba(0, 0, 0, 0.45);
     }
+
     to {
       transform: translate(-50%, -50%) scale(1);
       background: transparent;
     }
   }
+
   &:hover {
     &:after {
       animation: btnAnm 0.7s;
     }
+  }
+}
+
+@for $i from 1 through 50 {
+  .m-left-#{$i} {
+    margin-left: (1px * $i);
+  }
+
+  .m-right-#{$i} {
+    margin-right: (1px * $i);
+  }
+
+  .m-top-#{$i} {
+    margin-top: (1px * $i);
+  }
+
+  .m-bottom-#{$i} {
+    margin-bottom: (1px * $i);
+  }
+
+  .p-left-#{$i} {
+    padding-left: (1px * $i);
+  }
+
+  .p-right-#{$i} {
+    padding-right: (1px * $i);
+  }
+
+  .p-top-#{$i} {
+    padding-top: (1px * $i);
+  }
+
+  .p-bottom-#{$i} {
+    padding-bottom: (1px * $i);
+  }
+
+  .p-basis-#{$i} {
+    padding: (1px * $i);
+  }
+
+  .m-basis-#{$i} {
+    margin: (1px * $i);
   }
 }

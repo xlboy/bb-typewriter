@@ -13,7 +13,8 @@ import {
   Popup,
   NumberKeyboard,
   Popover,
-  SwipeCell
+  SwipeCell,
+  Tag
 } from "vant";
 
 const plugins = [
@@ -30,7 +31,8 @@ const plugins = [
   Popup,
   NumberKeyboard,
   Popover,
-  SwipeCell
+  SwipeCell,
+  Tag
 ];
 
 export const vantPlugins = {

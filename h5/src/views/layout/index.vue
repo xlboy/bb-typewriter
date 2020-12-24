@@ -17,10 +17,9 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch } from "vue";
+import { computed, defineComponent, reactive } from "vue";
 import AppSidebar from "@/components/AppLayout/Sidebar.vue";
 // import Live2d from "@/components/AppLayout/Live2d.vue";
-import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Layout",
@@ -60,23 +59,23 @@ export default defineComponent({
 
     // live2d模型模块（处理第三级路由时产生的live2d内存溢出）(2020-12-21)
     // 发现将live2d隐藏掉也无济于事，那只能换种方式了，此处留着，以后有长进了再看看 (2020-12-22)
-    const live2d = (() => {
-      const show = ref(true);
-      const router = useRouter();
-      // 路由发生改变后，判断是否为第三级子路由页面，若是则隐藏掉live2d模型，因为会触发不明所以的内存溢出。。。
-      watch(
-        () => router.currentRoute.value.fullPath,
-        (newVal) => {
-          show.value = !/base-layout/.test(newVal);
-        }
-      );
-      return {
-        live2dShow: show,
-      };
-    })();
+    // const live2d = (() => {
+    //   const show = ref(true);
+    //   const router = useRouter();
+    //   // 路由发生改变后，判断是否为第三级子路由页面，若是则隐藏掉live2d模型，因为会触发不明所以的内存溢出。。。
+    //   watch(
+    //     () => router.currentRoute.value.fullPath,
+    //     (newVal) => {
+    //       show.value = !/base-layout/.test(newVal);
+    //     }
+    //   );
+    //   return {
+    //     live2dShow: show,
+    //   };
+    // })();
     return {
       ...appSidebar,
-      ...live2d,
+      // ...live2d,
     };
   },
 });

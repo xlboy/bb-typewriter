@@ -14,7 +14,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import recentResults from "./hooks/recentResults";
+import recentResults from "@/storeComposition/cloudTyping/recentResults";
 export default defineComponent({
   name: "RecentResults",
   setup() {

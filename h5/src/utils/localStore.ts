@@ -29,7 +29,7 @@ export default class LocalStore {
         return this.store
     }
     public toNumber(): number {
-        return +this.store
+        return isNaN(+this.store) ? 0 : +this.store
     }
     public writeText(text: string) {
         localStorage.setItem(this.key, text)

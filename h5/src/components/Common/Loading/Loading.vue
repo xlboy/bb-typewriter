@@ -3,7 +3,7 @@
     <img
       src="../../../assets/images/gif-loading.gif"
       class="loading-img"
-      alt=""
+      alt="加载表情GIF"
     />
   </div>
 </template>
@@ -11,12 +11,7 @@
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "Loading",
-  props: {
-    show: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  props: ["show"],
   setup(props) {
     return { ...props };
   },

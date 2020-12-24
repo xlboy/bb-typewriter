@@ -169,10 +169,7 @@ export default defineComponent({
         // 处理发文：常用词组
         function onPostChinesePhrase(name: string) {
           ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
-            typingMutations.SetTypingType("词组", {
-              size,
-              name,
-            });
+            typingMutations.SetTypingType("词组", { size, name });
             typingMutations.SetSource({
               content: typingContent.phrase(name, +size),
               index: 1,
@@ -183,10 +180,7 @@ export default defineComponent({
         // 处理发文：单字
         function onPostASingleWord(name: string) {
           ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
-            typingMutations.SetTypingType("单字", {
-              size,
-              name,
-            });
+            typingMutations.SetTypingType("单字", { size, name });
             typingMutations.SetSource({
               content: typingContent.word(name, +size),
               index: 1,
