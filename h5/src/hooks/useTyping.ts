@@ -6,7 +6,6 @@ export const TypingSymbol = Symbol('typing')
 
 /**
  * 
- * @param finishCallback 练习完成回调
  * @param type 打字监听的两种模式(downKey/inputVal)。
  * downKey是按下键盘某键进行监听，这里针对pc端。移动端是监听不到键盘按下某键的。在精准程度上，此模式会更佳
  * inputVal是监听输入框的值进行处理，这里精准程度不如downKey模式，但此模式兼容PC端与移动端。
@@ -14,7 +13,6 @@ export const TypingSymbol = Symbol('typing')
  */
 
 export default function (
-  finishCallback: IFinishCallback,
   type: 'downKey' | 'inputVal',
   inputId?: string
 ): IUseTyping {
@@ -51,6 +49,8 @@ export default function (
       }
     }
   })
+  // 练习完成的回调，不限于一处使用，可多处使用
+  const finishCallBacks: IFinishCallback[] = []
 
   // 计算处理的数据
   const getters = {
@@ -82,7 +82,6 @@ export default function (
       return (state.ref.haveInput.length / getters.getSourceContentLength.value) * 100
     })
   }
-
   // 抛出需要对数据进行改动的接口
   const mutations = {
     SetSource(source: ITypingSource) {
@@ -126,6 +125,9 @@ export default function (
       state.ref.typingType.type = type
       state.ref.typingType.data = data
     },
+    AddFinishCallBack(callBack: IFinishCallback) {
+      finishCallBacks.push(callBack)
+    }
   }
 
   // 注册键盘模式的监听
@@ -153,6 +155,7 @@ export default function (
     }
   }
 
+  
   // 练习完成事件
   function typingFinish() {
     mutations.UpdateEndTime()
@@ -173,7 +176,7 @@ export default function (
       errorNum,
       totalCharSize: state.ref.source.content.length
     }
-    finishCallback(typingResults)
+    finishCallBacks.forEach(fun => fun(typingResults))
   }
 
   onMounted(() => {

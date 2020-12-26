@@ -1,9 +1,10 @@
 <template>
   <van-popup
     class="select-customize"
-    v-model:show="show"
     closeable
     close-icon="close"
+    @clickOverlay="closePopup"
+    @clickCloseIcon="closePopup"
     position="bottom"
     :style="{ height: '80%' }"
   >
@@ -57,19 +58,27 @@
   </van-popup>
 </template>
 <script lang="ts">
-import { defineComponent, getCurrentInstance, inject, ref } from "vue";
+import { defineComponent, inject } from "vue";
 import { useRouter } from "vue-router";
 import customizeArticle from "@/storeComposition/cloudTyping/customizeArticle";
 import { TypingSymbol } from "@/hooks/useTyping";
 import ConfirmInput from "@/components/Common/ConfirmInput";
+import { Toast } from "vant";
 export default defineComponent({
   name: "SelectCustomize",
-  emits: ['update:show'],
+  emits: ["update:show"],
   setup(props, { emit }) {
     const router = useRouter();
-    const app: any = getCurrentInstance()
-    console.log('app', app)
-    const { mutations: typingMutations }: any = inject(TypingSymbol);
+    const { mutations: typingMutations, refState }: any = inject(TypingSymbol);
+    typingMutations.AddFinishCallBack(() => {
+      const { type, data } = refState.typingType
+      if (type === '自定义文章') {
+        customizeArticle.updateCurrentIndex(data.id, data.size)
+      }
+    });
+    function closePopup() {
+      emit("update:show", false);
+    }
     // 跳转添加自定义文章页面
     function toAddPage() {
       router.push({ name: "EditCustomizeArticle" });
@@ -83,14 +92,15 @@ export default defineComponent({
       ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
         size = +size;
         const { content } = customizeArticle.find(id);
+        if (content.currentIndex >= content.content.length) {
+          return Toast('内容已发空啦，快换段试试！')
+        }
         typingMutations.SetTypingType("自定义文章", { id, size });
         typingMutations.SetSource({
           content: content.content.substr(content.currentIndex, size),
           index: 1,
         });
-        emit('update:show', false)
-        // app.proxy.show = false
-
+        emit("update:show", false);
       });
     }
     // 删除某个自定义文章
@@ -107,7 +117,9 @@ export default defineComponent({
       // 在此处提前暴露一个show置模板中，提防组件编译时，没收到父组件传进来的参数而报的警告
       // Property "show" was accessed during render but is not defined on instance
       // 在暴露后，可提防编译时没发现show变量的警告。父组件传置进来的show会顶替掉setupComponent中返回的show
-      show: ref(false),
+      // 此处已通过另外一种方式解决，乱七八糟的。。(2020-12-26)
+      // show: ref(false),
+      closePopup
     };
   },
 });

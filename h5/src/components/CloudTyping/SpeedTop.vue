@@ -30,7 +30,9 @@ import copyText from "@/utils/copyText";
 import typingContent from "@/utils/typingContent";
 import { Toast } from "vant";
 import Notify from "@/utils/notify";
+
 import { defineComponent, inject, reactive } from "vue";
+import customizeArticle from "@/storeComposition/cloudTyping/customizeArticle";
 export default defineComponent({
   name: "SpeedTop",
   setup() {
@@ -46,7 +48,7 @@ export default defineComponent({
           : document.body.requestFullscreen();
         isFullScreen = !isFullScreen;
       }
-      return onSwitch
+      return onSwitch;
     })();
 
     // 小菜单
@@ -71,6 +73,10 @@ export default defineComponent({
           case "下一段": {
             // 根据当前练习内容的类型来判定是否有下一段的操作
             const { type, data } = refState.typingType;
+            const resetToast = () => {
+              mutations.ResetTyping();
+              Notify("下一段成功，开始你的表演");
+            };
             if (["单字", "词组"].includes(type)) {
               if (data.size && data.name) {
                 const processMethod =
@@ -79,12 +85,19 @@ export default defineComponent({
                   content: processMethod(data.name, data.size),
                   index: refState.source.index + 1,
                 });
-                mutations.ResetTyping();
-                Notify("下一段成功，开始你的表演");
+                resetToast();
               }
-            } else {
-              Notify.warning("下一段内容类型不匹配哦");
-            }
+            } else if (type === "自定义文章") {
+              const { content } = customizeArticle.find(data.id);
+              if (content.currentIndex >= content.content.length) {
+                return Notify.warning("内容已打完！快换一段吧！");
+              }
+              mutations.SetSource({
+                content: content.content.substr(content.currentIndex, data.size),
+                index: refState.source.index + 1,
+              });
+              resetToast();
+            } else Notify.warning("下一段内容类型不匹配哦");
             break;
           }
         }

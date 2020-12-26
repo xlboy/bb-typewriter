@@ -51,55 +51,52 @@ export default defineComponent({
   setup() {
     const typingInputId = "typing-input";
 
-    const typing = useTyping(
-      // 每练习完成一次的回调
-      function (result: ITypingResult) {
-        // 将成绩复制到剪贴板中
-        const keyName: any = {
-          // #是占位符
-          speed: "速度#",
-          keystroke: "击键#",
-          yardsLong: "码长#",
-          totalTime: "耗时#s",
-          backSpace: "退格#",
-          backChange: "回改#",
-          totalKey: "总键数#",
-          totalCharSize: "总字数#",
-        };
-        const cIndex = (typing.refState as any).source?.index; // 当前练习段号
-        let resultsStr = `第${cIndex}段 `;
-        Object.entries(result).forEach(
-          ([k, v]) =>
-            keyName[k] && (resultsStr += `${keyName[k].replace("#", v)} `)
-        );
-        resultsStr += "@bb打字机1.0";
-        Toast(resultsStr);
-        copyText(resultsStr);
+    const typing = useTyping("downKey", typingInputId);
+    // 每练习完成一次的回调
+    function finishTyping(result: ITypingResult) {
+      // 将成绩复制到剪贴板中
+      const keyName: any = {
+        // #是占位符
+        speed: "速度#",
+        keystroke: "击键#",
+        yardsLong: "码长#",
+        totalTime: "耗时#s",
+        backSpace: "退格#",
+        backChange: "回改#",
+        totalKey: "总键数#",
+        totalCharSize: "总字数#",
+      };
+      const cIndex = (typing.refState as any).source?.index; // 当前练习段号
+      let resultsStr = `第${cIndex}段 `;
+      Object.entries(result).forEach(
+        ([k, v]) =>
+          keyName[k] && (resultsStr += `${keyName[k].replace("#", v)} `)
+      );
+      resultsStr += "@bb打字机1.0";
+      Toast(resultsStr);
+      copyText(resultsStr);
 
-        // 更新最近十把成绩
-        const resultObj: IRencentResult = {
-          index: cIndex,
-          speed: result.speed,
-          keystroke: result.speed,
-          yardsLong: result.yardsLong,
-          totalTime: result.totalTime,
-          backSpace: result.backSpace,
-          backChange: result.backChange,
-          errorNum: result.errorNum,
-          totalKey: result.totalKey,
-          totalCharSize: result.totalCharSize,
-          insertTime:
-            new Date()
-              .toLocaleString()
-              .match(/(?<=.{5})[\d/ :]+/g)
-              ?.join("") ?? "",
-        };
-        recentResults.add(resultObj);
-      },
-      "downKey",
-      typingInputId
-    );
-
+      // 更新最近十把成绩
+      const resultObj: IRencentResult = {
+        index: cIndex,
+        speed: result.speed,
+        keystroke: result.speed,
+        yardsLong: result.yardsLong,
+        totalTime: result.totalTime,
+        backSpace: result.backSpace,
+        backChange: result.backChange,
+        errorNum: result.errorNum,
+        totalKey: result.totalKey,
+        totalCharSize: result.totalCharSize,
+        insertTime:
+          new Date()
+            .toLocaleString()
+            .match(/(?<=.{5})[\d/ :]+/g)
+            ?.join("") ?? "",
+      };
+      recentResults.add(resultObj);
+    }
+    typing.mutations.AddFinishCallBack(finishTyping)
     const finishProgress = computed(() => {
       return typing.getters.getHasInputProgress.value;
     });

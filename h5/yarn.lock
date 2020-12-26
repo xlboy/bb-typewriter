@@ -1232,7 +1232,7 @@
     "semver" "^7.3.2"
     "tsutils" "^3.17.1"
 
-"@vant/icons@^1.4.0":
+"@vant/icons@^1.5.0":
   "integrity" "sha512-qHQU3GiQ6AkpjhYni46xG+YOy36LNmbHFanyjvzi+fODu+pEKYwqfLWluv42Q9CM4hshNET8A+Vsr0pr2UVTnA=="
   "resolved" "https://registry.npmjs.org/@vant/icons/-/icons-1.5.0.tgz"
   "version" "1.5.0"
@@ -1249,10 +1249,12 @@
   dependencies:
     "@popperjs/core" "^2.5.4"
 
-"@vant/use@^0.1.0":
-  "integrity" "sha512-INLOc5l5sI4Zpdd0ayf6IlaDe48m1/OTtKjkkOIW9Hl5xgLQX+aycgDmOof6nwUtNaln8IbkxXpvx6ggxVJCxA=="
-  "resolved" "https://registry.npmjs.org/@vant/use/-/use-0.1.0.tgz"
-  "version" "0.1.0"
+"@vant/use@^1.0.0":
+  "integrity" "sha512-Ff9ZDF+PNZfIvnZEQFImlbj9mGXG1MoFdSYrUq/TTXibxT1n6iT+rqS/h/nLnzyjciha/qQQb0TApTSGWy5uSQ=="
+  "resolved" "https://registry.npmjs.org/@vant/use/-/use-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "@babel/runtime" "7.x"
 
 "@vue/babel-helper-vue-jsx-merge-props@^1.0.0":
   "integrity" "sha512-6tyf5Cqm4m6v7buITuwS+jHzPlIPxbFzEhXR5JGZpbrvOcp1hiQKckd305/3C7C36wFekNTQSxAtgeM0j0yoUw=="
@@ -9780,16 +9782,16 @@
     "spdx-correct" "^3.0.0"
     "spdx-expression-parse" "^3.0.0"
 
-"vant@^3.0.0-rc.1":
-  "integrity" "sha512-05VQFLHl5VRMXKpsw9brMk06XaBE4OiUgk/VdAmNFtILZUHgYHKQ64odOEdtRoHc4gU3dIDhbqPiuIiS3+dn6Q=="
-  "resolved" "https://registry.npmjs.org/vant/-/vant-3.0.0-rc.3.tgz"
-  "version" "3.0.0-rc.3"
+"vant@^3.0.0":
+  "integrity" "sha512-MU8VlNyC1bhkv229NAX/c5CpUsEGnQpkkroezIs+jw/4dxt9ai2wUjwg2GmtsGKJv8hxAIqgrAwIKetiWZcVeg=="
+  "resolved" "https://registry.npmjs.org/vant/-/vant-3.0.0.tgz"
+  "version" "3.0.0"
   dependencies:
     "@babel/runtime" "7.x"
-    "@vant/icons" "^1.4.0"
+    "@vant/icons" "^1.5.0"
     "@vant/lazyload" "^1.0.2"
     "@vant/popperjs" "^1.0.2"
-    "@vant/use" "^0.1.0"
+    "@vant/use" "^1.0.0"
 
 "vary@~1.1.2":
   "integrity" "sha1-IpnwLG3tMNSllhsLn3RSShj2NPw="
