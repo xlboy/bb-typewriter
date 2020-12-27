@@ -42,6 +42,11 @@ export default {
         (customizeArticle as ICustomizeArticle).currentIndex += addSize
         store.writeJson(this.list.value)
     },
+    resetCurrentIndex(id: number) {
+        const { content: customizeArticle } = this.find(id);
+        (customizeArticle as ICustomizeArticle).currentIndex = 0
+        store.writeJson(this.list.value)
+    },
     delete(id: number) {
         const { index } = this.find(id)
         this.list.value.splice(index, 1)

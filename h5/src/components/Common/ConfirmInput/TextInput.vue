@@ -1,44 +1,46 @@
 <template>
-  <van-popup
-    v-model:show="show"
-    closeable
-    close-icon="close"
-    position="top"
-    :style="{ height: '30%' }"
-  >
-    <van-field v-model="digit" type="digit" :label="inputLabel" />
-    <!-- <van-button round type="primary">确定</van-button> -->
-  </van-popup>
-  <van-number-keyboard
-    v-model="inputVal"
-    :show="show"
-    title="数字键盘"
-    close-button-text="完成"
-    @hide="closeInput"
-  />
+  <transition name="van-fade">
+    <van-dialog
+      v-model:show="show"
+      title="输入内容"
+      show-cancel-button
+      @confirm="onConfirm"
+    >
+      <van-field
+        class="main-content"
+        v-model="val"
+        rows="7"
+        label="内容"
+        type="textarea"
+        maxlength="20000"
+        placeholder="请输入内容"
+        show-word-limit
+      />
+    </van-dialog>
+  </transition>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 export default defineComponent({
   name: "ConfirmTextInput",
   props: {
-    inputLabel: {
-      type: String,
-      default: "标签",
-    },
     finishCall: {
       type: Function,
-      default: () => 1,
-    },
+      required: true,
+    }
   },
   setup(props) {
     const show = ref(true);
-    const inputVal = ref("");
-    function closeInput() {
+    const val = ref("");
+
+    function onConfirm() {
       show.value = false;
-      props.finishCall();
+      props.finishCall(val.value);
     }
-    return { show, inputVal, closeInput };
+    return {
+      show,
+      val
+    };
   },
 });
 </script>
@@ -46,6 +48,10 @@ export default defineComponent({
 .confirm {
   left: 0;
   top: 0;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  z-index: 999;
   background: rgba(0, 0, 0, 0.3);
   &-img {
     width: 120px;

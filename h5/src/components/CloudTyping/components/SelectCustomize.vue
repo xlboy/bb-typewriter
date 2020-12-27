@@ -23,8 +23,14 @@
         <van-button
           square
           type="primary"
-          text="练习"
-          @click="startPractice(item.id)"
+          text="重新练习"
+          @click="startPractice(item.id, true)"
+        />
+        <van-button
+          square
+          color="#b46e65"
+          text="继续练习"
+          @click="startPractice(item.id, false)"
         />
         <van-button
           square
@@ -71,9 +77,9 @@ export default defineComponent({
     const router = useRouter();
     const { mutations: typingMutations, refState }: any = inject(TypingSymbol);
     typingMutations.AddFinishCallBack(() => {
-      const { type, data } = refState.typingType
-      if (type === '自定义文章') {
-        customizeArticle.updateCurrentIndex(data.id, data.size)
+      const { type, data } = refState.typingType;
+      if (type === "自定义文章") {
+        customizeArticle.updateCurrentIndex(data.id, data.size);
       }
     });
     function closePopup() {
@@ -88,16 +94,19 @@ export default defineComponent({
       router.push({ name: "EditCustomizeArticle", query: { id } });
     }
     // 开始进行练习
-    function startPractice(id: number) {
+    function startPractice(id: number, isReset: boolean) {
       ConfirmInput.number({ label: "练习字数" }).then((size: any) => {
         size = +size;
         const { content } = customizeArticle.find(id);
-        if (content.currentIndex >= content.content.length) {
-          return Toast('内容已发空啦，快换段试试！')
+        if (isReset) {
+          customizeArticle.resetCurrentIndex(id);
+        } else if (content.currentIndex >= content.content.length) {
+          return Toast("内容已发空啦，快换段试试！");
         }
+        const currentIndex = isReset ? 0 : content.currentIndex
         typingMutations.SetTypingType("自定义文章", { id, size });
         typingMutations.SetSource({
-          content: content.content.substr(content.currentIndex, size),
+          content: content.content.substr(currentIndex, size),
           index: 1,
         });
         emit("update:show", false);
@@ -119,7 +128,7 @@ export default defineComponent({
       // 在暴露后，可提防编译时没发现show变量的警告。父组件传置进来的show会顶替掉setupComponent中返回的show
       // 此处已通过另外一种方式解决，乱七八糟的。。(2020-12-26)
       // show: ref(false),
-      closePopup
+      closePopup,
     };
   },
 });
@@ -139,7 +148,7 @@ export default defineComponent({
   }
   &__swipe-wrap {
     width: 100%;
-    min-height: 44px;
+    min-height: 43.5px;
     display: flex;
     box-sizing: border-box;
     padding: 0px 10px;
