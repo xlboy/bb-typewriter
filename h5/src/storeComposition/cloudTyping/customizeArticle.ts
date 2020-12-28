@@ -39,12 +39,15 @@ export default {
     },
     updateCurrentIndex(id: number, addSize: number) {
         const { content: customizeArticle } = this.find(id);
-        (customizeArticle as ICustomizeArticle).currentIndex += addSize
+        customizeArticle.currentIndex += addSize
+        if (customizeArticle.currentIndex > customizeArticle.content.length) {
+            customizeArticle.currentIndex = customizeArticle.content.length
+        }
         store.writeJson(this.list.value)
     },
     resetCurrentIndex(id: number) {
         const { content: customizeArticle } = this.find(id);
-        (customizeArticle as ICustomizeArticle).currentIndex = 0
+        customizeArticle.currentIndex = 0
         store.writeJson(this.list.value)
     },
     delete(id: number) {

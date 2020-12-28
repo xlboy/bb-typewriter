@@ -23,7 +23,7 @@
   </transition>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 export default defineComponent({
   name: "ConfirmNumberInput",
   props: {
@@ -39,7 +39,9 @@ export default defineComponent({
   setup(props) {
     const show = ref(true);
     const val = ref("");
-
+    onMounted(() => {
+      console.log('我被渲染了吗，这是')
+    })
     function closeInput() {
       show.value = false;
       props.finishCall(val.value);

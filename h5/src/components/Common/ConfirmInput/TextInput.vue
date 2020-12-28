@@ -39,7 +39,8 @@ export default defineComponent({
     }
     return {
       show,
-      val
+      val,
+      onConfirm
     };
   },
 });
