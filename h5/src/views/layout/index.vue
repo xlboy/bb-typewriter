@@ -96,7 +96,7 @@ export default defineComponent({
     width: 50px;
     height: 50px;
     border-radius: 100%;
-    background: #2196f3;
+    background: var(--theme-color);
     display: flex;
     align-items: center;
     justify-content: center;
