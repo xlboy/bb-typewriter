@@ -34,7 +34,7 @@ const plugins = [
   Popover,
   SwipeCell,
   Tag,
-  Dialog
+  Dialog.Component
 ];
 
 export const vantPlugins = {

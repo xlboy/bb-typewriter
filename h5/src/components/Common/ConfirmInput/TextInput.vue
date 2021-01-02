@@ -2,7 +2,7 @@
   <transition name="van-fade">
     <van-dialog
       v-model:show="show"
-      title="输入内容"
+      :title="label"
       show-cancel-button
       @confirm="onConfirm"
     >
@@ -24,23 +24,24 @@ import { defineComponent, ref } from "vue";
 export default defineComponent({
   name: "ConfirmTextInput",
   props: {
-    finishCall: {
-      type: Function,
-      required: true,
-    }
+    label: {
+      type: String,
+      default: "标签",
+    },
   },
-  setup(props) {
-    const show = ref(true);
+  emits: ["close", "resolve"],
+  setup(props, { emit }) {
     const val = ref("");
 
     function onConfirm() {
-      show.value = false;
-      props.finishCall(val.value);
+      emit("resolve", val.value);
+      val.value = "";
+      emit("close");
     }
     return {
-      show,
+      show: true,
       val,
-      onConfirm
+      onConfirm,
     };
   },
 });

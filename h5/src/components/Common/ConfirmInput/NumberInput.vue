@@ -23,7 +23,7 @@
   </transition>
 </template>
 <script lang="ts">
-import { defineComponent, getCurrentInstance, onMounted, ref } from "vue";
+import { defineComponent, ref } from "vue";
 export default defineComponent({
   name: "ConfirmNumberInput",
   props: {
@@ -35,6 +35,7 @@ export default defineComponent({
   emits: ["close", "resolve"],
   setup(props, { emit }) {
     const val = ref("");
+    // 这里有个有意思的BUG，哈哈
     function closeInput() {
       emit("resolve", val.value);
       val.value = "";

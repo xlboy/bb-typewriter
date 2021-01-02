@@ -30,7 +30,7 @@ export default defineComponent({
     setup(props, { slots }) {
         return () => {
             return (
-                <div class="popup" v-show={props.show}>
+                <div class="bb-popup" v-show={props.show}>
                     {slots?.default?.()}
                 </div>
             );

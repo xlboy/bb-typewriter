@@ -37,12 +37,13 @@ import typingGroup from "@/model/typingGroup";
 import ConfirmInput from "../Common/ConfirmInput";
 import SelectCustomize from "./components/SelectCustomize.vue";
 import typingContent from "@/utils/typingContent";
+import { IUseTyping } from "@/interface/ITyping";
 
 export default defineComponent({
   name: "Domain",
   components: { SelectCustomize },
   setup() {
-    const { mutations: typingMutations }: any = inject(TypingSymbol);
+    const { mutations: typingMutations } = inject(TypingSymbol) as IUseTyping;
     const selectCustomizeVisible = ref(false);
     // 下拉面板的功能区
     const actionSheet = (() => {
@@ -114,6 +115,16 @@ export default defineComponent({
           switch (name) {
             case "剪贴板":
               Notify.primary("功能正在开发中哦...");
+              ConfirmInput.text({
+                label: "剪贴板内容",
+              }).then((str: unknown) => {
+                typingMutations.SetTypingType("剪贴板");
+                typingMutations.SetSource({
+                  content: str,
+                  index: 1,
+                });
+                Notify("开始你的表演");
+              });
               break;
           }
         }

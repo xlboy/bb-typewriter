@@ -1249,10 +1249,10 @@
   dependencies:
     "@popperjs/core" "^2.5.4"
 
-"@vant/use@^1.0.0":
-  "integrity" "sha512-Ff9ZDF+PNZfIvnZEQFImlbj9mGXG1MoFdSYrUq/TTXibxT1n6iT+rqS/h/nLnzyjciha/qQQb0TApTSGWy5uSQ=="
-  "resolved" "https://registry.npmjs.org/@vant/use/-/use-1.0.0.tgz"
-  "version" "1.0.0"
+"@vant/use@^1.0.1":
+  "integrity" "sha512-sHMxuWhFwJyGd8kDtdsVLIBZOUP9Fe1dwwxfuspB56IrJz48TQrJeQXWK0nShjx/khONOMtLPZBdSUhkyIJl7A=="
+  "resolved" "https://registry.npmjs.org/@vant/use/-/use-1.0.2.tgz"
+  "version" "1.0.2"
   dependencies:
     "@babel/runtime" "7.x"
 
@@ -9782,16 +9782,16 @@
     "spdx-correct" "^3.0.0"
     "spdx-expression-parse" "^3.0.0"
 
-"vant@^3.0.0":
-  "integrity" "sha512-MU8VlNyC1bhkv229NAX/c5CpUsEGnQpkkroezIs+jw/4dxt9ai2wUjwg2GmtsGKJv8hxAIqgrAwIKetiWZcVeg=="
-  "resolved" "https://registry.npmjs.org/vant/-/vant-3.0.0.tgz"
-  "version" "3.0.0"
+"vant@^3.0.1":
+  "integrity" "sha512-LjvFoJgrNn1HXka9/vjpAKFz+a6NetrqS/H+2n6e380wkh21uQ45pNpn4ST33FXO23xdcBRuX0J6/G++JyQHaQ=="
+  "resolved" "https://registry.npmjs.org/vant/-/vant-3.0.1.tgz"
+  "version" "3.0.1"
   dependencies:
     "@babel/runtime" "7.x"
     "@vant/icons" "^1.5.0"
     "@vant/lazyload" "^1.0.2"
     "@vant/popperjs" "^1.0.2"
-    "@vant/use" "^1.0.0"
+    "@vant/use" "^1.0.1"
 
 "vary@~1.1.2":
   "integrity" "sha1-IpnwLG3tMNSllhsLn3RSShj2NPw="
