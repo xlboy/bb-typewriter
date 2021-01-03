@@ -28,7 +28,7 @@ function createInstance(type: componentType) {
             const confirmConstructor = (() => {
                 const state = reactive({
                     props: {},
-                    resolve() { 1; }
+                    resolve() { }
                 })
                 const component = type === 'number' ? NumberInputConstructor : TextInputConstructor
                 return {

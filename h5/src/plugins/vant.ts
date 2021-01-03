@@ -15,7 +15,10 @@ import {
   Popover,
   SwipeCell,
   Tag,
-  Dialog
+  Dialog,
+  Form,
+  Col,
+  Row
 } from "vant";
 
 const plugins = [
@@ -34,7 +37,10 @@ const plugins = [
   Popover,
   SwipeCell,
   Tag,
-  Dialog.Component
+  Dialog.Component,
+  Form,
+  Col,
+  Row
 ];
 
 export const vantPlugins = {

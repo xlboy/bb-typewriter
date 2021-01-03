@@ -34,3 +34,27 @@ export function saveUserCurrentWord(userId: number, wordId: number): AxiosPromis
         userId, wordId
     })
 }
+
+/**
+ * 
+ * @param username 用户名
+ * @param password 密码
+ * @description 用户登录
+ */
+export function userLogin(username: string, password: string) {
+    return request('post', '/login', {
+        username, password
+    })
+}
+
+/**
+ * 
+ * @param username 用户名
+ * @param password 密码
+ * @description 用户注册并登录
+ */
+export function userReg(username: string, password: string) {
+    return request('post', '/reg', {
+        username, password
+    })
+}

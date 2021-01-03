@@ -114,14 +114,24 @@ export default defineComponent({
         function onLoadArticle(name: string) {
           switch (name) {
             case "剪贴板":
-              Notify.primary("功能正在开发中哦...");
               ConfirmInput.text({
                 label: "剪贴板内容",
-              }).then((str: unknown) => {
+              }).then((str: any) => {
+                /*
+                 如若是文段格式↓，则正则匹配取出
+                 惺惺相惜惺惺相惜惺惺相惜惺惺相惜惺惺相惜小
+                 -----第1010段 
+                 */
+                const reg = /(.+)\n-{5}第(\d+)段.*/;
+                let content = str,
+                  index = 1;
+                if (reg.test(str)) {
+                  [, content, index] = str.match(reg);
+                }
                 typingMutations.SetTypingType("剪贴板");
                 typingMutations.SetSource({
-                  content: str,
-                  index: 1,
+                  content,
+                  index,
                 });
                 Notify("开始你的表演");
               });

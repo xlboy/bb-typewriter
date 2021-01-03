@@ -1,23 +1,21 @@
 <template>
-  <transition name="van-fade">
-    <van-dialog
-      v-model:show="show"
-      :title="label"
-      show-cancel-button
-      @confirm="onConfirm"
-    >
-      <van-field
-        class="main-content"
-        v-model="val"
-        rows="7"
-        label="内容"
-        type="textarea"
-        maxlength="20000"
-        placeholder="请输入内容"
-        show-word-limit
-      />
-    </van-dialog>
-  </transition>
+  <van-dialog
+    v-model:show="show"
+    :title="label"
+    show-cancel-button
+    @confirm="onConfirm"
+    @cancel="onCancel"
+  >
+    <van-field
+      v-model="val"
+      rows="7"
+      label="内容"
+      type="textarea"
+      maxlength="20000"
+      placeholder="请输入内容"
+      show-word-limit
+    />
+  </van-dialog>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
@@ -33,14 +31,21 @@ export default defineComponent({
   setup(props, { emit }) {
     const val = ref("");
 
-    function onConfirm() {
-      emit("resolve", val.value);
+    function closeReset() {
       val.value = "";
       emit("close");
+    }
+    function onConfirm() {
+      emit("resolve", val.value);
+      closeReset();
+    }
+    function onCancel() {
+      closeReset();
     }
     return {
       show: true,
       val,
+      onCancel,
       onConfirm,
     };
   },
