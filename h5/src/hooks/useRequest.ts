@@ -3,6 +3,7 @@ import loading from "@/components/Common/Loading/index";
 /**
  * 
  * @param funs 传入的请求方法，可能是单个也可能是多个
+ * @param callback 请求完成的回调，不论成功或失败
  * @param isLoading 是否需要显示加载过程
  */
 export default function (

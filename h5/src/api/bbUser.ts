@@ -58,3 +58,10 @@ export function userReg(username: string, password: string) {
         username, password
     })
 }
+
+
+export function getReadUserInfo(userId: number) {
+    return request('post', '/readUserInfo', {
+        userId
+    })
+}

@@ -31,9 +31,9 @@ export default defineComponent({
       currentIndex: 0,
     });
     const baseLayout = useBaseLayout();
-    const router = useRouter();
+    const $router = useRouter();
 
-    const customizeArticleId = router.currentRoute.value.query.id ?? "";
+    const customizeArticleId = $router.currentRoute.value.query.id ?? "";
     const currentMode = customizeArticleId === "" ? "添加" : "修改";
 
     // 如若是修改状态，初始化下数据
@@ -55,7 +55,7 @@ export default defineComponent({
         }
         Notify(`自定义文章${currentMode}成功`);
         setTimeout(() => {
-          router.back();
+          $router.back();
         }, 300);
       },
     });

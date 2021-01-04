@@ -17,7 +17,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive } from "vue";
+import { computed, defineComponent, provide, reactive } from "vue";
 import AppSidebar from "@/components/AppLayout/Sidebar.vue";
 // import Live2d from "@/components/AppLayout/Live2d.vue";
 
@@ -36,8 +36,10 @@ export default defineComponent({
       });
 
       function openSidebar() {
-        /* 打开Sidebar事件   */
         sidebar.visible = true;
+      }
+      function closeSidebar() {
+        sidebar.visible = false;
       }
       function switchContainer() {
         /* 切换容器 */
@@ -50,6 +52,8 @@ export default defineComponent({
         sidebar.visible ? "app-layout__open-sidebar" : ""
       ); // 是否打开Sidebar
 
+      // 抛给子组件，切换Layout侧边栏的方法
+      provide("AppSwitchSidebar", { openSidebar, closeSidebar });
       return {
         openSidebar,
         switchContainer,
@@ -103,7 +107,7 @@ export default defineComponent({
     color: #ffffff;
     transition: all 0.5s;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    &:hover{
+    &:hover {
       transform: rotate(180deg);
     }
   }

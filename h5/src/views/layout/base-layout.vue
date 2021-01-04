@@ -20,9 +20,9 @@ export default defineComponent({
   name: "BaseLayout",
   setup() {
     const baseLayout = useBaseLayout();
-    const router = useRouter();
+    const $router = useRouter();
     function onClickLeft() {
-      router.back();
+      $router.back();
     }
     function onClickRight() {
       baseLayout.navBar.rightClick?.();

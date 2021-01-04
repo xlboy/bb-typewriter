@@ -23,7 +23,11 @@
           ></van-col
         >
         <van-col span="10">
-          <van-button round type="success" block @click="onSubmit('regAndLogin')"
+          <van-button
+            round
+            type="success"
+            block
+            @click="onSubmit('regAndLogin')"
             >注册并登录</van-button
           ></van-col
         >
@@ -35,8 +39,9 @@
 <script lang="ts">
 import useBaseLayout from "@/hooks/useBaseLayout";
 import { Toast } from "vant";
-import { defineComponent, reactive } from "vue";
-import { mapActions } from "vuex";
+import { defineComponent, inject, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { mapActions, useStore } from "vuex";
 export default defineComponent({
   name: "AppLogin",
   setup() {
@@ -50,12 +55,10 @@ export default defineComponent({
       username: "",
       password: "",
     });
-    console.log('mapActions("user", ["login", "regAndLogin"])', mapActions("user", ["login", "regAndLogin"]))
-    const {
-      login: actionLogin,
-      regAndLogin: actionRegAndLogin,
-    } = mapActions("user", ["login", "regAndLogin"]);
 
+    const $store = useStore();
+    const $router = useRouter();
+    const AppSwitchSidebar = inject("AppSwitchSidebar") as any;
     function onSubmit(type: "login" | "regAndLogin") {
       const { username, password } = form;
       if (!username || !password) {
@@ -69,10 +72,32 @@ export default defineComponent({
       }
 
       async function userLogin() {
-        const result = await actionLogin({ username, password });
-        console.log("store.dispatch", result);
+        const result = await $store.dispatch("user/login", {
+          username,
+          password,
+        });
+        if (result) {
+          Toast("登陆成功，快遨游宇宙吧！");
+          $router.push({ name: "CloudTyping" });
+          AppSwitchSidebar.openSidebar();
+        } else {
+          Toast("账号或密码有误，请重试");
+        }
       }
-      async function userRegAndLogin() {}
+
+      async function userRegAndLogin() {
+        const result = await $store.dispatch("user/regAndLogin", {
+          username,
+          password,
+        });
+        if (result) {
+          Toast("注册成功，已为您自动，快遨游宇宙吧！");
+          $router.push({ name: "CloudTyping" });
+          AppSwitchSidebar.openSidebar();
+        } else {
+          Toast("用户名已存在，请重试");
+        }
+      }
     }
 
     return {

@@ -74,7 +74,7 @@ export default defineComponent({
   name: "SelectCustomize",
   emits: ["update:show"],
   setup(props, { emit }) {
-    const router = useRouter();
+    const $router = useRouter();
     const { mutations: typingMutations, refState }: any = inject(TypingSymbol);
     typingMutations.AddFinishCallBack(() => {
       const { type, data } = refState.typingType;
@@ -87,11 +87,11 @@ export default defineComponent({
     }
     // 跳转添加自定义文章页面
     function toAddPage() {
-      router.push({ name: "EditCustomizeArticle" });
+      $router.push({ name: "EditCustomizeArticle" });
     }
     // 跳转修改自定义文章页面
     function toEditPage(id: number) {
-      router.push({ name: "EditCustomizeArticle", query: { id } });
+      $router.push({ name: "EditCustomizeArticle", query: { id } });
     }
     // 开始进行练习
     function startPractice(id: number, isReset: boolean) {
