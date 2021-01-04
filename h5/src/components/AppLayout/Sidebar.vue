@@ -3,14 +3,17 @@
     <div class="sidebar-user">
       <img
         class="sidebar-user__avatar"
-        :src="`http://q1.qlogo.cn/g?b=qq&nk=${userInfo.qq}&s=640`"
+        :src="`http://q1.qlogo.cn/g?b=qq&nk=${user.info.value.qq}&s=640`"
       />
       <span class="sidebar-user__nickname" @click="toLogin">{{
-        userInfo.username
+        user.info.value.username
       }}</span>
-      <span class="sidebar-user__sign" v-show="userInfo.id !== 0">{{
-        userInfo.sign || "这个人很懒，什么都没有留下"
-      }}</span>
+      <span
+        class="sidebar-user__sign"
+        v-if="user.info.value.id !== 0"
+        @click="user.editSign"
+        >{{ user.info.value.sign || "这个人很懒，什么都没有留下" }}</span
+      >
     </div>
     <ul class="sidebar-nav">
       <li
@@ -35,20 +38,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, reactive } from "vue";
-import { useRouter } from "vue-router";
+import { computed, defineComponent, inject, reactive, toRefs } from "vue";
 import themeColors from "@/model/themeColors";
-import { mapState, useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 import { Toast } from "vant";
+import ConfirmInput from "../Common/ConfirmInput";
+import { saveUserSign } from "@/api/bbUser";
+import useRequest from "@/hooks/useRequest";
+
 export default defineComponent({
   name: "AppSidebar",
-  computed: {
-    userInfo() {
-      const $store = useStore();
-      const { sign, username, qq, id } = $store.state.user;
-      return { sign, username, qq, id };
-    },
-  },
   setup() {
     const $router = useRouter();
     const $store = useStore();
@@ -94,23 +94,52 @@ export default defineComponent({
 
     // 去登录页面
     function toLogin() {
+      if ($store.getters["user/isLogin"]) {
+        return Toast("个人中心正在开发中哦亲..");
+      }
       $router.push({ name: "AppLogin" });
       AppSwitchSidebar.closeSidebar();
     }
+    const user = (() => {
+      const info = computed(() => {
+        const { sign, username, qq, id } = $store.state.user;
+        return { sign, username, qq, id };
+      });
+      initInfo();
 
-    // 初始化用户数据
-    async function initUser() {
-      const userId = localStorage.getItem("userId");
-      if (userId) {
-        const initResult = await $store.dispatch("user/initUserInfo", +userId);
-        !initResult && Toast("用户数据初始化失败，请联系开发人员");
+      return {
+        info,
+        editSign,
+      };
+
+      function editSign() {
+        ConfirmInput.text({
+          label: "输入个性签名",
+          defaultVal: info.value.sign,
+        }).then((sign: any) => {
+          useRequest(saveUserSign(info.value.id, sign), (result: any) => {
+            Toast("更改成功");
+            $store.dispatch("user/initUserInfo");
+          });
+        });
       }
-    }
-    initUser();
+
+      async function initInfo() {
+        const userId = localStorage.getItem("userId");
+        if (userId) {
+          const initResult = await $store.dispatch(
+            "user/initUserInfo",
+            +userId
+          );
+          !initResult && Toast("用户数据初始化失败，请联系开发人员");
+        }
+      }
+    })();
     return {
       nav,
       theme,
       toLogin,
+      user,
     };
   },
 });

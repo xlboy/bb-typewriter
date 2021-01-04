@@ -59,9 +59,25 @@ export function userReg(username: string, password: string) {
     })
 }
 
-
+/**
+ * 
+ * @param userId 用户ID
+ * @description 获取用户的基本信息
+ */
 export function getReadUserInfo(userId: number) {
     return request('post', '/readUserInfo', {
         userId
+    })
+}
+
+/**
+ * 
+ * @param userId 用户ID
+ * @param sign 个签字符串
+ * @description 保存用户个性签名
+ */
+export function saveUserSign(userId: number, sign: string) {
+    return request('post', '/savaSign', {
+        userId, sign
     })
 }

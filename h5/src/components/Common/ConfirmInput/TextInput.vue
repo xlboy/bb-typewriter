@@ -18,7 +18,7 @@
   </van-dialog>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 export default defineComponent({
   name: "ConfirmTextInput",
   props: {
@@ -26,10 +26,18 @@ export default defineComponent({
       type: String,
       default: "标签",
     },
+    defaultVal: String,
   },
   emits: ["close", "resolve"],
   setup(props, { emit }) {
     const val = ref("");
+
+    watch(
+      () => props.defaultVal,
+      (newVal) => {
+        newVal && (val.value = newVal);
+      }
+    );
 
     function closeReset() {
       val.value = "";

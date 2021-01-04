@@ -12,10 +12,12 @@ interface IComponentType {
 type componentType = 'number' | 'text'
 
 interface IConfirmNumber {
-    label?: string
+    label?: string,
+    defaultVal?: string
 }
 interface IConfirmText {
-    label?: string
+    label?: string,
+    defaultVal?: string
 }
 
 const confirmInstance: IComponentType = {}

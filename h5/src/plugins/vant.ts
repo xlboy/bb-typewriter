@@ -18,7 +18,11 @@ import {
   Dialog,
   Form,
   Col,
-  Row
+  Row,
+  Divider,
+  Rate,
+  Grid,
+  GridItem
 } from "vant";
 
 const plugins = [
@@ -40,7 +44,11 @@ const plugins = [
   Dialog.Component,
   Form,
   Col,
-  Row
+  Row,
+  Divider,
+  Rate,
+  Grid,
+  GridItem
 ];
 
 export const vantPlugins = {

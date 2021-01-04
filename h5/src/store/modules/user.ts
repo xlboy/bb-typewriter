@@ -1,7 +1,7 @@
 import { getReadUserInfo, userLogin, userReg } from "@/api/bbUser";
 import useRequest from "@/hooks/useRequest";
 import { StoreOptions } from "vuex";
-import _, { join } from 'lodash'
+import _ from 'lodash'
 import { Toast } from "vant";
 interface IBBUserState {
   countSize: number;
@@ -34,6 +34,11 @@ const $state: IBBUserState = {
 export default {
   namespaced: true,
   state: _.cloneDeep($state),
+  getters: {
+    isLogin(state: IBBUserState) {
+      return state.id !== 0
+    }
+  },
   mutations: {
     SET_WORDS_HINT(state: IBBUserState, wordsHint) {
       Object.assign(state.wordsHint, wordsHint)
@@ -96,7 +101,10 @@ export default {
         })
       })
     },
-    async initUserInfo({ dispatch }, userId): Promise<boolean> {
+    async initUserInfo({ dispatch, state }, userId): Promise<boolean> {
+      if (userId === void 0) {
+        userId = state.id
+      }
       return await new Promise(r => {
         useRequest(getReadUserInfo(+userId), (result: any) => {
           if (result === '获取失败') {
@@ -109,6 +117,7 @@ export default {
       })
     },
     logout({ commit }) {
+      localStorage.removeItem('userId')
       commit('RESET_STATE')
     }
   },

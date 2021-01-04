@@ -59,6 +59,7 @@ export default defineComponent({
     const $store = useStore();
     const $router = useRouter();
     const AppSwitchSidebar = inject("AppSwitchSidebar") as any;
+
     function onSubmit(type: "login" | "regAndLogin") {
       const { username, password } = form;
       if (!username || !password) {
@@ -91,7 +92,7 @@ export default defineComponent({
           password,
         });
         if (result) {
-          Toast("注册成功，已为您自动，快遨游宇宙吧！");
+          Toast("注册成功，已为您自动登陆，快遨游宇宙吧！");
           $router.push({ name: "CloudTyping" });
           AppSwitchSidebar.openSidebar();
         } else {
