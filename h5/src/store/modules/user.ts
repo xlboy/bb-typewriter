@@ -6,6 +6,7 @@ import { Toast } from "vant";
 interface IBBUserState {
   countSize: number;
   currentWordId: number;
+  wordHintList: Array<any>
   wordsHint: {
     fourC: string;
     fourWord: string;
@@ -29,14 +30,22 @@ const $state: IBBUserState = {
   id: 0,
   sign: '',
   qq: 52852983,
+  wordHintList: [],
   username: '登陆/注册'
 };
 export default {
   namespaced: true,
   state: _.cloneDeep($state),
   getters: {
+    test(state: IBBUserState) {
+      return state.id
+    },
     isLogin(state: IBBUserState) {
       return state.id !== 0
+    },
+    baseInfo(state: IBBUserState) {
+      const { sign, username, qq, id } = state;
+      return { sign, username, qq, id };
     }
   },
   mutations: {

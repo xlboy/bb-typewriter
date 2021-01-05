@@ -41,7 +41,7 @@ import useBaseLayout from "@/hooks/useBaseLayout";
 import { Toast } from "vant";
 import { defineComponent, inject, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { mapActions, useStore } from "vuex";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "AppLogin",
   setup() {

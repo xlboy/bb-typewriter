@@ -28,8 +28,9 @@ axios.defaults.timeout = 10000
 /**
  * 
  * @param method 请求方式
- * @param isDefault 请求地址是否为默认，如默认则拼接传过来的接口。（因会外接其他接口，特此处理）
  * @param url 请求地址
+ * @param data 请求所带参数
+ * @param isDefault 请求地址是否为默认，如默认则拼接传过来的接口。（因会外接其他接口，特此处理）
  * @param headers 请求头
  */
 export default function request(

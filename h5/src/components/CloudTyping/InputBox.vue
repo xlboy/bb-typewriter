@@ -1,6 +1,6 @@
 <template>
   <div class="input">
-    <textarea v-model="refState.haveInput" :id="inputId" placeholder="hi,好久不见"></textarea>
+    <textarea v-model="refState.haveInput" :id="inputId" placeholder="点我进行录入练习吧!"></textarea>
   </div>
 </template>
 <script lang="ts">

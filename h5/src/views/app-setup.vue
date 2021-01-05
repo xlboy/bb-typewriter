@@ -1,6 +1,6 @@
 <template>
   <div class="setup">
-    <van-cell title="个人中心" is-link @click="toMyInfo" />
+    <van-cell title="个人中心" is-link @click="toMyMaterial" />
     <van-cell title="清除缓存" is-link @click="clearCache">
       <template #right-icon>
         <van-icon name="failure" class="search-icon" />
@@ -19,12 +19,14 @@ import Loading from "@/components/Common/Loading";
 import useBaseLayout from "@/hooks/useBaseLayout";
 import { Dialog, Toast } from "vant";
 import { defineComponent, inject } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 export default defineComponent({
   name: "AppSetup",
   setup() {
     const baseLayout = useBaseLayout();
     const $store = useStore();
+    const $router = useRouter();
     const AppSwitchSidebar = inject("AppSwitchSidebar") as any;
     baseLayout.setNavBar({
       title: "设置",
@@ -48,11 +50,16 @@ export default defineComponent({
         AppSwitchSidebar.openSidebar();
       });
     }
-    function toMyInfo() {
-      Toast('功能正在开发中..请耐心等待')
+    function toMyMaterial() {
+      if ($store.getters["user/isLogin"]) {
+        $router.push({ name: "MyMaterial" });
+      } else {
+        Toast("亲，这边先登陆哦")
+        $router.push({ name: 'AppLogin' })
+      }
     }
     return {
-      toMyInfo,
+      toMyMaterial,
       onLogout,
       clearCache,
     };

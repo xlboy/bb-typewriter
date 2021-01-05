@@ -10,7 +10,7 @@
       }}</span>
       <span
         class="sidebar-user__sign"
-        v-if="user.info.value.id !== 0"
+        v-if="$store.getters['user/isLogin']"
         @click="user.editSign"
         >{{ user.info.value.sign || "这个人很懒，什么都没有留下" }}</span
       >
@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, reactive, toRefs } from "vue";
+import { computed, defineComponent, inject, reactive } from "vue";
 import themeColors from "@/model/themeColors";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -53,7 +53,6 @@ export default defineComponent({
     const $router = useRouter();
     const $store = useStore();
     const AppSwitchSidebar = inject("AppSwitchSidebar") as any;
-
     // nav导航的功能处理
     const nav = (() => {
       const state = reactive({
@@ -95,11 +94,14 @@ export default defineComponent({
     // 去登录页面
     function toLogin() {
       if ($store.getters["user/isLogin"]) {
-        return Toast("个人中心正在开发中哦亲..");
+        AppSwitchSidebar.closeSidebar();
+        return $router.push({ name: "MyMaterial" });
       }
       $router.push({ name: "AppLogin" });
       AppSwitchSidebar.closeSidebar();
     }
+
+    // 用户块
     const user = (() => {
       const info = computed(() => {
         const { sign, username, qq, id } = $store.state.user;
@@ -117,7 +119,7 @@ export default defineComponent({
           label: "输入个性签名",
           defaultVal: info.value.sign,
         }).then((sign: any) => {
-          useRequest(saveUserSign(info.value.id, sign), (result: any) => {
+          useRequest(saveUserSign(info.value.id, sign), () => {
             Toast("更改成功");
             $store.dispatch("user/initUserInfo");
           });
@@ -135,11 +137,13 @@ export default defineComponent({
         }
       }
     })();
+
     return {
       nav,
       theme,
       toLogin,
       user,
+      test: $store.getters
     };
   },
 });

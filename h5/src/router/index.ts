@@ -41,6 +41,11 @@ const routes: Array<RouteRecordRaw> = [
             name: "MiniApps",
             component: () => import("../views/mini-apps/index.vue")
           },
+          {
+            path: "my-material",
+            name: "MyMaterial",
+            component: () => import("../views/my-material.vue")
+          },
         ]
       }
     ]

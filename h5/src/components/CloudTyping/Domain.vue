@@ -1,5 +1,8 @@
 <template>
   <div class="domain">
+    <van-divider dashed style="margin-top: 0px" content-position="left"
+      >基本功能</van-divider
+    >
     <button class="domain-button waves-btn" @click="showLoadArticle">
       载文
     </button>
@@ -9,6 +12,10 @@
     <button class="domain-button waves-btn" @click="showTypingModel">
       模式
     </button>
+    <van-divider dashed content-position="left">智能词提</van-divider>
+    <div>
+      <van-switch v-model="checked" size="24px" />
+    </div>
   </div>
   <van-action-sheet
     v-model:show="actionSheet.data.show"
@@ -38,7 +45,9 @@ import ConfirmInput from "../Common/ConfirmInput";
 import SelectCustomize from "./components/SelectCustomize.vue";
 import typingContent from "@/utils/typingContent";
 import { IUseTyping } from "@/interface/ITyping";
+import wordHint from "@/storeComposition/cloudTyping/wordHint";
 
+console.log(wordHint)
 export default defineComponent({
   name: "Domain",
   components: { SelectCustomize },
@@ -246,6 +255,8 @@ export default defineComponent({
   padding-top: 5px;
   &-button {
     font-size: 14px;
+    height: 30px;
+    line-height: 26px;
     box-sizing: border-box;
     letter-spacing: 1px;
     border: 0px;
@@ -255,7 +266,7 @@ export default defineComponent({
     color: var(--theme-color);
     background: transparent;
     transition: all 0.3s;
-    padding: 5px 10px;
+    padding: 0px 10px;
     border-radius: 100px;
     filter: opacity(50%);
     overflow: hidden;

@@ -10,5 +10,4 @@ files.keys().forEach(key => {
 });
 
 Realmodule = Object.assign({}, modules);
-
 export default Realmodule;

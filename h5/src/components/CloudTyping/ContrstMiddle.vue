@@ -24,7 +24,7 @@ import {
 export default defineComponent({
   name: "ContrstMiddle",
   setup() {
-    const { refState }: any = inject(TypingSymbol);
+    const { refState } = inject(TypingSymbol) as any;
 
     // 处理渲染对照区
     const renderContrst = (() => {

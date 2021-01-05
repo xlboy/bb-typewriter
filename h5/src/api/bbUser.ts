@@ -81,3 +81,14 @@ export function saveUserSign(userId: number, sign: string) {
         userId, sign
     })
 }
+
+/**
+ * 
+ * @param userId 用户ID
+ * @description 获取用户上传的词库
+ */
+export function getUserWordHint(userId: number) {
+    return request('post', '/readWord', {
+        userId
+    })
+}
