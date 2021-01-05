@@ -22,7 +22,9 @@ import {
   Divider,
   Rate,
   Grid,
-  GridItem
+  GridItem,
+  Switch,
+  Cascader
 } from "vant";
 
 const plugins = [
@@ -48,7 +50,9 @@ const plugins = [
   Divider,
   Rate,
   Grid,
-  GridItem
+  GridItem,
+  Switch,
+  Cascader
 ];
 
 export const vantPlugins = {

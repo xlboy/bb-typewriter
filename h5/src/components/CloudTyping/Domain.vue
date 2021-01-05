@@ -13,9 +13,16 @@
       模式
     </button>
     <van-divider dashed content-position="left">智能词提</van-divider>
-    <div>
-      <van-switch v-model="checked" size="24px" />
-    </div>
+    <van-row align="center">
+      <van-switch
+        v-model="wordHint.isOpen"
+        inactive-color="#dcdee0"
+        size="21px"
+      />
+      <van-tag type="primary" size="large" style="margin-left: 5px;">{{
+        wordHint.currentSelectWordName
+      }}</van-tag>
+    </van-row>
   </div>
   <van-action-sheet
     v-model:show="actionSheet.data.show"
@@ -47,10 +54,14 @@ import typingContent from "@/utils/typingContent";
 import { IUseTyping } from "@/interface/ITyping";
 import wordHint from "@/storeComposition/cloudTyping/wordHint";
 
-console.log(wordHint)
 export default defineComponent({
   name: "Domain",
   components: { SelectCustomize },
+  data() {
+    return {
+      wordHint,
+    };
+  },
   setup() {
     const { mutations: typingMutations } = inject(TypingSymbol) as IUseTyping;
     const selectCustomizeVisible = ref(false);

@@ -63,6 +63,9 @@ export default {
     },
     RESET_STATE(state: IBBUserState) {
       Object.assign(state, _.cloneDeep($state))
+    },
+    SET_USER_WORD_HINT_LIST(state: IBBUserState, list) {
+      state.wordHintList = list
     }
   },
   actions: {
