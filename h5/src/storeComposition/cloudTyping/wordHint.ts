@@ -4,12 +4,9 @@
 
 import { getDefaultWordHint, getQueryWordHint } from "@/api/bbPublic";
 import useRequest from "@/hooks/useRequest";
-import { computed, Ref, ref, toRef, watch } from "vue";
-import store from '@/store/'
+import { computed, reactive, Ref, ref, toRef, watch } from "vue";
+import store from "@/store/";
 import { getUserWordHint } from "@/api/bbUser";
-
-const $store = store as any
-const userCurrentWordId = toRef($store.state.user, 'currentWordId') as Ref<number>
 
 interface IWordHintObj {
     preceptName: string;
@@ -21,30 +18,32 @@ interface IWordHintAll {
     user: IWordHintObj[]
 }
 
+interface IWordHintState {
+    userWordId: Ref<number>;
+    defaultWord: IWordHintObj[],
+}
 
-// 系统默认词库 
-const defaultWordHintList: Ref<IWordHintObj[]> = ref([])
 
-// 当前用户状态发生了改变，则更新一次用户词库 
-watch(() => $store.state.user.id, (newVal) => {
-    if (newVal !== 0) {
-        console.log('userCurrentWordId', userCurrentWordId)
-        useRequest(getUserWordHint(newVal), (result: IWordHintObj[]) => {
-            $store.commit('user/SET_USER_WORD_HINT_LIST', result)
-        }, false)
+const $store = store as any;
+
+const state = reactive({
+    userWordId: toRef($store.state.user, 'currentWordId') as Ref<number>,
+    defaultWord: [] as IWordHintObj[],
+    get list() {
+        return 1
     }
-})
+} as IWordHintState)
 
-useRequest(getDefaultWordHint(), (result: IWordHintObj[]) => {
-    defaultWordHintList.value = result
-}, false)
+const getters = {
+
+}
 
 
 const wordHint = {
     list: computed(() => {
         const userWordHintList = $store.state.user.wordHintList
         return {
-            default: defaultWordHintList.value,
+            // default: defaultWord.value,
             user: userWordHintList
         }
     }),
@@ -52,10 +51,10 @@ const wordHint = {
     yardsLong: ref(false), // 文章码长
     hintContrst: ref([]), // 词提渲染数据格式
     currentSelectWordName: computed(() => {
-        const wordId = userCurrentWordId.value
+        const wordId = 1 //userWordId.value
         const list = wordHint.list.value as IWordHintAll;
         // 用户当前选中的词提码表为“未登陆状态的0”或者是“登陆后没选中某个码表的null”
-        if ([0, null].includes(userCurrentWordId.value)) {
+        if ([0, null].includes(1)) {
             return list.default?.[0]?.preceptName ?? '词库异常'
         }
         return [...list.default, ...list.user]
@@ -63,7 +62,7 @@ const wordHint = {
     }),
     updateHintContrst(str: string) {
         if (this.isOpen.value) {
-            useRequest(getQueryWordHint(str, userCurrentWordId.value), (result: any) => {
+            useRequest(getQueryWordHint(str, 1), (result: any) => {
                 const { llmc, wordAry, zjs } = result
                 this.hintContrst.value = wordAry
                 this.yardsLong.value = llmc
@@ -72,4 +71,18 @@ const wordHint = {
         }
     }
 }
+
+// 当前用户状态发生了改变，则更新一次用户词库 
+watch(() => $store.state.user.id, (newVal) => {
+    if (newVal !== 0) {
+        useRequest(getUserWordHint(newVal), (result: IWordHintObj[]) => {
+            $store.commit('user/SET_USER_WORD_HINT_LIST', result)
+        }, false)
+    }
+})
+// 初始化请求一遍默认词库
+useRequest(getDefaultWordHint(), (result: IWordHintObj[]) => {
+    state.defaultWord = result
+}, false)
+
 export default wordHint

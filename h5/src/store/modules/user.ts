@@ -1,9 +1,9 @@
 import { getReadUserInfo, userLogin, userReg } from "@/api/bbUser";
 import useRequest from "@/hooks/useRequest";
-import { StoreOptions } from "vuex";
+import { Module } from "vuex";
 import _ from 'lodash'
 import { Toast } from "vant";
-interface IBBUserState {
+export interface IBBUserState {
   countSize: number;
   currentWordId: number;
   wordHintList: Array<any>
@@ -37,9 +37,6 @@ export default {
   namespaced: true,
   state: _.cloneDeep($state),
   getters: {
-    test(state: IBBUserState) {
-      return state.id
-    },
     isLogin(state: IBBUserState) {
       return state.id !== 0
     },
@@ -133,4 +130,4 @@ export default {
       commit('RESET_STATE')
     }
   },
-} as StoreOptions<IBBUserState>;
+} as Module<IBBUserState, any>;

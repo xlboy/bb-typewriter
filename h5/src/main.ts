@@ -10,7 +10,7 @@ import "./utils/theme";
 
 
 export const app = createApp(App);
-// app.config.globalProperties.$bmob = Bmob;
+app.config.globalProperties.$bmob = 123;
 app
   .use(store)
   .use(router)

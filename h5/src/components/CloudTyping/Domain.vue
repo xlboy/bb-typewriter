@@ -13,7 +13,7 @@
       模式
     </button>
     <van-divider dashed content-position="left">智能词提</van-divider>
-    <van-row align="center">
+    <!-- <van-row align="center">
       <van-switch
         v-model="wordHint.isOpen"
         inactive-color="#dcdee0"
@@ -22,7 +22,8 @@
       <van-tag type="primary" size="large" style="margin-left: 5px;">{{
         wordHint.currentSelectWordName
       }}</van-tag>
-    </van-row>
+    </van-row> -->
+    
   </div>
   <van-action-sheet
     v-model:show="actionSheet.data.show"
@@ -34,7 +35,7 @@
 </template>
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";
-import { defineComponent, inject, reactive, ref } from "vue";
+import { defineComponent, getCurrentInstance, inject, reactive, ref } from "vue";
 import {
   IActionSheet,
   loadArticle,
@@ -63,6 +64,8 @@ export default defineComponent({
     };
   },
   setup() {
+    const { proxy } = getCurrentInstance() as any
+    console.log(Object.keys(proxy), proxy)
     const { mutations: typingMutations } = inject(TypingSymbol) as IUseTyping;
     const selectCustomizeVisible = ref(false);
     // 下拉面板的功能区

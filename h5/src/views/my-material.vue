@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import useBaseLayout from "@/hooks/useBaseLayout";
-import wordHint from "@/storeComposition/cloudTyping/wordHint";
+// import wordHint from "@/storeComposition/cloudTyping/wordHint";
 import { defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
 export default defineComponent({
