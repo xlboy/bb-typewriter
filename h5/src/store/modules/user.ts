@@ -6,7 +6,6 @@ import { Toast } from "vant";
 export interface IBBUserState {
   countSize: number;
   currentWordId: number;
-  wordHintList: Array<any>
   wordsHint: {
     fourC: string;
     fourWord: string;
@@ -30,7 +29,6 @@ const $state: IBBUserState = {
   id: 0,
   sign: '',
   qq: 52852983,
-  wordHintList: [],
   username: '登陆/注册'
 };
 export default {
@@ -40,9 +38,9 @@ export default {
     isLogin(state: IBBUserState) {
       return state.id !== 0
     },
-    baseInfo(state: IBBUserState) {
-      const { sign, username, qq, id } = state;
-      return { sign, username, qq, id };
+    getWordHintBase({ currentWordId, id }: IBBUserState) {
+      /* 提供一个接口给词提模块返回牵扯的数据 */
+      return { currentWordId, id }
     }
   },
   mutations: {
@@ -60,9 +58,6 @@ export default {
     },
     RESET_STATE(state: IBBUserState) {
       Object.assign(state, _.cloneDeep($state))
-    },
-    SET_USER_WORD_HINT_LIST(state: IBBUserState, list) {
-      state.wordHintList = list
     }
   },
   actions: {
