@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { createApp, computed } from "xlboy-vue3";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -7,7 +7,6 @@ import { vantPlugins } from "./plugins/vant";
 import "./assets/style/reset.scss";
 import "./assets/style/global.scss";
 import "./utils/theme";
-
 
 export const app = createApp(App);
 // app.config.globalProperties.$bmob = 123;

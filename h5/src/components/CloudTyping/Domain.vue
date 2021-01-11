@@ -13,17 +13,16 @@
       模式
     </button>
     <van-divider dashed content-position="left">智能词提</van-divider>
-    <!-- <van-row align="center">
+    <van-row align="center">
       <van-switch
-        v-model="wordHint.isOpen"
+        v-model="wordHint.isOpen.value"
         inactive-color="#dcdee0"
         size="21px"
       />
-      <van-tag type="primary" size="large" style="margin-left: 5px;">{{
-        wordHint.currentSelectWordName
+      <van-tag @click="wordHint.toMyMaterial" type="primary" size="large" style="margin-left: 5px">{{
+        wordHint.getters.currentSelectWordName
       }}</van-tag>
-    </van-row> -->
-    
+    </van-row>
   </div>
   <van-action-sheet
     v-model:show="actionSheet.data.show"
@@ -35,7 +34,7 @@
 </template>
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";
-import { defineComponent, getCurrentInstance, inject, reactive, ref } from "vue";
+import { defineComponent, inject, reactive, ref, toRef, watch } from "vue";
 import {
   IActionSheet,
   loadArticle,
@@ -53,26 +52,21 @@ import ConfirmInput from "../Common/ConfirmInput";
 import SelectCustomize from "./components/SelectCustomize.vue";
 import typingContent from "@/utils/typingContent";
 import { IUseTyping } from "@/interface/ITyping";
-import wordHint from "@/storeComposition/cloudTyping/wordHint";
+import _wordHint from "@/storeComposition/cloudTyping/wordHint";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Domain",
   components: { SelectCustomize },
-  data() {
-    return {
-      wordHint,
-    };
-  },
   setup() {
-    const { proxy } = getCurrentInstance() as any
-    console.log(Object.keys(proxy), proxy)
     const { mutations: typingMutations } = inject(TypingSymbol) as IUseTyping;
     const selectCustomizeVisible = ref(false);
+    const $router = useRouter();
     // 下拉面板的功能区
     const actionSheet = (() => {
       const data = reactive({
         show: false,
-        actions: [],
+        actions: [] as IActionSheet[],
       });
 
       return {
@@ -91,34 +85,21 @@ export default defineComponent({
       }
       // 抛出去的设置动作面板数据函数
       function setActions(actions: IActionSheet[]) {
-        data.actions = actions as never;
+        data.actions = actions;
       }
       // 处理选择动作面板后的分类回调匹配
       function handleSelectType(type: string, name: string) {
         try {
-          switch (type) {
-            case "loadArticle":
-              onLoadArticle(name);
-              break;
-            case "loadGroupMatchArticle":
-              onLoadGroupMatchArticle(name);
-              break;
-            case "loadGroupLatestArticle":
-              onLoadGroupLatestArticle(name);
-              break;
-            case "postChinesePhrase":
-              onPostChinesePhrase(name);
-              break;
-            case "postASingleWord":
-              onPostASingleWord(name);
-              break;
-            case "postArticle":
-              onPostArticle(name);
-              break;
-            case "typingModel":
-              onTypingModel(name);
-              break;
-          }
+          const handle = {
+            loadArticle: onLoadArticle,
+            loadGroupMatchArticle: onLoadGroupMatchArticle,
+            loadGroupLatestArticle: onLoadGroupLatestArticle,
+            postChinesePhrase: onPostChinesePhrase,
+            postASingleWord: onPostASingleWord,
+            postArticle: onPostArticle,
+            typingModel: onTypingModel,
+          };
+          handle[type]?.(name);
         } catch (error) {
           Notify.danger("出错啦，快联系开发人员呀" + error);
           throw new Error(error);
@@ -135,30 +116,27 @@ export default defineComponent({
         }
         // 处理载文
         function onLoadArticle(name: string) {
-          switch (name) {
-            case "剪贴板":
-              ConfirmInput.text({
-                label: "剪贴板内容",
-              }).then((str: any) => {
-                /*
-                 如若是文段格式↓，则正则匹配取出
-                 惺惺相惜惺惺相惜惺惺相惜惺惺相惜惺惺相惜小
-                 -----第1010段 
-                 */
-                const reg = /(.+)\n-{5}第(\d+)段.*/;
-                let content = str,
-                  index = 1;
-                if (reg.test(str)) {
-                  [, content, index] = str.match(reg);
-                }
-                typingMutations.SetTypingType("剪贴板");
-                typingMutations.SetSource({
-                  content,
-                  index,
-                });
-                Notify("开始你的表演");
+          const handle = {
+            剪贴板: handleClipboard,
+          };
+
+          handle[name]?.();
+
+          function handleClipboard() {
+            ConfirmInput.text({ label: "剪贴板内容" }).then((str: any) => {
+              const reg = /(.+)\n-{5}第(\d+)段.*/;
+              let content = str,
+                index = 1;
+              if (reg.test(str)) {
+                [, content, index] = str.match(reg);
+              }
+              typingMutations.SetTypingType("剪贴板");
+              typingMutations.SetSource({
+                content,
+                index,
               });
-              break;
+              Notify("开始你的表演");
+            });
           }
         }
         // 处理群载文，param name is group nme
@@ -201,13 +179,18 @@ export default defineComponent({
         }
         // 处理发文：随机一文/自定义等等
         function onPostArticle(name: string) {
-          switch (name) {
-            case "自定义文章":
-              selectCustomizeVisible.value = true;
-              break;
-            case "随机一文":
-              Notify("随机一文功能正在努力开发中...");
-              break;
+          const handle = {
+            自定义文章: handleDIYArticle,
+            随机一文: handleRandomArticle,
+          };
+
+          handle[name]?.();
+
+          function handleDIYArticle() {
+            selectCustomizeVisible.value = true;
+          }
+          function handleRandomArticle() {
+            Notify("随机一文功能正在努力开发中...");
           }
         }
         // 处理发文：常用词组
@@ -235,6 +218,18 @@ export default defineComponent({
       }
     })();
 
+    // 词提功能块
+    const wordHint = (() => {
+      function toMyMaterial() {
+        $router.push({ name: "MyMaterial" });
+      }
+      return {
+        isOpen: toRef(_wordHint.state, "isOpen"),
+        getters: _wordHint.getters,
+        toMyMaterial,
+      };
+    })();
+
     // 载文
     function showLoadArticle() {
       actionSheet.setActions(loadArticle);
@@ -256,6 +251,7 @@ export default defineComponent({
       showPostArticle,
       showTypingModel,
       selectCustomizeVisible,
+      wordHint,
     };
   },
 });

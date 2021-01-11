@@ -13,9 +13,9 @@ export interface ICustomizeArticle {
 }
 const store = new LocalStore('bb-customizeArticle')
 export default {
-    list: ref([]),
+    list: ref([] as ICustomizeArticle[]),
     find(id: number): { index: number, content: ICustomizeArticle } {
-        const index = this.list.value.findIndex((o: ICustomizeArticle) => o.id === id);
+        const index = this.list.value.findIndex(o => o.id === id);
         if (index !== -1) {
             return { index, content: this.list.value[index] }
         } else {
@@ -26,15 +26,15 @@ export default {
     },
     initData() {
         store.initStore()
-        this.list.value = store.toArray().slice(0, 10) as never
+        this.list.value = store.toArray().slice(0, 10)
     },
     add(customizeArticle: ICustomizeArticle) {
-        this.list.value.unshift(customizeArticle as never)
+        this.list.value.unshift(customizeArticle)
         store.writeJson(this.list.value)
     },
     update(id: number, customizeArticle: ICustomizeArticle) {
         const { index } = this.find(id);
-        (this.list.value[index] as ICustomizeArticle) = customizeArticle
+        this.list.value[index] = customizeArticle
         store.writeJson(this.list.value)
     },
     updateCurrentIndex(id: number, addSize: number) {

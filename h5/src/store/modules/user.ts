@@ -38,9 +38,12 @@ export default {
     isLogin(state: IBBUserState) {
       return state.id !== 0
     },
-    getWordHintBase({ currentWordId, id }: IBBUserState) {
+    getWordHintBase(state: IBBUserState) {
       /* 提供一个接口给词提模块返回牵扯的数据 */
-      return { currentWordId, id }
+      return {
+        currentWordId: state.currentWordId,
+        id: state.id
+      }
     }
   },
   mutations: {

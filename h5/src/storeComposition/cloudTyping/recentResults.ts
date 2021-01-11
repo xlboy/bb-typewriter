@@ -21,11 +21,11 @@ const store = new LocalStore('bb-recentResults')
 export default {
     initData() {
         store.initStore()
-        this.list.value = store.toArray().slice(0, 10) as never
+        this.list.value = store.toArray().slice(0, 10)
     },
     add(result: IRencentResult) {
-        this.list.value.unshift(result as never)
+        this.list.value.unshift(result)
         store.writeJson(this.list.value)
     },
-    list: ref([])
+    list: ref([] as IRencentResult[])
 }
