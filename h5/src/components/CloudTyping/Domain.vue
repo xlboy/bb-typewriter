@@ -19,9 +19,13 @@
         inactive-color="#dcdee0"
         size="21px"
       />
-      <van-tag @click="wordHint.toMyMaterial" type="primary" size="large" style="margin-left: 5px">{{
-        wordHint.getters.currentSelectWordName
-      }}</van-tag>
+      <van-tag
+        @click="wordHint.toRallySetup"
+        type="primary"
+        size="large"
+        style="margin-left: 5px"
+        >{{ wordHint.getters.currentSelectWordName }}</van-tag
+      >
     </van-row>
   </div>
   <van-action-sheet
@@ -220,13 +224,18 @@ export default defineComponent({
 
     // 词提功能块
     const wordHint = (() => {
-      function toMyMaterial() {
-        $router.push({ name: "MyMaterial" });
+      const isOpen = ref(false);
+      watch(
+        () => isOpen.value,
+        (newVal) => _wordHint.mutations.SET_IS_OPEN(newVal)
+      );
+      function toRallySetup() {
+        $router.push({ name: "RallySetup" });
       }
       return {
-        isOpen: toRef(_wordHint.state, "isOpen"),
+        isOpen,
         getters: _wordHint.getters,
-        toMyMaterial,
+        toRallySetup,
       };
     })();
 

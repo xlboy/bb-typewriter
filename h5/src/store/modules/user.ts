@@ -1,4 +1,4 @@
-import { getReadUserInfo, userLogin, userReg } from "@/api/bbUser";
+import { getReadUserInfo, saveUserCurrentWord, userLogin, userReg } from "@/api/bbUser";
 import useRequest from "@/hooks/useRequest";
 import { Module } from "vuex";
 import _ from 'lodash'
@@ -44,6 +44,9 @@ export default {
         currentWordId: state.currentWordId,
         id: state.id
       }
+    },
+    currentWordId(state: IBBUserState) {
+      return state.currentWordId
     }
   },
   mutations: {
@@ -78,8 +81,8 @@ export default {
       commit('SET_USER_COUNT_SIZE', +countSize)
       localStorage.setItem('userId', id)
     },
-    async login({ dispatch }, { username = '', password = '' }): Promise<boolean> {
-      return await new Promise(r => {
+    login({ dispatch }, { username = '', password = '' }): Promise<boolean> {
+      return new Promise(r => {
         useRequest(userLogin(username, password), (result: any) => {
           if (result === '账号密码有误') {
             r(false)
@@ -90,8 +93,8 @@ export default {
         })
       })
     },
-    async regAndLogin({ dispatch }, { username = '', password = '' }): Promise<boolean> {
-      return await new Promise(r => {
+    regAndLogin({ dispatch }, { username = '', password = '' }): Promise<boolean> {
+      return new Promise(r => {
         useRequest(userReg(username, password), async (result: any) => {
           if (result === '存在此账号') {
             r(false)
@@ -108,11 +111,11 @@ export default {
         })
       })
     },
-    async initUserInfo({ dispatch, state }, userId): Promise<boolean> {
+    initUserInfo({ dispatch, state }, userId): Promise<boolean> {
       if (userId === void 0) {
         userId = state.id
       }
-      return await new Promise(r => {
+      return new Promise(r => {
         useRequest(getReadUserInfo(+userId), (result: any) => {
           if (result === '获取失败') {
             r(false)
@@ -121,6 +124,16 @@ export default {
             r(true)
           }
         })
+      })
+    },
+    setCurrentWordId({ commit, state }, wordId): Promise<void> {
+      return new Promise(r => {
+        commit('SET_USER_CURRENT_WORD_ID', wordId)
+        if (state.id !== void 0) {
+          useRequest(saveUserCurrentWord(state.id, wordId), r)
+        } else {
+          r()
+        }
       })
     },
     logout({ commit }) {

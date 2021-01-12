@@ -1,6 +1,7 @@
 <template>
   <div class="setup">
     <van-cell title="个人中心" is-link @click="toMyMaterial" />
+    <van-cell title="跟打设置" is-link @click="$router.push({ name: 'RallySetup' })" />
     <van-cell title="清除缓存" is-link @click="clearCache">
       <template #right-icon>
         <van-icon name="failure" class="search-icon" />

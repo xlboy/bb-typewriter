@@ -4,10 +4,9 @@
 
 import { getDefaultWordHint } from "@/api/bbPublic";
 import useRequest from "@/hooks/useRequest";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, reactive, watch } from "vue";
 import store from "@/store/";
 import { getUserWordHint } from "@/api/bbUser";
-
 export interface IWordHintObj {
     preceptName: string;
     id: number
@@ -25,19 +24,12 @@ interface IWordHintState {
     yardsLong: number;
 }
 
-
 const $store = store;
 
-// 等着…这.value…迟早给改了
 const userState = computed(() => $store.getters['user/getWordHintBase'] as {
     currentWordId: number | null;
     id: number;
 })
-
-
-console.log(userState)
-
-
 const state = reactive({
     defaultWord: [], // 系统默认的词提码表列表
     userWord: [], // 用户的词提码表列表
@@ -45,7 +37,7 @@ const state = reactive({
     yardsLong: 0, // 文章码长
 } as IWordHintState)
 
-const getters = {
+const getters = reactive({
     get allWordList(): IWordHintAll {
         return {
             user: state.userWord,
@@ -70,7 +62,7 @@ const getters = {
     get hintContrst() {
         return '只期待后来的你能快乐' + state.isOpen
     }
-}
+})
 const mutations = {
     SET_DEFAULT_WORD(word: IWordHintObj[]) {
         state.defaultWord = word
@@ -86,27 +78,35 @@ const mutations = {
     }
 }
 
-function initRequest() {
+function init() {
+    getDefaultWord()
+    listenUserStateChange()
 
-
-}
-
-// 当前用户状态发生了改变，则更新一次用户词库 
-watch(() => userState.value.id, (newVal) => {
-    if (newVal !== 0) {
-        useRequest(getUserWordHint(newVal), (result: IWordHintObj[]) => {
-            mutations.SET_USER_WORD(result)
+    function listenUserStateChange() {
+        // 当前用户状态发生了改变，则更新一次用户词库 
+        function handleChange(userId: number) {
+            if (userId !== 0) {
+                useRequest(getUserWordHint(userId), (result: IWordHintObj[]) => {
+                    console.log('result', result)
+                    mutations.SET_USER_WORD(result)
+                }, false)
+            }
+        }
+        watch(() => userState.value.id, handleChange, {
+            immediate: true
+        })
+    }
+    function getDefaultWord() {
+        // 初始化请求一遍默认词库
+        useRequest(getDefaultWordHint(), (result: IWordHintObj[]) => {
+            mutations.SET_DEFAULT_WORD(result)
         }, false)
     }
-})
-// 初始化请求一遍默认词库
-useRequest(getDefaultWordHint(), (result: IWordHintObj[]) => {
-    mutations.SET_DEFAULT_WORD(result)
-    console.log('请求了2')
-}, false)
+}
+
+init()
 
 export default {
-    state,
     getters,
     mutations
 }

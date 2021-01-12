@@ -1774,6 +1774,54 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@xlboy-v3/compiler-core@0.0.2":
+  "integrity" "sha512-RI6YG6QAlyf5c2OvOTieEbQrl9AZVrDRG4SJyeNnnzmpuK455mwp0ZKOjbF6DhPdsLteSQiloMnzqF039CHWYw=="
+  "resolved" "https://registry.npmjs.org/@xlboy-v3/compiler-core/-/compiler-core-0.0.2.tgz"
+  "version" "0.0.2"
+  dependencies:
+    "@babel/parser" "^7.12.0"
+    "@babel/types" "^7.12.0"
+    "@xlboy-v3/shared" "0.0.2"
+    "estree-walker" "^2.0.1"
+    "source-map" "^0.6.1"
+
+"@xlboy-v3/compiler-dom@0.0.2":
+  "integrity" "sha512-0LLyU/EezNEUIIkf1GemsqFln7ZzNVSUoVLWz6iAmYRjR4kmx0fgTaV0+yd4ZHbP671qWKNwV0oFqHqHqCiVNQ=="
+  "resolved" "https://registry.npmjs.org/@xlboy-v3/compiler-dom/-/compiler-dom-0.0.2.tgz"
+  "version" "0.0.2"
+  dependencies:
+    "@xlboy-v3/compiler-core" "0.0.2"
+    "@xlboy-v3/shared" "0.0.2"
+
+"@xlboy-v3/reactivity@0.0.2":
+  "integrity" "sha512-8p1cOZsuOF/zaGelmAqbHtfxFmuG2pcBdvNeLSW9NBDYgNKtBZqekxnuDPTeLuKhe9MgLPXG3bTehRSNW1/QIg=="
+  "resolved" "https://registry.npmjs.org/@xlboy-v3/reactivity/-/reactivity-0.0.2.tgz"
+  "version" "0.0.2"
+  dependencies:
+    "@xlboy-v3/shared" "0.0.2"
+
+"@xlboy-v3/runtime-core@0.0.2":
+  "integrity" "sha512-5j5Tr/xoqcQR5nppUjCxdIWWYGQDK7oi3bsGcSReNXFf9BmOueskwIqEt3+fNI3iS5FjBIGULuRCYJ1hgkQHGg=="
+  "resolved" "https://registry.npmjs.org/@xlboy-v3/runtime-core/-/runtime-core-0.0.2.tgz"
+  "version" "0.0.2"
+  dependencies:
+    "@xlboy-v3/reactivity" "0.0.2"
+    "@xlboy-v3/shared" "0.0.2"
+
+"@xlboy-v3/runtime-dom@0.0.2":
+  "integrity" "sha512-J8jRpzWxe5xkbz9WY84ozXuxy2BUIwJj+endI/dj1dGDLON+A49ObEUwDmd6c+kUaTZ8ZAjlbORUu11XjGh6gA=="
+  "resolved" "https://registry.npmjs.org/@xlboy-v3/runtime-dom/-/runtime-dom-0.0.2.tgz"
+  "version" "0.0.2"
+  dependencies:
+    "@xlboy-v3/runtime-core" "0.0.2"
+    "@xlboy-v3/shared" "0.0.2"
+    "csstype" "^2.6.8"
+
+"@xlboy-v3/shared@0.0.2":
+  "integrity" "sha512-erdqargRHwUiD9o3VVGYEn2Vdn7AULOYN79KuG7l64Izu4a4yAtQMO0gBPQ8mT7bHMk64ugx/Bg3hgVoHgVzIg=="
+  "resolved" "https://registry.npmjs.org/@xlboy-v3/shared/-/shared-0.0.2.tgz"
+  "version" "0.0.2"
+
 "@xtuc/ieee754@^1.2.0":
   "integrity" "sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA=="
   "resolved" "https://registry.npmjs.org/@xtuc/ieee754/-/ieee754-1.2.0.tgz"
@@ -10201,14 +10249,14 @@
   dependencies:
     "async-limiter" "~1.0.0"
 
-"xlboy-vue3@^3.0.5":
-  "integrity" "sha512-DVCl2meaolyD+3bpOZdwQKgaKG14IUEGPhReADPh40YEqK7K31eonnYfeJoYU2o5A5fxUHF1cv4JzJJ1Z0lXAQ=="
-  "resolved" "https://registry.npmjs.org/xlboy-vue3/-/xlboy-vue3-3.0.5.tgz"
-  "version" "3.0.5"
+"xlboy-vue3@^0.0.4":
+  "integrity" "sha512-WG77ko92BKWEMez9nH1qnOU+mefs+D4jIY0JYZolHM12ewFMU1EY3obP945C164ZiyUhkgUhcFk+Zm+1qcbIww=="
+  "resolved" "https://registry.npmjs.org/xlboy-vue3/-/xlboy-vue3-0.0.4.tgz"
+  "version" "0.0.4"
   dependencies:
-    "@vue/compiler-dom" "3.0.5"
-    "@vue/runtime-dom" "3.0.5"
-    "@vue/shared" "3.0.5"
+    "@xlboy-v3/compiler-dom" "0.0.2"
+    "@xlboy-v3/runtime-dom" "0.0.2"
+    "@xlboy-v3/shared" "0.0.2"
 
 "xtend@^4.0.0", "xtend@~4.0.1":
   "integrity" "sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ=="

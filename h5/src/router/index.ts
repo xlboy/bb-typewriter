@@ -46,6 +46,11 @@ const routes: Array<RouteRecordRaw> = [
             name: "MyMaterial",
             component: () => import("../views/my-material.vue")
           },
+          {
+            path: "rally-setup",
+            name: "RallySetup",
+            component: () => import("../views/rally-setup.vue")
+          }
         ]
       }
     ]

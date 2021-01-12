@@ -23,7 +23,7 @@
     "vue-class-component": "^8.0.0-0",
     "vue-router": "4.0.1",
     "vuex": "^4.0.0-0",
-    "xlboy-vue3": "^3.0.5"
+    "xlboy-vue3": "^0.0.4"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.167",
