@@ -12,6 +12,7 @@
 <script lang="ts">
 import { TypingSymbol } from "@/hooks/useTyping";
 import { IContrstCharObj } from "@/interface/ITyping";
+import storeWordHint from "@/storeComposition/cloudTyping/wordHint";
 import {
   computed,
   defineComponent,
@@ -29,25 +30,7 @@ export default defineComponent({
     // 处理渲染对照区
     const renderContrst = (() => {
       // 练习内容的源数据，记载练习时的状态
-      const contrstChars: IContrstCharObj[] = reactive([
-        ...toContrstCharObjs(refState.source.content),
-      ]);
-      // 转成对照区规定格式的，可供初始化转化与源数据内容变化时转化↓
-      function toContrstCharObjs(content: string): IContrstCharObj[] {
-        return content.split("").map((v: any) => ({
-          text: v,
-          haveInput: false,
-          inputCorrect: false,
-        }));
-      }
-      watch(
-        () => refState.source.content,
-        (newVal) => {
-          while (contrstChars.shift()) {}
-          Object.assign(contrstChars, toContrstCharObjs(newVal));
-        }
-      );
-
+      const contrstChars = ref(contrstCharObjs(refState.source.content));
       // 翻页、滚动的数据块
       const pageScroll = (() => {
         const size = 300; // 每页字数
@@ -78,55 +61,45 @@ export default defineComponent({
       // 当前页的字符数据，给予模板进行渲染
       const currentPageChars = computed(() => {
         const { startIndex, endIndex } = pageScroll;
-        return contrstChars.slice(startIndex.value, endIndex.value);
-      });
-      onMounted(() => {
-        contrstPageScroll();
+        return contrstChars.value.slice(startIndex.value, endIndex.value);
       });
       // 所处模式,是否为看打模式,若是,则不显示对与错
       const seePlayTypingModelClass = computed(() => {
         return refState.typingModel === "看打模式" ? "contrst-see-play" : "";
       });
+
+      onMounted(() => {
+        listenContrstPageScroll();
+        listenContentChange();
+        listenWordHintSwitch();
+      });
+
       return {
-        formatSpace,
         ...verifCorrect(),
+        formatSpace,
         currentPageChars,
         seePlayTypingModelClass,
       };
-
-      // 处理录入内容的正确性验证
-      function verifCorrect() {
+      // 监听词提开关，如开，对照区则显示词提。如不开，提桶跑路
+      function listenWordHintSwitch() {
         watch(
-          () => refState.haveInput,
-          () => {
-            // 遍历判断录入内容的正确性，不正确则将相应属性设置上状态
-            contrstChars.forEach((o: IContrstCharObj, i: number) => {
-              if (i < refState.haveInput.length) {
-                o.haveInput = true;
-                o.inputCorrect = o.text === refState.haveInput[i];
-              } else {
-                o.haveInput = false;
-              }
-            });
+          [() => storeWordHint.getters.isOpen, () => refState.source.content],
+          ([isOpen, content]) => {
+            storeWordHint.actions.updateHintContrst(content as any);
           }
         );
-        // 筛选器：录入错误的css
-        const inputCorrectClass = (obj: IContrstCharObj): string => {
-          return obj.haveInput && !obj.inputCorrect
-            ? "contrst-span__input-error"
-            : "";
-        };
-        // 筛选器：录入正确的css
-        const haveInputClass = (is: boolean): string =>
-          is ? "contrst-span__have-input" : "";
-
-        return {
-          inputCorrectClass,
-          haveInputClass,
-        };
       }
-      // 对照区的翻页、滚动（输入框内容发生改变时触发）
-      function contrstPageScroll() {
+      // 监听源内容发生改变
+      function listenContentChange() {
+        watch(
+          () => refState.source.content,
+          (newVal) => {
+            contrstChars.value = contrstCharObjs(newVal);
+          }
+        );
+      }
+      // 监听对照区的翻页、滚动（输入框内容发生改变时触发）
+      function listenContrstPageScroll() {
         const elContrst = document.getElementById("elContrst");
         if (elContrst) {
           watch(
@@ -153,9 +126,48 @@ export default defineComponent({
           );
         }
       }
+      // 处理录入内容的正确性验证
+      function verifCorrect() {
+        watch(
+          () => refState.haveInput,
+          () => {
+            // 遍历判断录入内容的正确性，不正确则将相应属性设置上状态
+            contrstChars.value.forEach((o: IContrstCharObj, i: number) => {
+              if (i < refState.haveInput.length) {
+                o.haveInput = true;
+                o.inputCorrect = o.text === refState.haveInput[i];
+              } else {
+                o.haveInput = false;
+              }
+            });
+          }
+        );
+        // 筛选器：录入错误的css
+        const inputCorrectClass = (obj: IContrstCharObj): string => {
+          return obj.haveInput && !obj.inputCorrect
+            ? "contrst-span__input-error"
+            : "";
+        };
+        // 筛选器：录入正确的css
+        const haveInputClass = (is: boolean): string =>
+          is ? "contrst-span__have-input" : "";
+
+        return {
+          inputCorrectClass,
+          haveInputClass,
+        };
+      }
       // 过滤空格内容
       function formatSpace(text: string) {
         return text === " " ? "　" : text;
+      }
+      // 转成对照区规定格式的，可供初始化转化与源数据内容变化时转化↓
+      function contrstCharObjs(content: string): IContrstCharObj[] {
+        return content.split("").map((v: string) => ({
+          text: v,
+          haveInput: false,
+          inputCorrect: false,
+        }));
       }
     })();
 

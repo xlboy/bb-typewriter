@@ -1,4 +1,3 @@
-import { ref } from "vue";
 
 // 打乱数组
 export function shuffleArray(array: any): Array<any> {

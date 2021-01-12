@@ -49,7 +49,7 @@ const routes: Array<RouteRecordRaw> = [
           {
             path: "rally-setup",
             name: "RallySetup",
-            component: () => import("../views/rally-setup.vue")
+            component: () => import("../views/cloud-typing/rally-setup.vue")
           }
         ]
       }

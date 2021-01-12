@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import useBaseLayout from "@/hooks/useBaseLayout";
-import wordHint, {
+import storeWordHint, {
   IWordHintObj,
 } from "@/storeComposition/cloudTyping/wordHint";
 import { Toast } from "vant";
@@ -41,14 +41,14 @@ export default defineComponent({
     const wordHintSelect = (() => {
       const state = reactive({
         show: false,
-        currentSelect: toRef(wordHint.getters, "currentSelectWordName"),
-        select: $store.getters['user/currentWordId'], // 此处单向一波
+        currentSelect: toRef(storeWordHint.getters, "currentSelectWordName"),
+        select: $store.getters["user/currentWordId"], // 此处单向一波
       });
       const options = computed(() => {
         const {
           user: userWord,
           default: defaultWord,
-        } = wordHint.getters.allWordList;
+        } = storeWordHint.getters.allWordList;
 
         return [
           {
@@ -70,12 +70,12 @@ export default defineComponent({
           }));
         }
       });
-      
+
       async function onFinish({ selectedOptions }: any) {
         const [, wordId] = selectedOptions;
-        await $store.dispatch('user/setCurrentWordId', wordId.value)
-        Toast('更换成功')
-        state.show = false
+        await $store.dispatch("user/setCurrentWordId", wordId.value);
+        Toast("更换成功");
+        state.show = false;
       }
       return {
         state,
@@ -83,6 +83,7 @@ export default defineComponent({
         onFinish,
       };
     })();
+    
     return {
       wordHintSelect,
     };

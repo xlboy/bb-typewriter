@@ -2,7 +2,7 @@
  * @description 词提功能模块
  */
 
-import { getDefaultWordHint } from "@/api/bbPublic";
+import { getDefaultWordHint, getQueryWordHint } from "@/api/bbPublic";
 import useRequest from "@/hooks/useRequest";
 import { computed, reactive, watch } from "vue";
 import store from "@/store/";
@@ -22,6 +22,7 @@ interface IWordHintState {
     userWord: IWordHintObj[];
     isOpen: boolean;
     yardsLong: number;
+    hintContrst: any[]
 }
 
 const $store = store;
@@ -35,6 +36,7 @@ const state = reactive({
     userWord: [], // 用户的词提码表列表
     isOpen: false, // 是否打开词提
     yardsLong: 0, // 文章码长
+    hintContrst: [], // 词提对照的数据
 } as IWordHintState)
 
 const getters = reactive({
@@ -60,7 +62,10 @@ const getters = reactive({
         return findWord()
     },
     get hintContrst() {
-        return '只期待后来的你能快乐' + state.isOpen
+        return state.hintContrst
+    },
+    get isOpen() {
+        return state.isOpen
     }
 })
 const mutations = {
@@ -75,19 +80,35 @@ const mutations = {
     },
     SET_YARDS_LONG(long: number) {
         state.yardsLong = long
+    },
+    SET_HINT_CONTRST(contrst: any[]) {
+        state.hintContrst = contrst
     }
 }
-
+const actions = {
+    updateHintContrst(content: string) {
+        if (state.isOpen) {
+            const currentWordId = userState.value.currentWordId || 1
+            useRequest(
+                getQueryWordHint(
+                    content,
+                    currentWordId,
+                    state.defaultWord.find(o => o.id === currentWordId) ? 'default' : 'user'
+                ), (result: any) => {
+                    console.log('result', result)
+                }, true)
+        }
+    }
+}
 function init() {
     getDefaultWord()
     listenUserStateChange()
 
+    // 监听用户状态，发生改变则重新请求用户词库
     function listenUserStateChange() {
-        // 当前用户状态发生了改变，则更新一次用户词库 
         function handleChange(userId: number) {
             if (userId !== 0) {
                 useRequest(getUserWordHint(userId), (result: IWordHintObj[]) => {
-                    console.log('result', result)
                     mutations.SET_USER_WORD(result)
                 }, false)
             }
@@ -96,8 +117,8 @@ function init() {
             immediate: true
         })
     }
+    // 初始化请求一遍默认词库
     function getDefaultWord() {
-        // 初始化请求一遍默认词库
         useRequest(getDefaultWordHint(), (result: IWordHintObj[]) => {
             mutations.SET_DEFAULT_WORD(result)
         }, false)
@@ -108,5 +129,6 @@ init()
 
 export default {
     getters,
-    mutations
+    mutations,
+    actions
 }

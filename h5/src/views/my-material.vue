@@ -4,16 +4,11 @@
 
 <script lang="ts">
 import useBaseLayout from "@/hooks/useBaseLayout";
-import wordHint, {
-  IWordHintObj,
-} from "@/storeComposition/cloudTyping/wordHint";
-import { defineComponent, reactive, computed, toRef } from "vue";
-import { useStore } from "vuex";
+import { defineComponent } from "vue";
 export default defineComponent({
   name: "MyMaterial",
   setup() {
     const baseLayout = useBaseLayout();
-    const $store = useStore();
     baseLayout.setNavBar({
       title: "个人中心",
       rightVisible: false,

@@ -15,8 +15,8 @@ export function getDefaultWordHint(): AxiosPromise<any> {
  * @param wordId 码表ID
  * @description 获取词提
  */
-export function getQueryWordHint(str: string, wordId: number): AxiosPromise<any> {
+export function getQueryWordHint(str: string, wordId: number, isDefaultWord: 'default' | 'user'): AxiosPromise<any> {
     return request('post', '/queryWordHint', {
-        str, wordId
+        str, wordId, isDefaultWord
     })
 }

@@ -38,7 +38,7 @@
 </template>
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";
-import { defineComponent, inject, reactive, ref, toRef, watch } from "vue";
+import { defineComponent, inject, reactive, ref, watch } from "vue";
 import {
   IActionSheet,
   loadArticle,
@@ -56,7 +56,7 @@ import ConfirmInput from "../Common/ConfirmInput";
 import SelectCustomize from "./components/SelectCustomize.vue";
 import typingContent from "@/utils/typingContent";
 import { IUseTyping } from "@/interface/ITyping";
-import _wordHint from "@/storeComposition/cloudTyping/wordHint";
+import storeWordHint from "@/storeComposition/cloudTyping/wordHint";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -227,14 +227,14 @@ export default defineComponent({
       const isOpen = ref(false);
       watch(
         () => isOpen.value,
-        (newVal) => _wordHint.mutations.SET_IS_OPEN(newVal)
+        (newVal) => storeWordHint.mutations.SET_IS_OPEN(newVal)
       );
       function toRallySetup() {
         $router.push({ name: "RallySetup" });
       }
       return {
         isOpen,
-        getters: _wordHint.getters,
+        getters: storeWordHint.getters,
         toRallySetup,
       };
     })();
