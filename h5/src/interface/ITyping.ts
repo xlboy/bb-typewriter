@@ -45,6 +45,8 @@ export interface IContrstCharObj {
         encode: string; // 词/单字编码
         type: TypingHintStyleTypes; // 提示样式类型
         weight: number;
+        isBold: boolean;
+        _flag_: Symbol;
     }
 }
 // 打字练习成绩的数据

@@ -4,9 +4,11 @@
       v-for="(item, index) in currentPageChars"
       :key="index"
       :class="[inputCorrectClass(item), haveInputClass(item.haveInput)]"
-      :style="handleWordHintStyle(item)"
+      :style="wordHint.handleWordHintStyle(item)"
     >
-      <span v-if="item.hintObj">{{ item.hintObj.weight }}</span>
+      <span v-if="wordHint.weightCacheShow(item)">{{
+        item.hintObj.weight
+      }}</span>
       {{ formatSpace(item.text) }}
     </div>
   </div>
@@ -65,11 +67,73 @@ export default defineComponent({
       const seePlayTypingModelClass = computed(() => {
         return refState.typingModel === "看打模式" ? "contrst-see-play" : "";
       });
-      // 用户词提样式
-      const userWordHintStyle = computed(
-        () => $store.getters["user/getWordsHintStyle"]
-      );
+      // 词提模块的
+      const wordHint = (() => {
+        // 用户词提样式
+        const userWordHintStyle = computed(
+          () => $store.getters["user/getWordsHintStyle"]
+        );
+        const hasRenderMap = new Set();
 
+        return {
+          hasRenderMap,
+          handleWordHintStyle,
+          weightCacheShow,
+        };
+        // 处理词提样式
+        function handleWordHintStyle(item: IContrstCharObj) {
+          if (item.hintObj) {
+            const { type, isBold } = item.hintObj;
+            const {
+              fourC,
+              twoWord,
+              threeWord,
+              fourWord,
+            } = userWordHintStyle.value;
+
+            const style = {
+              [TypingHintStyleTypes.FOUR_MAC_LENGTH_WORD]: {
+                color: fourC,
+                fontStyle: "italic",
+              },
+              [TypingHintStyleTypes.TOW_CODE_WORD]: {
+                color: twoWord,
+              },
+              [TypingHintStyleTypes.THREE_CODE_WORD]: {
+                color: threeWord,
+                borderBottom: `1px solid ${threeWord}`,
+              },
+              [TypingHintStyleTypes.FOUR_CODE_WORD]: {
+                color: fourWord,
+              },
+              [TypingHintStyleTypes.ONE_CHAR]: {
+                color: "inherit",
+              },
+            };
+
+            return {
+              ...style[type],
+              fontWeight: isBold ? "bold" : "initial",
+            };
+          }
+          return {};
+        }
+        function weightCacheShow(item: IContrstCharObj) {
+          if (item.hintObj) {
+            const { _flag_, type, weight } = item.hintObj;
+            if (
+              hasRenderMap.has(_flag_) ||
+              type === TypingHintStyleTypes.ONE_CHAR ||
+              weight === 0
+            ) {
+              return false;
+            } else {
+              hasRenderMap.add(_flag_);
+              return true;
+            }
+          }
+        }
+      })();
       onMounted(() => {
         listenContrstPageScroll();
         listenContentOrHintSwitchChange();
@@ -80,31 +144,9 @@ export default defineComponent({
         formatSpace,
         currentPageChars,
         seePlayTypingModelClass,
-        handleWordHintStyle,
+        wordHint,
       };
 
-      // 处理词提样式
-      function handleWordHintStyle(item: IContrstCharObj) {
-        if (item.hintObj) {
-          const {
-            fourC,
-            twoWord,
-            threeWord,
-            fourWord,
-          } = userWordHintStyle.value;
-          const styleType = {
-            [TypingHintStyleTypes.FOUR_MAC_LENGTH_WORD]: fourC,
-            [TypingHintStyleTypes.TOW_CODE_WORD]: twoWord,
-            [TypingHintStyleTypes.THREE_CODE_WORD]: threeWord,
-            [TypingHintStyleTypes.FOUR_CODE_WORD]: fourWord,
-            [TypingHintStyleTypes.ONE_CHAR]: "inherit",
-          };
-          return {
-            color: styleType[item.hintObj.type],
-          };
-        }
-        return {};
-      }
       // 监听源内容、词提开关的变化，如开，对照区则显示词提。如不开，提桶跑路
       function listenContentOrHintSwitchChange() {
         watch(
@@ -115,6 +157,7 @@ export default defineComponent({
                 content
               );
               if (isUpdate) {
+                wordHint.hasRenderMap.clear();
                 contrstChars.value = storeWordHint.getters.hintContrst;
               } else {
                 Toast("啊哦，词提翻车车了");
@@ -223,12 +266,14 @@ $fontColor: #4b4747;
   overflow: auto;
   div {
     box-sizing: border-box;
-    padding: 4px 0;
+    padding: 8px 0;
     position: relative;
     span {
       position: absolute;
       font-size: 10px;
-      bottom: 0px;
+      bottom: -5px;
+      transform: translate(-50%, 0%);
+      left: 50%;
     }
   }
   .contrst-span__have-input {
