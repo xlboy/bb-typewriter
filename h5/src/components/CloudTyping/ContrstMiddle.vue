@@ -101,7 +101,7 @@ export default defineComponent({
               },
               [TypingHintStyleTypes.THREE_CODE_WORD]: {
                 color: threeWord,
-                borderBottom: `1px solid ${threeWord}`,
+                // borderBottom: `1px solid ${threeWord}`,
               },
               [TypingHintStyleTypes.FOUR_CODE_WORD]: {
                 color: fourWord,
@@ -184,7 +184,7 @@ export default defineComponent({
                   ((newVal.length - startIndex.value) /
                     currentPageChars.value.length) *
                     pageMaxHeight -
-                  40;
+                  50;
               }
 
               // 当输入的长度小于或等于 当页结尾字数的时候进行跳页。。
