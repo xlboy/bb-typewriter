@@ -38,16 +38,17 @@ export default {
     isLogin(state: IBBUserState) {
       return state.id !== 0
     },
-    getWordHintBase(state: IBBUserState) {
+    getWordsHintStyle(state: IBBUserState) {
+      return state.wordsHint
+    },
+    getWordHintBase({ currentWordId, id }: IBBUserState) {
       /* 提供一个接口给词提模块返回牵扯的数据 */
-      return {
-        currentWordId: state.currentWordId,
-        id: state.id
-      }
+      return { currentWordId, id }
     },
     currentWordId(state: IBBUserState) {
       return state.currentWordId
-    }
+    },
+
   },
   mutations: {
     SET_WORDS_HINT(state: IBBUserState, wordsHint) {

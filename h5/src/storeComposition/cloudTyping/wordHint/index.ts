@@ -7,6 +7,8 @@ import useRequest from "@/hooks/useRequest";
 import { computed, reactive, watch } from "vue";
 import store from "@/store/";
 import { getUserWordHint } from "@/api/bbUser";
+import { IContrstCharObj } from "@/interface/ITyping";
+import contrstRender from "./contrstRender";
 export interface IWordHintObj {
     preceptName: string;
     id: number
@@ -22,7 +24,7 @@ interface IWordHintState {
     userWord: IWordHintObj[];
     isOpen: boolean;
     yardsLong: number;
-    hintContrst: any[]
+    hintContrst: IContrstCharObj[]
 }
 
 const $store = store;
@@ -81,23 +83,33 @@ const mutations = {
     SET_YARDS_LONG(long: number) {
         state.yardsLong = long
     },
-    SET_HINT_CONTRST(contrst: any[]) {
+    SET_HINT_CONTRST(contrst: IContrstCharObj[]) {
         state.hintContrst = contrst
     }
 }
 const actions = {
-    updateHintContrst(content: string) {
-        if (state.isOpen) {
-            const currentWordId = userState.value.currentWordId || 1
-            useRequest(
-                getQueryWordHint(
-                    content,
-                    currentWordId,
-                    state.defaultWord.find(o => o.id === currentWordId) ? 'default' : 'user'
-                ), (result: any) => {
-                    console.log('result', result)
-                }, true)
-        }
+    updateHintContrst(content: string): Promise<boolean> {
+        return new Promise(r => {
+            if (state.isOpen && content.length !== 0) {
+                const currentWordId = userState.value.currentWordId || 1
+                useRequest(
+                    getQueryWordHint(
+                        content,
+                        currentWordId,
+                        state.defaultWord.find(o => o.id === currentWordId) ? 'default' : 'user'
+                    ), (result: any) => {
+                        if (result.llmc) {
+                            mutations.SET_HINT_CONTRST(contrstRender(result.wordAry))
+                            mutations.SET_YARDS_LONG(result.llmc)
+                            r(true)
+                        } else {
+                            r(false)
+                        }
+                    }, true)
+            } else {
+                r(false)
+            }
+        })
     }
 }
 function init() {

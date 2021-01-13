@@ -1,5 +1,6 @@
 import axios, { AxiosPromise } from 'axios'
 import qs from 'qs'
+import { Toast } from 'vant'
 // 请求拦截器
 axios.interceptors.request.use(
     config => {
@@ -15,11 +16,13 @@ axios.interceptors.response.use(
         if (response.status === 200) {
             return Promise.resolve(response.data)
         } else {
+            Toast('服务异常…' + response.status)
             return Promise.reject(response)
         }
     },
     // 服务器状态码不是200的情况
     error => {
+        Toast('服务异常…' + error)
         return Promise.reject(error.response)
     }
 )
@@ -60,6 +63,6 @@ export default function request(
     } else {
         options.data = data
     }
-    
+
     return axios(options)
 }

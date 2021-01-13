@@ -1,3 +1,4 @@
+import { TypingHintStyleTypes } from '@/enums/typingEnum';
 import { ComputedRef, UnwrapRef } from 'vue';
 
 export interface ITypingTime {
@@ -40,8 +41,12 @@ export interface IContrstCharObj {
     text: string; // 单个文字内容
     haveInput: boolean; // 是否已输入
     inputCorrect: boolean; // 是否输入正确
+    hintObj?: { // 词提的数据
+        encode: string; // 词/单字编码
+        type: TypingHintStyleTypes; // 提示样式类型
+        weight: number;
+    }
 }
-
 // 打字练习成绩的数据
 export interface ITypingResult {
     speed: number; // 速度

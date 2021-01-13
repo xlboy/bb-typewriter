@@ -1,32 +1,30 @@
 <template>
   <div class="contrst" :class="[seePlayTypingModelClass]" id="elContrst">
-    <span
+    <div
       v-for="(item, index) in currentPageChars"
       :key="index"
       :class="[inputCorrectClass(item), haveInputClass(item.haveInput)]"
+      :style="handleWordHintStyle(item)"
     >
+      <span v-if="item.hintObj">{{ item.hintObj.weight }}</span>
       {{ formatSpace(item.text) }}
-    </span>
+    </div>
   </div>
 </template>
 <script lang="ts">
+import { TypingHintStyleTypes } from "@/enums/typingEnum";
 import { TypingSymbol } from "@/hooks/useTyping";
 import { IContrstCharObj } from "@/interface/ITyping";
-import storeWordHint from "@/storeComposition/cloudTyping/wordHint";
-import {
-  computed,
-  defineComponent,
-  inject,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-} from "vue";
+import storeWordHint from "@/storeComposition/cloudTyping/wordHint/";
+import { Toast } from "vant";
+import { computed, defineComponent, inject, onMounted, ref, watch } from "vue";
+import { useStore } from "vuex";
+
 export default defineComponent({
   name: "ContrstMiddle",
   setup() {
     const { refState } = inject(TypingSymbol) as any;
-
+    const $store = useStore();
     // 处理渲染对照区
     const renderContrst = (() => {
       // 练习内容的源数据，记载练习时的状态
@@ -67,11 +65,14 @@ export default defineComponent({
       const seePlayTypingModelClass = computed(() => {
         return refState.typingModel === "看打模式" ? "contrst-see-play" : "";
       });
+      // 用户词提样式
+      const userWordHintStyle = computed(
+        () => $store.getters["user/getWordsHintStyle"]
+      );
 
       onMounted(() => {
         listenContrstPageScroll();
-        listenContentChange();
-        listenWordHintSwitch();
+        listenContentOrHintSwitchChange();
       });
 
       return {
@@ -79,22 +80,48 @@ export default defineComponent({
         formatSpace,
         currentPageChars,
         seePlayTypingModelClass,
+        handleWordHintStyle,
       };
-      // 监听词提开关，如开，对照区则显示词提。如不开，提桶跑路
-      function listenWordHintSwitch() {
+
+      // 处理词提样式
+      function handleWordHintStyle(item: IContrstCharObj) {
+        if (item.hintObj) {
+          const {
+            fourC,
+            twoWord,
+            threeWord,
+            fourWord,
+          } = userWordHintStyle.value;
+          const styleType = {
+            [TypingHintStyleTypes.FOUR_MAC_LENGTH_WORD]: fourC,
+            [TypingHintStyleTypes.TOW_CODE_WORD]: twoWord,
+            [TypingHintStyleTypes.THREE_CODE_WORD]: threeWord,
+            [TypingHintStyleTypes.FOUR_CODE_WORD]: fourWord,
+            [TypingHintStyleTypes.ONE_CHAR]: "inherit",
+          };
+          return {
+            color: styleType[item.hintObj.type],
+          };
+        }
+        return {};
+      }
+      // 监听源内容、词提开关的变化，如开，对照区则显示词提。如不开，提桶跑路
+      function listenContentOrHintSwitchChange() {
         watch(
           [() => storeWordHint.getters.isOpen, () => refState.source.content],
-          ([isOpen, content]) => {
-            storeWordHint.actions.updateHintContrst(content as any);
-          }
-        );
-      }
-      // 监听源内容发生改变
-      function listenContentChange() {
-        watch(
-          () => refState.source.content,
-          (newVal) => {
-            contrstChars.value = contrstCharObjs(newVal);
+          async ([isOpen, content]: [boolean, any]) => {
+            if (isOpen) {
+              const isUpdate = await storeWordHint.actions.updateHintContrst(
+                content
+              );
+              if (isUpdate) {
+                contrstChars.value = storeWordHint.getters.hintContrst;
+              } else {
+                Toast("啊哦，词提翻车车了");
+              }
+            } else {
+              contrstChars.value = contrstCharObjs(content);
+            }
           }
         );
       }
@@ -149,8 +176,8 @@ export default defineComponent({
             : "";
         };
         // 筛选器：录入正确的css
-        const haveInputClass = (is: boolean): string =>
-          is ? "contrst-span__have-input" : "";
+        const haveInputClass = (haveInput: boolean): string =>
+          haveInput ? "contrst-span__have-input" : "";
 
         return {
           inputCorrectClass,
@@ -178,6 +205,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+$fontColor: #4b4747;
 .contrst {
   width: 100%;
   height: 100%;
@@ -189,19 +217,26 @@ export default defineComponent({
   border-radius: 3px;
   background: var(--box-back-color);
   box-shadow: 0 3px 6px var(--box-shadow);
-  color: #4b4747;
+  color: $fontColor;
   font-size: 17px;
   letter-spacing: 0.5px;
   overflow: auto;
-  span {
+  div {
     box-sizing: border-box;
     padding: 4px 0;
+    position: relative;
+    span {
+      position: absolute;
+      font-size: 10px;
+      bottom: 0px;
+    }
   }
   .contrst-span__have-input {
     background: #beb2b2;
+    color: $fontColor !important;
   }
   .contrst-span__input-error {
-    color: #ff0000;
+    color: #ff0000 !important;
   }
   &-see-play {
     .contrst-span__have-input {

@@ -56,7 +56,7 @@ import ConfirmInput from "../Common/ConfirmInput";
 import SelectCustomize from "./components/SelectCustomize.vue";
 import typingContent from "@/utils/typingContent";
 import { IUseTyping } from "@/interface/ITyping";
-import storeWordHint from "@/storeComposition/cloudTyping/wordHint";
+import storeWordHint from "@/storeComposition/cloudTyping/wordHint/";
 import { useRouter } from "vue-router";
 
 export default defineComponent({

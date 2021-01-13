@@ -24,7 +24,7 @@
 import useBaseLayout from "@/hooks/useBaseLayout";
 import storeWordHint, {
   IWordHintObj,
-} from "@/storeComposition/cloudTyping/wordHint";
+} from "@/storeComposition/cloudTyping/wordHint/";
 import { Toast } from "vant";
 import { defineComponent, reactive, computed, toRef } from "vue";
 import { useStore } from "vuex";
