@@ -93,7 +93,7 @@ export default defineComponent({
             } = userWordHintStyle.value;
 
             const style = {
-              [TypingHintStyleTypes.FOUR_MAC_LENGTH_WORD]: {
+              [TypingHintStyleTypes.FOUR_CHAR_LENGTH_WORD]: {
                 color: fourC,
                 fontStyle: "italic",
               },
@@ -176,7 +176,7 @@ export default defineComponent({
         const elContrst = document.getElementById("elContrst");
         if (elContrst) {
           watch(
-            () => refState.haveInput,
+            () => refState.haveInput as string,
             (newVal) => {
               const { startIndex, endIndex, turnSize } = pageScroll;
               const pageMaxHeight = elContrst.scrollHeight;
@@ -194,6 +194,10 @@ export default defineComponent({
               if (newVal.length >= endIndex.value - turnSize) {
                 pageScroll.page.value++;
                 elContrst.scrollTop = 0;
+              }
+              // 当输入的长度为0时证明重新开始了，当前页恢复为第一页
+              if (newVal.length === 0) {
+                pageScroll.page.value = 1
               }
             }
           );
@@ -270,13 +274,16 @@ $fontColor: #4b4747;
   div {
     box-sizing: border-box;
     padding-top: 14px;
+    padding-bottom: 1px;
     position: relative;
+    letter-spacing: 0.5px;
     span {
       position: absolute;
       font-size: 10px;
       bottom: -14px;
       transform: translate(-50%, 0%);
       left: 50%;
+      z-index: 2;
     }
   }
   .contrst-span__have-input {

@@ -68,6 +68,9 @@ const getters = reactive({
     },
     get isOpen() {
         return state.isOpen
+    },
+    get yardsLong() {
+        return state.yardsLong
     }
 })
 const mutations = {

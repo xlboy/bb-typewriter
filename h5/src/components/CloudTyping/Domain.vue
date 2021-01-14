@@ -1,8 +1,8 @@
 <template>
   <div class="domain">
-    <van-divider dashed style="margin-top: 0px" content-position="left"
-      >基本功能</van-divider
-    >
+    <van-divider dashed style="margin-top: 0px" content-position="left">
+      基本功能
+    </van-divider>
     <button class="domain-button waves-btn" @click="showLoadArticle">
       载文
     </button>
@@ -24,8 +24,17 @@
         type="primary"
         size="large"
         style="margin-left: 5px"
-        >{{ wordHint.getters.currentSelectWordName }}</van-tag
       >
+        {{ wordHint.getters.currentSelectWordName }}
+      </van-tag>
+      <van-tag
+        type="primary"
+        size="large"
+        style="margin-left: 5px"
+        v-if="wordHint.isOpen.value"
+      >
+        理论码长：{{ wordHint.getters.yardsLong }}
+      </van-tag>
     </van-row>
   </div>
   <van-action-sheet

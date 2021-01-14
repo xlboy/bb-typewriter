@@ -19,11 +19,14 @@ interface IAllWord {
 function handleHintStyleType(source: IWordHintRenderSource): TypingHintStyleTypes {
     const charLength = source.val.length
     const codeLength = source.bm.length
+    const lastCode = source.bm[codeLength - 1]
     if (charLength === 1) {
         return TypingHintStyleTypes.ONE_CHAR
-    } else if (charLength >= 4) {
-        return TypingHintStyleTypes.FOUR_MAC_LENGTH_WORD
-    } else if (charLength === 3) {
+    } else if (codeLength === 2) {
+        return TypingHintStyleTypes.ONE_CODE_WORD
+    } else if (charLength === 4) {
+        return TypingHintStyleTypes.FOUR_CHAR_LENGTH_WORD
+    } else if (codeLength === 4 && /[\d_]/.test(lastCode)) {
         return TypingHintStyleTypes.THREE_CODE_WORD
     } else if (codeLength >= 4) {
         return TypingHintStyleTypes.FOUR_CODE_WORD

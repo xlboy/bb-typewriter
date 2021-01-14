@@ -2,6 +2,9 @@
   <div class="speed">
     <div class="speed-tag">第{{ refState.source.index }}段</div>
     <div class="speed-tag">{{ getSpeed }}</div>
+    <div class="speed-tag" v-if="wordhint.isOpen.value">
+      {{ wordhint.currentCode.value }}
+    </div>
     <div class="speed-btn waves-btn" @click="restartTyping">
       <van-icon name="replay" />
     </div>
@@ -13,7 +16,6 @@
       :actions="menuActions.data.actions"
       @select="menuActions.onSelect"
       placement="bottom-end"
-      class="wdnmdb"
       :style="{ height: '100%' }"
     >
       <template #reference>
@@ -30,13 +32,13 @@ import copyText from "@/utils/copyText";
 import typingContent from "@/utils/typingContent";
 import { Toast } from "vant";
 import Notify from "@/utils/notify";
-
-import { defineComponent, inject, reactive } from "vue";
+import { computed, defineComponent, inject, reactive } from "vue";
 import customizeArticle from "@/storeComposition/cloudTyping/customizeArticle";
+import storeWordHint from "@/storeComposition/cloudTyping/wordHint";
 export default defineComponent({
   name: "SpeedTop",
   setup() {
-    const { getters, refState, mutations }: any = inject(TypingSymbol);
+    const { getters, refState, mutations } = inject(TypingSymbol) as any;
     const { getSpeed, getKeystroke, getYardsLong } = getters;
 
     // 切换全屏
@@ -93,7 +95,10 @@ export default defineComponent({
                 return Notify.warning("内容已打完！快换一段吧！");
               }
               mutations.SetSource({
-                content: content.content.substr(content.currentIndex, data.size),
+                content: content.content.substr(
+                  content.currentIndex,
+                  data.size
+                ),
                 index: refState.source.index + 1,
               });
               resetToast();
@@ -105,6 +110,20 @@ export default defineComponent({
       return {
         data,
         onSelect,
+      };
+    })();
+
+    // 词提编码展示
+    const wordhint = (() => {
+      const isOpen = computed(() => storeWordHint.getters.isOpen);
+      const currentCode = computed(() => {
+        const inputLength = refState.haveInput.length;
+        const { hintContrst } = storeWordHint.getters;
+        return hintContrst[inputLength]?.hintObj?.encode || '🐢🐢';
+      });
+      return {
+        isOpen,
+        currentCode,
       };
     })();
 
@@ -120,7 +139,8 @@ export default defineComponent({
       refState,
       menuActions,
       restartTyping,
-      switchFullScreen
+      switchFullScreen,
+      wordhint,
     };
   },
 });

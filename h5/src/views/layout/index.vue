@@ -124,12 +124,12 @@ export default defineComponent({
     height: 100%;
     border: 1px;
     box-sizing: border-box;
-    // padding: 5px;
     background: #fbfbfb;
     border-radius: 0px;
     transition: all 0.4s;
     position: fixed;
     top: 0%;
+    overflow: auto;
     transform: translate3d(0%, 0, 0) scale3d(1, 1, 1);
   }
   &__open-sidebar {
