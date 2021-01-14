@@ -1,7 +1,25 @@
 body {
   user-select: none;
+  background: #eee;
 }
+* {
+  ::-webkit-scrollbar {
+    /* 定义滚动条的体积 */
+    width: 2px;
+    height: 2px;
+  }
 
+  ::-webkit-scrollbar-track {
+    /* 定义滚动条的背景色 */
+    background-color: #fff;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    /* 定义滚动条的滑块 */
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    background-color: #f1f0ed;
+  }
+}
 .wx-flex {
   display: flex;
 }
@@ -25,7 +43,7 @@ body {
 }
 
 .identicon:after {
-  content: '';
+  content: "";
   clear: both;
   display: block;
 }
