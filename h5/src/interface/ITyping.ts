@@ -42,6 +42,7 @@ export interface IContrstCharObj {
     haveInput: boolean; // 是否已输入
     inputCorrect: boolean; // 是否输入正确
     hintObj?: { // 词提的数据
+        uid: number;
         encode: string; // 词/单字编码
         type: TypingHintStyleTypes; // 提示样式类型
         weight: number;

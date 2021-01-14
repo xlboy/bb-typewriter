@@ -134,7 +134,7 @@ export default defineComponent({
   }
   &-contrst {
     width: 100%;
-    height: 150px;
+    height: 190px;
   }
   &-input {
     width: 100%;

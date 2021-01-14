@@ -52,6 +52,7 @@ function handleRepeatWord(allWord: IAllWord[]): boolean {
 }
 export default function (source: IWordHintRenderSource[]): IContrstCharObj[] {
     const allWord: IAllWord[] = []
+    let uid = 0
     return (source.map(o => {
         const type = handleHintStyleType(o)
         allWord.push({
@@ -60,17 +61,20 @@ export default function (source: IWordHintRenderSource[]): IContrstCharObj[] {
         })
         const _flag_ = Symbol('')
         return o.val.split('').map(_o => {
-
+            uid++
             return {
                 text: _o,
                 haveInput: false,
                 inputCorrect: false,
                 hintObj: {
+                    // 利用_flag_与uid来实现词提权重防止重复渲染
+                    uid: uid++,
+                    _flag_,
+                    weight: handleHintWeight(o.bm),
                     encode: o.bm,
                     type,
-                    weight: handleHintWeight(o.bm),
+                    // 如果前一个词与后一个词的类型是一样的，则让后一个词的字体加粗状态与前面那个词的相反，区分开来
                     isBold: handleRepeatWord(allWord),
-                    _flag_
                 }
             }
         })

@@ -73,7 +73,8 @@ export default defineComponent({
         const userWordHintStyle = computed(
           () => $store.getters["user/getWordsHintStyle"]
         );
-        const hasRenderMap = new Set();
+        // 防止重复词语权重数渲染的一个缓存集合
+        const hasRenderMap = new Map();
 
         return {
           hasRenderMap,
@@ -98,10 +99,11 @@ export default defineComponent({
               },
               [TypingHintStyleTypes.TOW_CODE_WORD]: {
                 color: twoWord,
+                borderBottom: `1px dashed ${twoWord}`
               },
               [TypingHintStyleTypes.THREE_CODE_WORD]: {
                 color: threeWord,
-                // borderBottom: `1px solid ${threeWord}`,
+                borderBottom: `1px solid ${threeWord}`,
               },
               [TypingHintStyleTypes.FOUR_CODE_WORD]: {
                 color: fourWord,
@@ -120,18 +122,19 @@ export default defineComponent({
         }
         function weightCacheShow(item: IContrstCharObj) {
           if (item.hintObj) {
-            const { _flag_, type, weight } = item.hintObj;
-            if (
-              hasRenderMap.has(_flag_) ||
-              type === TypingHintStyleTypes.ONE_CHAR ||
-              weight === 0
-            ) {
+            const { uid, _flag_, type, weight } = item.hintObj;
+            if (type === TypingHintStyleTypes.ONE_CHAR || weight === 0) {
+              return false
+            } else if (!hasRenderMap.has(_flag_)) {
+              hasRenderMap.set(_flag_, uid);
+              return true;
+            } else if (hasRenderMap.get(_flag_) !== uid) {
               return false;
             } else {
-              hasRenderMap.add(_flag_);
               return true;
             }
           }
+          return false;
         }
       })();
       onMounted(() => {
@@ -266,12 +269,12 @@ $fontColor: #4b4747;
   overflow: auto;
   div {
     box-sizing: border-box;
-    padding: 8px 0;
+    padding-top: 14px;
     position: relative;
     span {
       position: absolute;
       font-size: 10px;
-      bottom: -5px;
+      bottom: -14px;
       transform: translate(-50%, 0%);
       left: 50%;
     }
