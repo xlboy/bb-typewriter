@@ -123,7 +123,7 @@ export default defineComponent({
         function weightCacheShow(item: IContrstCharObj) {
           if (item.hintObj) {
             const { uid, _flag_, type, weight } = item.hintObj;
-            if (type === TypingHintStyleTypes.ONE_CHAR || weight === 0) {
+            if (type === TypingHintStyleTypes.ONE_CHAR || [0, 1].includes(weight)) {
               return false
             } else if (!hasRenderMap.has(_flag_)) {
               hasRenderMap.set(_flag_, uid);

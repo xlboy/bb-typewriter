@@ -6,6 +6,7 @@
         :key="index"
         :icon="vanIcons[~~(Math.random() * vanIcons.length - 1)]"
         :text="item"
+        @click="toMiniApp"
       />
     </van-grid>
   </div>
@@ -15,6 +16,7 @@
 import useBaseLayout from "@/hooks/useBaseLayout";
 import { defineComponent } from "vue";
 import vanIcons from "@/model/vanIcons";
+import { Toast } from "vant";
 export default defineComponent({
   name: "MiniApps",
   setup() {
@@ -34,9 +36,13 @@ export default defineComponent({
       "天气预告",
       "富婆通讯录",
     ];
+    function toMiniApp() {
+      Toast('作者正在马不停蹄开发中..')
+    }
     return {
       vanIcons,
       miniApps,
+      toMiniApp
     };
   },
 });

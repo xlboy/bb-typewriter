@@ -6,7 +6,6 @@ import { getDefaultWordHint, getQueryWordHint } from "@/api/bbPublic";
 import useRequest from "@/hooks/useRequest";
 import { computed, reactive, watch } from "vue";
 import store from "@/store/";
-import { getUserWordHint } from "@/api/bbUser";
 import { IContrstCharObj } from "@/interface/ITyping";
 import contrstRender from "./contrstRender";
 export interface IWordHintObj {
@@ -21,7 +20,6 @@ interface IWordHintAll {
 
 interface IWordHintState {
     defaultWord: IWordHintObj[];
-    userWord: IWordHintObj[];
     isOpen: boolean;
     yardsLong: number;
     hintContrst: IContrstCharObj[]
@@ -32,10 +30,12 @@ const $store = store;
 const userState = computed(() => $store.getters['user/getWordHintBase'] as {
     currentWordId: number | null;
     id: number;
+    wordList: IWordHintObj[]
 })
+
+
 const state = reactive({
     defaultWord: [], // 系统默认的词提码表列表
-    userWord: [], // 用户的词提码表列表
     isOpen: false, // 是否打开词提
     yardsLong: 0, // 文章码长
     hintContrst: [], // 词提对照的数据
@@ -44,7 +44,7 @@ const state = reactive({
 const getters = reactive({
     get allWordList(): IWordHintAll {
         return {
-            user: state.userWord,
+            user: userState.value.wordList,
             default: state.defaultWord
         }
     },
@@ -76,9 +76,6 @@ const getters = reactive({
 const mutations = {
     SET_DEFAULT_WORD(word: IWordHintObj[]) {
         state.defaultWord = word
-    },
-    SET_USER_WORD(word: IWordHintObj[]) {
-        state.userWord = word
     },
     SET_IS_OPEN(status: boolean) {
         state.isOpen = status
@@ -121,14 +118,9 @@ function init() {
 
     // 监听用户状态，发生改变则重新请求用户词库
     function listenUserStateChange() {
-        function handleChange(userId: number) {
-            if (userId !== 0) {
-                useRequest(getUserWordHint(userId), (result: IWordHintObj[]) => {
-                    mutations.SET_USER_WORD(result)
-                }, false)
-            }
-        }
-        watch(() => userState.value.id, handleChange, {
+        watch(() => userState.value.id, () => {
+            $store.dispatch('user/refreshUserWordList')
+        }, {
             immediate: true
         })
     }

@@ -1,12 +1,13 @@
-import { getReadUserInfo, saveUserCurrentWord, userLogin, userReg } from "@/api/bbUser";
+import { getReadUserInfo, getUserWordHint, saveUserCurrentWord, userLogin, userReg } from "@/api/bbUser";
 import useRequest from "@/hooks/useRequest";
 import { Module } from "vuex";
 import _ from 'lodash'
 import { Toast } from "vant";
+import { IWordHintObj } from "@/storeComposition/cloudTyping/wordHint";
 export interface IBBUserState {
   countSize: number;
   currentWordId: number;
-  wordsHint: {
+  wordHintStyle: {
     fourC: string;
     fourWord: string;
     threeWord: string;
@@ -15,12 +16,13 @@ export interface IBBUserState {
   id: number;
   sign: string;
   qq: number;
-  username: string
+  username: string;
+  wordList: IWordHintObj[]
 }
 const $state: IBBUserState = {
   countSize: 0,
   currentWordId: 0,
-  wordsHint: {
+  wordHintStyle: {
     fourC: '',
     fourWord: '',
     threeWord: '',
@@ -29,7 +31,8 @@ const $state: IBBUserState = {
   id: 0,
   sign: '',
   qq: 52852983,
-  username: '登陆/注册'
+  username: '登陆/注册',
+  wordList: []
 };
 export default {
   namespaced: true,
@@ -39,20 +42,19 @@ export default {
       return state.id !== 0
     },
     getWordsHintStyle(state: IBBUserState) {
-      return state.wordsHint
+      return state.wordHintStyle
     },
-    getWordHintBase({ currentWordId, id }: IBBUserState) {
+    getWordHintBase({ currentWordId, id, wordList }: IBBUserState) {
       /* 提供一个接口给词提模块返回牵扯的数据 */
-      return { currentWordId, id }
+      return { currentWordId, id, wordList }
     },
     currentWordId(state: IBBUserState) {
       return state.currentWordId
-    },
-
+    }
   },
   mutations: {
-    SET_WORDS_HINT(state: IBBUserState, wordsHint) {
-      Object.assign(state.wordsHint, wordsHint)
+    SET_WORD_HINT_STYLE(state: IBBUserState, wordHintStyle) {
+      Object.assign(state.wordHintStyle, wordHintStyle)
     },
     SET_USER_BASE_INFO(state: IBBUserState, info) {
       Object.assign(state, info)
@@ -65,6 +67,9 @@ export default {
     },
     RESET_STATE(state: IBBUserState) {
       Object.assign(state, _.cloneDeep($state))
+    },
+    SET_WORD_LIST(state: IBBUserState, wordList) {
+      state.wordList = wordList
     }
   },
   actions: {
@@ -72,7 +77,7 @@ export default {
     loginSuccessConvert({ commit }, result) {
       // 词提样式
       const { fourC, fourWord, threeWord, twoWord } = result
-      commit('SET_WORDS_HINT', { fourC, fourWord, threeWord, twoWord })
+      commit('SET_WORD_HINT_STYLE', { fourC, fourWord, threeWord, twoWord })
       // 用户基本信息
       const { id, qq, sign, username } = result
       commit('SET_USER_BASE_INFO', { id, qq, sign, username })
@@ -140,6 +145,18 @@ export default {
     logout({ commit }) {
       localStorage.removeItem('userId')
       commit('RESET_STATE')
-    }
+    },
+    refreshUserWordList({ commit, state }): Promise<boolean> {
+      return new Promise(r => {
+        if (state.id !== 0) {
+          useRequest(getUserWordHint(state.id), (result: IWordHintObj[]) => {
+            commit('SET_WORD_LIST', result)
+            r(true)
+          }, false)
+        } else {
+          r(false)
+        }
+      })
+    },
   },
 } as Module<IBBUserState, any>;
