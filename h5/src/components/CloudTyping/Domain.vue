@@ -31,6 +31,7 @@
         @click="wordHintAnalysisVisible = true"
         type="primary"
         size="large"
+        v-if="wordHint.isOpen.value"
         style="margin-left: 5px"
       >
         词提分析
