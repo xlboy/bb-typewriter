@@ -24,7 +24,9 @@ import {
   Grid,
   GridItem,
   Switch,
-  Cascader
+  Cascader,
+  Collapse,
+  CollapseItem
 } from "vant";
 
 const plugins = [
@@ -52,7 +54,9 @@ const plugins = [
   Grid,
   GridItem,
   Switch,
-  Cascader
+  Cascader,
+  Collapse,
+  CollapseItem
 ];
 
 export const vantPlugins = {

@@ -1,15 +1,11 @@
 import { TypingHintStyleTypes } from "@/enums/typingEnum";
 import { IContrstCharObj } from "@/interface/ITyping";
+import { IWordHintRenderSource } from ".";
 
 /**
  * @description 将词提数据转换为对照区渲染数据格式
  */
-export interface IWordHintRenderSource {
-    val: string;
-    kt: number;
-    jw: number;
-    bm: string;
-}
+
 
 interface IAllWord {
     type: TypingHintStyleTypes;

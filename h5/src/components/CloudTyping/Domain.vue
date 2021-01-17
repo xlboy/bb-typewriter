@@ -28,6 +28,14 @@
         {{ wordHint.getters.currentSelectWordName }}
       </van-tag>
       <van-tag
+        @click="wordHintAnalysisVisible = true"
+        type="primary"
+        size="large"
+        style="margin-left: 5px"
+      >
+        词提分析
+      </van-tag>
+      <van-tag
         type="primary"
         size="large"
         style="margin-left: 5px"
@@ -44,6 +52,7 @@
     cancel-text="取消"
   />
   <SelectCustomize v-model:show="selectCustomizeVisible" />
+  <WordHintAnalysis v-model:show="wordHintAnalysisVisible" />
 </template>
 <script lang="ts">
 import useRequest from "@/hooks/useRequest";
@@ -60,9 +69,11 @@ import {
 } from "@/api/qqGroupArticle";
 import Notify from "@/utils/notify";
 import { TypingSymbol } from "@/hooks/useTyping";
-import typingGroup from "@/model/typingGroup";
+import typingGroup from "@/model/typingGroup.ts";
 import ConfirmInput from "../Common/ConfirmInput";
 import SelectCustomize from "./components/SelectCustomize.vue";
+import WordHintAnalysis from "./components/WordHintAnalysis.vue";
+
 import typingContent from "@/utils/typingContent";
 import { IUseTyping } from "@/interface/ITyping";
 import storeWordHint from "@/storeComposition/cloudTyping/wordHint/";
@@ -70,11 +81,13 @@ import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Domain",
-  components: { SelectCustomize },
+  components: { SelectCustomize, WordHintAnalysis },
   setup() {
     const { mutations: typingMutations } = inject(TypingSymbol) as IUseTyping;
     const selectCustomizeVisible = ref(false);
+    const wordHintAnalysisVisible = ref(false);
     const $router = useRouter();
+
     // 下拉面板的功能区
     const actionSheet = (() => {
       const data = reactive({
@@ -269,6 +282,7 @@ export default defineComponent({
       showPostArticle,
       showTypingModel,
       selectCustomizeVisible,
+      wordHintAnalysisVisible,
       wordHint,
     };
   },

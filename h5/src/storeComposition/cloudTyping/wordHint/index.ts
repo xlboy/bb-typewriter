@@ -8,9 +8,17 @@ import { computed, reactive, watch } from "vue";
 import store from "@/store/";
 import { IContrstCharObj } from "@/interface/ITyping";
 import contrstRender from "./contrstRender";
+import hintAnalysis, { IHintAnalysis } from "./hintAnalysis";
 export interface IWordHintObj {
     preceptName: string;
     id: number
+}
+
+export interface IWordHintRenderSource {
+    val: string;
+    kt: number;
+    jw: number;
+    bm: string;
 }
 
 interface IWordHintAll {
@@ -22,7 +30,8 @@ interface IWordHintState {
     defaultWord: IWordHintObj[];
     isOpen: boolean;
     yardsLong: number;
-    hintContrst: IContrstCharObj[]
+    hintSource: IWordHintRenderSource[];
+    hintContrst: IContrstCharObj[];
 }
 
 const $store = store;
@@ -38,6 +47,7 @@ const state = reactive({
     defaultWord: [], // 系统默认的词提码表列表
     isOpen: false, // 是否打开词提
     yardsLong: 0, // 文章码长
+    hintSource: [],
     hintContrst: [], // 词提对照的数据
 } as IWordHintState)
 
@@ -63,6 +73,9 @@ const getters = reactive({
         }
         return findWord()
     },
+    get hintAnalysis(): IHintAnalysis[] {
+        return hintAnalysis(state.hintSource)
+    },
     get hintContrst() {
         return state.hintContrst
     },
@@ -85,6 +98,9 @@ const mutations = {
     },
     SET_HINT_CONTRST(contrst: IContrstCharObj[]) {
         state.hintContrst = contrst
+    },
+    SET_HINT_SOURCE(source: IWordHintRenderSource[]) {
+        state.hintSource = source
     }
 }
 const actions = {
@@ -99,6 +115,7 @@ const actions = {
                         state.defaultWord.find(o => o.id === currentWordId) ? 'default' : 'user'
                     ), (result: any) => {
                         if (result.llmc) {
+                            mutations.SET_HINT_SOURCE(result.wordAry)
                             mutations.SET_HINT_CONTRST(contrstRender(result.wordAry))
                             mutations.SET_YARDS_LONG(result.llmc)
                             r(true)
