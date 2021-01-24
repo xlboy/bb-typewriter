@@ -3,11 +3,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Layout",
-    redirect: "/cloud-typing",
     component: () => import("../views/layout/index.vue"),
     children: [
       {
-        path: "cloud-typing",
+        path: "/",
         name: "CloudTyping",
         component: () => import("../views/cloud-typing/index.vue")
       },
