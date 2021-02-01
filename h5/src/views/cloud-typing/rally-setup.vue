@@ -28,6 +28,7 @@ import storeWordHint, {
 import { Toast } from "vant";
 import { defineComponent, reactive, computed, toRef } from "vue";
 import { useStore } from "vuex";
+
 export default defineComponent({
   name: "RallySetup",
   setup() {

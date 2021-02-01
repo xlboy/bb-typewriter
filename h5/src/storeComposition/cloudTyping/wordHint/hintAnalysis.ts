@@ -60,17 +60,19 @@ export default function (hintSource: IWordHintRenderSource[]): IHintAnalysis[] {
     const analysis: IHintAnalysis[] = []
 
     hintSource.forEach(hintObj => {
-        if (hintObj.val.length === 1) {
-            insertAnalysisOneCharType(hintObj.val)
+        const word = hintObj.val
+        if (word.length === 1) {
+            insertAnalysisOneCharType(word)
         } else {
             const ruleType = rules.find(r => r.reg.test(hintObj.bm))
             if (ruleType) {
                 const typeName =
-                    (ruleType.types[hintObj.val.length] || ruleType.types.default) as string
-                insertAnalysisWordType(typeName, hintObj.val)
+                    (ruleType.types[word.length] || ruleType.types.default) as string
+                insertAnalysisWordType(typeName, word)
             }
         }
     })
+    return analysis
 
     function insertAnalysisWordType(typeName: string, word: string) {
         const analysisObj = findType() || createType()
@@ -103,5 +105,4 @@ export default function (hintSource: IWordHintRenderSource[]): IHintAnalysis[] {
             return analysis[analysis.length - 1]
         }
     }
-    return analysis
 }

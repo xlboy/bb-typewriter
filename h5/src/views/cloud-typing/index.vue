@@ -55,7 +55,7 @@ export default defineComponent({
     // 每练习完成一次的回调
     function finishTyping(result: ITypingResult) {
       // 将成绩复制到剪贴板中
-      const keyName: any = {
+      const keyName = {
         // #是占位符
         speed: "速度#",
         keystroke: "击键#",

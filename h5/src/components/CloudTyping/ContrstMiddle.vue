@@ -181,7 +181,7 @@ export default defineComponent({
               const { startIndex, endIndex, turnSize } = pageScroll;
               const pageMaxHeight = elContrst.scrollHeight;
               // 输入的内容超过了20个字后再进行滚动
-              // -30是为了滚动滚的更精准，一些偏差
+              // -50是为了滚动滚的更精准，一些偏差
               if (newVal.length - 20 > startIndex.value) {
                 elContrst.scrollTop =
                   ((newVal.length - startIndex.value) /
@@ -198,6 +198,7 @@ export default defineComponent({
               // 当输入的长度为0时证明重新开始了，当前页恢复为第一页
               if (newVal.length === 0) {
                 pageScroll.page.value = 1
+                elContrst.scrollTop = 0;
               }
             }
           );
