@@ -1,4 +1,4 @@
-import { getReadUserInfo, getUserWordHint, saveUserCurrentWord, userLogin, userReg } from "@/api/bbUser";
+import { getReadUserInfo, getUserWordHint, saveUserColorWord, saveUserCurrentWord, userLogin, userReg } from "@/api/bbUser";
 import useRequest from "@/hooks/useRequest";
 import { Module } from "vuex";
 import _ from 'lodash'
@@ -23,10 +23,10 @@ const $state: IBBUserState = {
   countSize: 0,
   currentWordId: 0,
   wordHintStyle: {
-    fourC: '',
-    fourWord: '',
-    threeWord: '',
-    twoWord: ''
+    fourC: 'rgba(152, 16, 221, 0.96)',
+    fourWord: 'rgba(58, 216, 34, 0.73)',
+    threeWord: 'rgba(24, 98, 209, 0.96)',
+    twoWord: 'rgba(204, 22, 22, 0.96)'
   },
   id: 0,
   sign: '',
@@ -151,6 +151,18 @@ export default {
         if (state.id !== 0) {
           useRequest(getUserWordHint(state.id), (result: IWordHintObj[]) => {
             commit('SET_WORD_LIST', result)
+            r(true)
+          }, false)
+        } else {
+          r(false)
+        }
+      })
+    },
+    refreshUserWordStyle({ state }): Promise<boolean> {
+      return new Promise(r => {
+        if (state.id !== 0) {
+          const { twoWord, threeWord, fourWord, fourC } = state.wordHintStyle
+          useRequest(saveUserColorWord(state.id, twoWord, threeWord, fourWord, fourC), (_: any) => {
             r(true)
           }, false)
         } else {

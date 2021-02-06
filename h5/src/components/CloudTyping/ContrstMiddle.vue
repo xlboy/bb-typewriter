@@ -292,7 +292,7 @@ $fontColor: #4b4747;
     color: $fontColor !important;
   }
   .contrst-span__input-error {
-    color: #ff0000 !important;
+    background: #ff4c4c !important;
   }
   &-see-play {
     .contrst-span__have-input {

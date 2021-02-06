@@ -8,6 +8,7 @@
       placeholder="词提选择"
       @click="wordHintSelect.state.show = true"
     />
+    <van-cell title="词提颜色" is-link @click="wordHintColorVisible = true" />
     <van-popup v-model:show="wordHintSelect.state.show" round position="bottom">
       <van-cascader
         v-model="wordHintSelect.state.select"
@@ -17,6 +18,7 @@
         @finish="wordHintSelect.onFinish"
       />
     </van-popup>
+    <WordHintColor v-model:show="wordHintColorVisible" />
   </div>
 </template>
 
@@ -28,9 +30,16 @@ import storeWordHint, {
 import { Toast } from "vant";
 import { defineComponent, reactive, computed, toRef } from "vue";
 import { useStore } from "vuex";
+import WordHintColor from "./components/WordHintColor.vue";
 
 export default defineComponent({
   name: "RallySetup",
+  components: { WordHintColor },
+  data() {
+    return {
+      wordHintColorVisible: false
+    };
+  },
   setup() {
     const baseLayout = useBaseLayout();
     const $store = useStore();
@@ -84,7 +93,7 @@ export default defineComponent({
         onFinish,
       };
     })();
-    
+
     return {
       wordHintSelect,
     };
