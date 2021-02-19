@@ -162,7 +162,7 @@ export default {
       return new Promise(r => {
         if (state.id !== 0) {
           const { twoWord, threeWord, fourWord, fourC } = state.wordHintStyle
-          useRequest(saveUserColorWord(state.id, twoWord, threeWord, fourWord, fourC), (_: any) => {
+          useRequest(saveUserColorWord(state.id, twoWord, threeWord, fourWord, fourC), () => {
             r(true)
           }, false)
         } else {

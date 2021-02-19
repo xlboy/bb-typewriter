@@ -26,7 +26,8 @@ import {
   Switch,
   Cascader,
   Collapse,
-  CollapseItem
+  CollapseItem,
+  Pagination
 } from "vant";
 
 const plugins = [
@@ -56,7 +57,8 @@ const plugins = [
   Switch,
   Cascader,
   Collapse,
-  CollapseItem
+  CollapseItem,
+  Pagination
 ];
 
 export const vantPlugins = {

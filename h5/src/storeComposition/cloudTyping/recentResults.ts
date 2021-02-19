@@ -5,6 +5,7 @@ import { ref } from 'vue'
  * @description 最近练习的成绩，在本地存储里
  */
 export interface IRencentResult {
+    id: string;
     index: number; // 段号
     speed: number; // 速度
     keystroke: number; // 击键
@@ -18,14 +19,35 @@ export interface IRencentResult {
     insertTime: string; // 插入时间
 }
 const store = new LocalStore('bb-recentResults')
-export default {
+
+const recentResults = {
     initData() {
         store.initStore()
-        this.list.value = store.toArray().slice(0, 10)
+        this.list.value = store.toArray()
     },
     add(result: IRencentResult) {
+        // result.id = 1
         this.list.value.unshift(result)
         store.writeJson(this.list.value)
     },
-    list: ref([] as IRencentResult[])
+    list: ref([] as IRencentResult[]),
+    findPage(startPage: number, size: number) {
+        const list = this.list.value
+        const countPage = ~~(list.length / size) + 1
+        return {
+            data: getData(),
+            countPage
+        }
+        function getData() {
+            const startIndex = startPage * size
+            const result = list.slice(
+                startIndex,
+                startIndex + size)
+            return result
+        }
+    }
 }
+
+recentResults.initData()
+
+export default recentResults

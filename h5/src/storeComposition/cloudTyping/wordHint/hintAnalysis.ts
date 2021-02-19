@@ -76,7 +76,9 @@ export default function (hintSource: IWordHintRenderSource[]): IHintAnalysis[] {
 
     function insertAnalysisWordType(typeName: string, word: string) {
         const analysisObj = findType() || createType()
-        analysisObj.words.push(word)
+        if (!analysisObj.words.includes(word)) {
+            analysisObj.words.push(word)
+        }
 
         function findType() {
             return analysis.find(analy => analy.typeName === typeName)
@@ -92,7 +94,9 @@ export default function (hintSource: IWordHintRenderSource[]): IHintAnalysis[] {
     function insertAnalysisOneCharType(word: string) {
         const analysisObj = findType() || createType()
         const regChinese = /[\u4e00-\u9fa5]/
-        regChinese.test(word) && analysisObj.words.push(word)
+        if (!analysisObj.words.includes(word) && regChinese.test(word)) {
+            analysisObj.words.push(word)
+        }
 
         function findType() {
             return analysis.find(analy => analy.typeName === '单字')

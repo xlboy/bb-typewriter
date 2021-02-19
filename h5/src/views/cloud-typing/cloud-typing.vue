@@ -92,7 +92,7 @@ export default defineComponent({
           new Date()
             .toLocaleString()
             .match(/(?<=.{5})[\d/ :]+/g)
-            ?.join("") ?? "",
+            ?.join("　") ?? "",
       };
       recentResults.add(resultObj);
     }

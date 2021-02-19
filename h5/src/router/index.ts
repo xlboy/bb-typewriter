@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "/",
         name: "CloudTyping",
-        component: () => import(/* webpackChunkName: "CloudTyping" */ "../views/cloud-typing/index.vue")
+        component: () => import(/* webpackChunkName: "CloudTyping" */ "../views/cloud-typing/cloud-typing.vue")
       },
       {
         path: "/base-layout",
@@ -48,7 +48,12 @@ const routes: Array<RouteRecordRaw> = [
           {
             path: "rally-setup",
             name: "RallySetup",
-            component: () => import(/* webpackChunkName: "RallySetup" */ "../views/cloud-typing/rally-setup.vue")
+            component: () => import(/* webpackChunkName: "RallySetup" */ "../views/cloud-typing/rally-setup/index.vue")
+          },
+          {
+            path: "recent-results",
+            name: "RecentResults",
+            component: () => import(/* webpackChunkName: "RecentResults" */ "../views/cloud-typing/recent-results.vue")
           }
         ]
       }

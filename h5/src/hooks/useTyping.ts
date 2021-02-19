@@ -204,7 +204,7 @@ export default function (
         } else if (type === 'inputVal') mutations.UpdateStartTime() // 更新开始时间
 
         // 判断是否回改
-        if (newVal.length < oldVal.length) {
+        if (newVal.length !== 0 && newVal.length < oldVal.length) {
           const changeNum = Math.abs(newVal.length - oldVal.length)
           mutations.SetBackChange(changeNum)
         }
