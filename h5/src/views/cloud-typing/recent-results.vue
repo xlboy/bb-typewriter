@@ -74,7 +74,7 @@ export default defineComponent({
           Toast('删除成功')
         });
       } else {
-        Toast("删除失败…此练习数据为旧版本所留，不可删，请移步至");
+        Toast("删除失败…此练习数据为旧版本所留，不可删，请移步至 设置->清除缓存");
       }
     }
     return {
