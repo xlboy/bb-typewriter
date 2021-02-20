@@ -1,6 +1,6 @@
 import aSingleWord from "@/model/aSingleWord";
 import chinesePhrase from "@/model/chinesePhrase";
-import { shuffleArray } from "./utils";
+import { shuffleArray } from "../utils";
 
 /**
  * @description 生成打字练习内容，例 单字、词组等等
