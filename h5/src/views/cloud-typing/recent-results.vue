@@ -10,7 +10,12 @@
         <span class="date">{{ item.insertTime }}</span>
         <span class="operate">
           <van-tag @click="deleteResult(item)">删除</van-tag>
-          <van-tag type="warning" style="margin-left: 5px">复制</van-tag>
+          <van-tag
+            type="warning"
+            style="margin-left: 5px"
+            @click="copyResult(item)"
+            >复制</van-tag
+          >
         </span>
       </li>
     </div>
@@ -23,8 +28,15 @@
 </template>
 <script lang="ts">
 import useBaseLayout from "@/hooks/useBaseLayout";
-import recentResults, { IRencentResult } from "@/storeComposition/cloudTyping/recentResults";
+import recentResults, {
+  IRencentResult,
+} from "@/storeComposition/cloudTyping/recentResults";
+import { Toast } from "vant";
 import { computed, defineComponent, ref } from "vue";
+import resultComposite from "@/utils/typing/resultComposite";
+import copyText from "@/utils/copyText";
+import { Dialog } from "vant";
+
 export default defineComponent({
   name: "RecentResults",
   setup() {
@@ -36,7 +48,7 @@ export default defineComponent({
       rightVisible: true,
     });
 
-    const pageSize = 10;
+    const pageSize = 15;
     const currentPage = ref(1);
     const currentList = computed(() => {
       const { data, countPage } = recentResults.findPage(
@@ -46,12 +58,30 @@ export default defineComponent({
       return { data, countPage };
     });
 
+    function copyResult(result: IRencentResult) {
+      const resultStr = resultComposite(result, result.index);
+      copyText(resultStr);
+      Toast("复制成功");
+    }
+
     function deleteResult(result: IRencentResult) {
+      if (result.id) {
+        const resultStr = resultComposite(result, result.index);
+        Dialog.confirm({
+          message: `确认删除此成绩？\n${resultStr}`,
+        }).then(() => {
+          recentResults.delete(result.id!);
+          Toast('删除成功')
+        });
+      } else {
+        Toast("删除失败…此练习数据为旧版本所留，不可删，请移步至");
+      }
     }
     return {
       currentPage,
       currentList,
-      deleteResult
+      deleteResult,
+      copyResult,
     };
   },
 });

@@ -1,11 +1,12 @@
 import LocalStore from '@/utils/localStore'
+import { Toast } from 'vant'
 import { ref } from 'vue'
 
 /**
  * @description 最近练习的成绩，在本地存储里
  */
 export interface IRencentResult {
-    id: string;
+    id?: number;
     index: number; // 段号
     speed: number; // 速度
     keystroke: number; // 击键
@@ -26,9 +27,16 @@ const recentResults = {
         this.list.value = store.toArray()
     },
     add(result: IRencentResult) {
-        // result.id = 1
+        result.id = parseInt(String(Math.random() * 1E8))
         this.list.value.unshift(result)
         store.writeJson(this.list.value)
+    },
+    delete(id: number) {
+        const index = this.list.value.findIndex(item => item.id === id)
+        if (index !== undefined) {
+            this.list.value.splice(index, 1)
+            store.writeJson(this.list.value)
+        }
     },
     list: ref([] as IRencentResult[]),
     findPage(startPage: number, size: number) {

@@ -29,7 +29,7 @@
 <script lang="ts">
 import { TypingSymbol } from "@/hooks/useTyping";
 import copyText from "@/utils/copyText";
-import typingContent from "@/utils/typingContent";
+import typingContent from "@/utils/typing/typingContent";
 import { Toast } from "vant";
 import Notify from "@/utils/notify";
 import { computed, defineComponent, inject, reactive } from "vue";

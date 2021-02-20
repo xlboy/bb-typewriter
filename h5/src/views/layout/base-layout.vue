@@ -43,7 +43,7 @@ export default defineComponent({
   flex-direction: column;
   &__header {
     width: 100%;
-    height: 45px;
+    min-height: 45px;
     display: flex;
     box-sizing: border-box;
     padding: 0px 20px;
@@ -65,6 +65,7 @@ export default defineComponent({
   &__view {
     width: 100%;
     flex: 1;
+    overflow: auto;
   }
 }
 </style>

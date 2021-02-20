@@ -1,7 +1,11 @@
 <template>
   <div class="setup">
     <van-cell title="个人中心" is-link @click="toMyMaterial" />
-    <van-cell title="跟打设置" is-link @click="$router.push({ name: 'RallySetup' })" />
+    <van-cell
+      title="跟打设置"
+      is-link
+      @click="$router.push({ name: 'RallySetup' })"
+    />
     <van-cell title="清除缓存" is-link @click="clearCache">
       <template #right-icon>
         <van-icon name="failure" class="search-icon" />
@@ -35,9 +39,11 @@ export default defineComponent({
     });
     function clearCache() {
       // 这不欺骗？留着过年？
+      const localCacheNames = ["bb-recentResults"];
       Loading.show();
       setTimeout(() => {
         Loading.close();
+        localCacheNames.forEach((name) => localStorage.setItem(name, ""));
         Toast("清除成功");
       }, Math.floor(Math.random() * 3000));
     }
@@ -55,8 +61,8 @@ export default defineComponent({
       if ($store.getters["user/isLogin"]) {
         $router.push({ name: "MyMaterial" });
       } else {
-        Toast("亲，这边先登陆哦")
-        $router.push({ name: 'AppLogin' })
+        Toast("亲，这边先登陆哦");
+        $router.push({ name: "AppLogin" });
       }
     }
     return {
