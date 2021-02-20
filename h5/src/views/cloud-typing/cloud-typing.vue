@@ -57,7 +57,7 @@ export default defineComponent({
     function finishTyping(result: ITypingResult) {
       // 将成绩复制到剪贴板中
       const cIndex = (typing.refState as any).source?.index; // 当前练习段号
-      let resultStr = resultComposite(result, cIndex);
+      const resultStr = resultComposite(result, cIndex);
       Toast(resultStr);
       copyText(resultStr);
 
