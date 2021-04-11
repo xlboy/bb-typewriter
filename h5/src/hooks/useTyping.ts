@@ -1,5 +1,5 @@
 import { reactive, computed, watch, onMounted } from "vue";
-import { IFinishCallback, ITypingResult, ITypingSource, ITypingState, IUseTyping } from '@/interface/ITyping'
+import { IFinishCallback, ITypingResult, ITypingSource, ITypingState, IUseTyping } from '@/@types/ITyping'
 
 // 起一个唯一的代号，用来引入provide/inject
 export const TypingSymbol = Symbol('typing')
@@ -16,7 +16,6 @@ export default function (
   type: 'downKey' | 'inputVal',
   inputId?: string
 ): IUseTyping {
-
   // 返回辅助型的数据
   const initAidState = (): ITypingState => {
     return {

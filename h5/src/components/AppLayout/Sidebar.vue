@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, inject, reactive } from "vue";
-import themeColors from "@/model/themeColors";
+import themeColors from "@/constants/themeColors";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { Toast } from "vant";

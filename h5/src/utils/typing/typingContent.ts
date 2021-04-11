@@ -1,5 +1,4 @@
-import aSingleWord from "@/model/aSingleWord";
-import chinesePhrase from "@/model/chinesePhrase";
+import { aSingleWord, chinesePhrase } from "@/constants/typing";
 import { shuffleArray } from "../utils";
 
 /**

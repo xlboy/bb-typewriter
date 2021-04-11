@@ -10,7 +10,7 @@ export default function (
   funs: (Promise<any>)[] | Promise<any>,
   callback: Function,
   isLoading = true
-) {
+): void {
   isLoading && loading.show()
   // 先不理它传入多个还是单个，直接扁平化成一维，再丢给all处理即可
   const tasks = [funs].flat(Infinity)

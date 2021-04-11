@@ -1,4 +1,4 @@
-import typingGroups from '@/model/typingGroup'
+import { typingGroups } from "@/constants/typing";
 export interface IActionSheet {
     type: string,
     name: string,

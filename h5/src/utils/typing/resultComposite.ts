@@ -2,7 +2,7 @@
  * @description 跟打成绩合成的函数
  */
 
-import { ITypingResult } from "@/interface/ITyping";
+import { ITypingResult } from "@/@types/ITyping";
 
 const keyName = {
     // #是占位符

@@ -70,7 +70,7 @@ import {
 } from "@/api/qqGroupArticle";
 import Notify from "@/utils/notify";
 import { TypingSymbol } from "@/hooks/useTyping";
-import typingGroup from "@/model/typingGroup.ts";
+import { typingGroups } from "@/constants/typing";
 import ConfirmInput from "../Common/ConfirmInput";
 import SelectCustomize from "./components/SelectCustomize.vue";
 import WordHintAnalysis from "./components/WordHintAnalysis.vue";
@@ -170,7 +170,7 @@ export default defineComponent({
         function onLoadGroupLatestArticle(name: string) {
           // 群号
           const guid: number =
-            typingGroup.find((o) => o.name === name)?.guid ?? 522394334;
+            typingGroups.find((o) => o.name === name)?.guid ?? 522394334;
           // 请求老谭的接口，取到实时的文章内容并赋上
           useRequest(getGroupLatestArticle(guid), function (result: any) {
             if (result.code === 200) {
@@ -188,7 +188,7 @@ export default defineComponent({
         function onLoadGroupMatchArticle(name: string) {
           // 群号
           const guid: number =
-            typingGroup.find((o) => o.name === name)?.guid ?? 522394334;
+            typingGroups.find((o) => o.name === name)?.guid ?? 522394334;
           // 请求小拆的接口，取到文章内容并赋上
           useRequest(getGroupMatchArticle(guid), function (result: any) {
             if (result.code === 0) {

@@ -1,4 +1,4 @@
-import { TypingHintStyleTypes } from '@/enums/typingEnum';
+import { TypingHintStyleTypes } from '@/constants/typing';
 import { ComputedRef, UnwrapRef } from 'vue';
 
 export interface ITypingTime {

@@ -6,7 +6,7 @@ import { getDefaultWordHint, getQueryWordHint } from "@/api/bbPublic";
 import useRequest from "@/hooks/useRequest";
 import { computed, reactive, watch } from "vue";
 import store from "@/store/";
-import { IContrstCharObj } from "@/interface/ITyping";
+import { IContrstCharObj } from "@/@types/ITyping";
 import contrstRender from "./contrstRender";
 import hintAnalysis, { IHintAnalysis } from "./hintAnalysis";
 export interface IWordHintObj {

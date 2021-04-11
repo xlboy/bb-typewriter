@@ -1,5 +1,5 @@
-import { TypingHintStyleTypes } from "@/enums/typingEnum";
-import { IContrstCharObj } from "@/interface/ITyping";
+import { TypingHintStyleTypes } from "@/constants/typing";
+import { IContrstCharObj } from "@/@types/ITyping";
 import { IWordHintRenderSource } from ".";
 
 /**

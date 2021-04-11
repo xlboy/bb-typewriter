@@ -15,7 +15,7 @@
 <script lang="ts">
 import useBaseLayout from "@/hooks/useBaseLayout";
 import { defineComponent } from "vue";
-import vanIcons from "@/model/vanIcons";
+import vanIcons from "@/constants/vanIcons";
 import { Toast } from "vant";
 export default defineComponent({
   name: "MiniApps",

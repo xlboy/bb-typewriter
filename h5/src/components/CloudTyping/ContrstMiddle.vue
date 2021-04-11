@@ -14,7 +14,7 @@
   </div>
 </template>
 <script lang="ts">
-import { TypingHintStyleTypes } from "@/enums/typingEnum";
+import { TypingHintStyleTypes } from "@/constants/typing";
 import { TypingSymbol } from "@/hooks/useTyping";
 import { IContrstCharObj } from "@/interface/ITyping";
 import storeWordHint from "@/storeComposition/cloudTyping/wordHint/";
