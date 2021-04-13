@@ -16,7 +16,7 @@
 <script lang="ts">
 import { TypingHintStyleTypes } from "@/constants/typing";
 import { TypingSymbol } from "@/hooks/useTyping";
-import { IContrstCharObj } from "@/interface/ITyping";
+import { IContrstCharObj } from "@/@types/ITyping";
 import storeWordHint from "@/storeComposition/cloudTyping/wordHint/";
 import { Toast } from "vant";
 import { computed, defineComponent, inject, onMounted, ref, watch } from "vue";

@@ -39,7 +39,7 @@ import Domain from "@/components/CloudTyping/Domain.vue";
 
 import { computed, defineComponent, provide } from "vue";
 import useTyping, { TypingSymbol } from "@/hooks/useTyping";
-import { ITypingResult } from "@/interface/ITyping";
+import { ITypingResult } from "@/@types/ITyping";
 import copyText from "@/utils/copyText";
 import recentResults, {
   IRencentResult,
